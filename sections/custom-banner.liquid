@@ -41,9 +41,9 @@
       {%- comment -%}
         Both breakpoints' media sit in the markup and CSS toggles which one
         shows, so nothing here may fetch eagerly on its own: videos carry
-        preload="none" and no autoplay attribute, and custom-banner-audio.js
-        starts only the variant that is actually visible (see
-        initBannerPlayback). Until the video is actually playing the frame is
+        preload="none" and no autoplay attribute (see snippets/banner-video),
+        and the inline starter below plays only the variant that is actually
+        visible, with custom-banner-audio.js taking over from there. Until the video is actually playing the frame is
         solid #570f13 -- the video (poster included) stays transparent and
         fades in on its first `playing` event (.is-ready), so no poster or
         half-loaded frame flashes in first. When iOS Low Power Mode refuses
@@ -55,20 +55,11 @@
         arrives; the framed layout's height:100% overrides it.
       {%- endcomment -%}
       {%- if section.settings.media_type == 'video' and section.settings.banner_video != blank -%}
-        {%- assign desktop_video = section.settings.banner_video -%}
-        {%- assign desktop_video_style = 'aspect-ratio: ' | append: desktop_video.aspect_ratio -%}
-        {{
-          desktop_video
-          | video_tag:
-            class: 'custom-banner_desktop-video',
-            image_size: '1920x',
-            style: desktop_video_style,
-            loop: true,
-            muted: true,
-            controls: false,
-            playsinline: true,
-            preload: 'none'
-        }}
+        {%- render 'banner-video',
+          video: section.settings.banner_video,
+          class: 'custom-banner_desktop-video',
+          mp4_height: 1080
+        -%}
       {%- elsif section.settings.banner_image != blank -%}
         <picture class="custom-banner-picture">
           <source media="(max-width: 749px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
@@ -86,20 +77,11 @@
       {%- endif -%}
 
       {%- if section.settings.media_type == 'video' and section.settings.mobile_banner_video != blank -%}
-        {%- assign mobile_video = section.settings.mobile_banner_video -%}
-        {%- assign mobile_video_style = 'aspect-ratio: ' | append: mobile_video.aspect_ratio -%}
-        {{
-          mobile_video
-          | video_tag:
-            class: 'custom-banner_mobile-video',
-            image_size: '1080x',
-            style: mobile_video_style,
-            loop: true,
-            muted: true,
-            controls: false,
-            playsinline: true,
-            preload: 'none'
-        }}
+        {%- render 'banner-video',
+          video: section.settings.mobile_banner_video,
+          class: 'custom-banner_mobile-video',
+          mp4_height: 720
+        -%}
       {%- elsif section.settings.mobile_banner_image != blank -%}
         <picture class="custom-banner-picture">
           <source media="(min-width: 750px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
