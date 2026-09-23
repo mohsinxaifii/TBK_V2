@@ -11,17 +11,18 @@
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
     {%- endif -%}
 
+    {%- comment -%}
+      The home hero film streams from cdn.shopify.com/videos. Opening that
+      connection from the <head> saves its DNS + TLS round trips from the
+      film's first frame. No crossorigin: <video> fetches without CORS, so
+      only a no-cors connection is reused.
+    {%- endcomment -%}
+    {%- if request.page_type == 'index' -%}
+      <link rel="preconnect" href="https://cdn.shopify.com">
+    {%- endif -%}
+
     {%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
-      {%- comment -%}
-        The home hero film streams from cdn.shopify.com/videos. Opening that
-        connection from the <head> saves its DNS + TLS round trips from the
-        film's first frame. No crossorigin: <video> fetches without CORS, so
-        only a no-cors connection is reused.
-      {%- endcomment -%}
-      {%- if request.page_type == 'index' -%}
-        <link rel="preconnect" href="https://cdn.shopify.com">
-      {%- endif -%}
     {%- endunless -%}
 
     <title>
