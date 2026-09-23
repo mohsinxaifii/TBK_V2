@@ -1701,27 +1701,35 @@ a.mini-cart__promo-banner:hover {
   row-gap: 0.4rem;
 }
 
+/* Label and price on one centred line, in the cart's own type: the display
+   face at 600 like .mini-cart__title and the recommendation titles, prices in
+   --font-price-family at 600 like every other price in the drawer. It was
+   baseline-aligned body type beside a 700 price, which with the icon in the
+   label left the words riding visibly above the figure. */
 .cart-summary__row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   column-gap: 1rem;
+  min-height: 2.8rem;
 }
 
 .cart-summary__label {
   display: inline-flex;
   align-items: center;
-  column-gap: 0.7rem;
+  column-gap: 0.8rem;
+  font-family: var(--font-family-display);
   font-size: 1.6rem;
   font-weight: 600;
+  line-height: 1.2;
   letter-spacing: 0;
   color: var(--cart-strong);
 }
 
 .cart-summary__label .icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  align-self: center;
+  flex: 0 0 auto;
+  width: 1.6rem;
+  height: 1.6rem;
   color: var(--cart-strong);
 }
 
@@ -1730,6 +1738,7 @@ a.mini-cart__promo-banner:hover {
   align-items: baseline;
   column-gap: 0.8rem;
   font-family: var(--font-price-family);
+  line-height: 1.2;
 }
 
 .cart-summary__compare-at {
@@ -1739,8 +1748,8 @@ a.mini-cart__promo-banner:hover {
 }
 
 .cart-summary__total {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 1.8rem;
+  font-weight: 600;
   color: var(--cart-strong);
 }
 
