@@ -102,9 +102,12 @@
             <button type="button" class="custom-audio-player-language-button" data-language="en">ENGLISH</button>
           </div>
           {%- endcomment -%}
+<<<<<<< HEAD
           {%- assign default_audio = 'bikaneri-bhujia.mp3' | asset_url -%}
           {%- assign audio_hi = section.settings.audio_url | default: section.settings.audio_url_english | default: default_audio -%}
           {%- assign audio_en = section.settings.audio_url_english | default: section.settings.audio_url | default: default_audio -%}
+=======
+>>>>>>> d1d4900 (polishing)
           <audio
             class="custom-audio-player-audio"
             preload="metadata"
