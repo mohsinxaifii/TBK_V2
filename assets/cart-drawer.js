@@ -48,6 +48,12 @@ class MiniCart extends HTMLElement {
     // If the idle fetch has not landed yet, the drawer still opens straight
     // away and fills in as soon as it does -- the spinner is the placeholder.
     this.requestContents();
+
+    // Nothing has toggled <details> on this path -- there was no click on the
+    // summary -- so `open` has to be set before the drawer is told to animate,
+    // or `details[open] > .cart-drawer` never matches and the panel stays off
+    // screen. On the click path the browser does this itself.
+    detailsElement.setAttribute('open', '');
     this.drawer.openMenuDrawer();
   }
 

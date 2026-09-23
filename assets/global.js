@@ -684,29 +684,14 @@ class CartDrawer extends MenuDrawer {
     const summary = summaryElement || this.querySelector('summary');
     if (!summary) return;
 
-    // Dawn's MenuDrawer never sets `open` itself -- clicking the <summary>
-    // makes the browser do it, so the base class only has to add the animation
-    // class. Opened programmatically (add to cart), nothing sets it, the
-    // `details[open] > .cart-drawer` rule never matches and the panel stays
-    // translated off-screen. Hence setting it here before handing over.
-    if (!this.mainDetailsToggle.hasAttribute('open')) {
-      this.mainDetailsToggle.setAttribute('open', '');
-    }
-
     // Pinning last: the base class measures the scrollbar and the header's
     // position first, and both read differently once the body is out of flow.
     super.openMenuDrawer(summary);
 
-    // The cart's stylesheet keys the backdrop -- and the transitions on the
-    // panel's contents -- off these two classes on <body>. The source theme's
-    // own MenuDrawer applied them through a class-state system Dawn's does not
-    // have, so the drawer opened with no dimming behind it until this was
-    // added. --opening runs the transition in, --open is the resting state.
-    document.body.classList.add(CartDrawer.CLASS_OPENING);
-    requestAnimationFrame(() => {
-      document.body.classList.remove(CartDrawer.CLASS_OPENING);
-      document.body.classList.add(CartDrawer.CLASS_OPEN);
-    });
+    // The cart's stylesheet keys the backdrop off this class on <body>. The
+    // source theme applied it through a class-state system Dawn's MenuDrawer
+    // does not have, so without this the drawer opened with nothing behind it.
+    document.body.classList.add(CartDrawer.CLASS_OPEN);
 
     this.lockPageScroll();
     this.lockScroll();
