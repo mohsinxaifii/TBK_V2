@@ -38,42 +38,83 @@
 
   <div class="custom-banner-sticky">
     <div class="custom-banner-container{% if framed %} page-top-banner-container{% endif %}">
+      {%- comment -%}
+        Both breakpoints' media sit in the markup and CSS toggles which one
+        shows, so nothing here may fetch eagerly on its own: videos carry
+        preload="none" and no autoplay attribute, and custom-banner-audio.js
+        starts only the variant that is actually visible (see
+        initBannerPlayback). The poster is what paints first -- and what
+        stays up when iOS Low Power Mode refuses autoplay -- so it gets the
+        high-priority preload, scoped by media query to the one that shows.
+      {%- endcomment -%}
       {%- if section.settings.media_type == 'video' and section.settings.banner_video != blank -%}
+        {%- assign desktop_video = section.settings.banner_video -%}
+        {%- if desktop_video.preview_image -%}
+          <link
+            rel="preload"
+            as="image"
+            href="{{ desktop_video.preview_image | image_url: width: 1920 }}"
+            media="(min-width: 750px)"
+            fetchpriority="high"
+          >
+        {%- endif -%}
         {{
-          section.settings.banner_video
+          desktop_video
           | video_tag:
             class: 'custom-banner_desktop-video',
-            autoplay: true,
+            image_size: '1920x',
             loop: true,
             muted: true,
             controls: false,
-            playsinline: true
+            playsinline: true,
+            preload: 'none'
         }}
       {%- else -%}
-        <img
-          src="{{ section.settings.banner_image | image_url }}"
-          alt="{{ section.settings.banner_image.alt | escape }}"
-          class="custom-banner_desktop-image"
-        >
+        {{
+          section.settings.banner_image
+          | image_url: width: 3000
+          | image_tag:
+            class: 'custom-banner_desktop-image',
+            widths: '750, 1100, 1500, 1920, 2400, 3000',
+            sizes: '100vw',
+            loading: 'eager',
+            fetchpriority: 'high'
+        }}
       {%- endif -%}
 
       {%- if section.settings.media_type == 'video' and section.settings.mobile_banner_video != blank -%}
+        {%- assign mobile_video = section.settings.mobile_banner_video -%}
+        {%- if mobile_video.preview_image -%}
+          <link
+            rel="preload"
+            as="image"
+            href="{{ mobile_video.preview_image | image_url: width: 1080 }}"
+            media="(max-width: 749px)"
+            fetchpriority="high"
+          >
+        {%- endif -%}
         {{
-          section.settings.mobile_banner_video
+          mobile_video
           | video_tag:
             class: 'custom-banner_mobile-video',
-            autoplay: true,
+            image_size: '1080x',
             loop: true,
             muted: true,
             controls: false,
-            playsinline: true
+            playsinline: true,
+            preload: 'none'
         }}
       {%- else -%}
-        <img
-          src="{{ section.settings.mobile_banner_image | image_url }}"
-          alt="{{ section.settings.mobile_banner_image.alt | escape }}"
-          class="custom-banner_mobile-image"
-        >
+        {{
+          section.settings.mobile_banner_image
+          | image_url: width: 1500
+          | image_tag:
+            class: 'custom-banner_mobile-image',
+            widths: '375, 550, 750, 1080, 1500',
+            sizes: '100vw',
+            loading: 'eager',
+            fetchpriority: 'high'
+        }}
       {%- endif -%}
 
       {%- if show_video_audio_controls -%}
