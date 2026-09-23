@@ -161,8 +161,8 @@
   font-family: var(--font-heading-family);
   font-style: var(--font-heading-style);
   font-weight: var(--font-heading-weight);
-  font-size: 2rem;
-  line-height: 1.25;
+  font-size: 2.4rem;
+  line-height: 38px;
   color: currentColor;
 }
 
