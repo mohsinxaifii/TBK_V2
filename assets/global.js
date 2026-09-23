@@ -646,6 +646,9 @@ theme.routes = theme.routes || {
 };
 
 class CartDrawer extends MenuDrawer {
+  static CLASS_OPEN = 'mini-cart--open';
+  static CLASS_OPENING = 'mini-cart--opening';
+
   constructor() {
     super();
     this.onCartRefreshListener = this.onCartRefresh.bind(this);
@@ -667,11 +670,14 @@ class CartDrawer extends MenuDrawer {
   // back unscrollable.
   onPageShow(event) {
     if (event.persisted) {
+      document.body.classList.remove(CartDrawer.CLASS_OPEN, CartDrawer.CLASS_OPENING);
       this.unlockScroll();
       this.unlockPageScroll();
     }
   }
 
+  // MiniCart.open() calls this with no argument, so the summary is resolved
+  // here rather than being required of the caller.
   // MiniCart.open() calls this with no argument, so the summary is resolved
   // here rather than being required of the caller.
   openMenuDrawer(summaryElement = false) {
@@ -681,6 +687,18 @@ class CartDrawer extends MenuDrawer {
     // Pinning last: the base class measures the scrollbar and the header's
     // position first, and both read differently once the body is out of flow.
     super.openMenuDrawer(summary);
+
+    // The cart's stylesheet keys the backdrop -- and the transitions on the
+    // panel's contents -- off these two classes on <body>. The source theme's
+    // own MenuDrawer applied them through a class-state system Dawn's does not
+    // have, so the drawer opened with no dimming behind it until this was
+    // added. --opening runs the transition in, --open is the resting state.
+    document.body.classList.add(CartDrawer.CLASS_OPENING);
+    requestAnimationFrame(() => {
+      document.body.classList.remove(CartDrawer.CLASS_OPENING);
+      document.body.classList.add(CartDrawer.CLASS_OPEN);
+    });
+
     this.lockPageScroll();
     this.lockScroll();
   }
@@ -689,8 +707,9 @@ class CartDrawer extends MenuDrawer {
     super.closeMenuDrawer(event, elementToFocus);
 
     // The base class only closes when it is handed an event; without one the
-    // drawer stays open, so the locks have to stay on too.
+    // drawer stays open, so the locks and the backdrop have to stay on too.
     if (event !== undefined) {
+      document.body.classList.remove(CartDrawer.CLASS_OPEN, CartDrawer.CLASS_OPENING);
       this.unlockPageScroll();
       this.unlockScroll();
     }
