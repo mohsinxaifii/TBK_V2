@@ -222,7 +222,7 @@
   color: #fffdee;
   font-family: var(--font-family-body);
   font-size: var(--font-intro-popup-body-size);
-  font-weight: var(--font-intro-popup-welcome-weight);
+  font-weight: 500;
   line-height: var(--font-intro-popup-body-line-height);
 }
 
