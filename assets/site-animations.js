@@ -1322,6 +1322,22 @@
     } else {
       window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
     }
+
+    // Below-the-fold images are loading="lazy" so they don't compete with the
+    // hero film, which means they land after window load -- and the ones
+    // without width/height change the page's height when they do. Re-measure
+    // after each such batch (debounced, so a row of images is one refresh).
+    let lazyRefreshTimer = null;
+    document.addEventListener(
+      'load',
+      (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLImageElement) || target.loading !== 'lazy') return;
+        clearTimeout(lazyRefreshTimer);
+        lazyRefreshTimer = setTimeout(() => ScrollTrigger.refresh(), 200);
+      },
+      true
+    );
   };
 
   if (document.readyState === 'complete') {

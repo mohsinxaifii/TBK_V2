@@ -43,6 +43,7 @@
         "mobile_logo_position": "center",
         "menu": "main-menu",
         "secondary_menu": "secondary-main-menu",
+        "drawer_extra_menus": "footer-middle, footer-right",
         "menu_type_desktop": "dropdown",
         "sticky_header_type": "on-scroll-up",
         "show_line_separator": true,

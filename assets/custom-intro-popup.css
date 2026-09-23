@@ -159,10 +159,6 @@
   opacity: 0.7;
 }
 
-.custom-intro-popup__close:focus-visible {
-  outline: 2px solid #fffdee;
-  outline-offset: -2px;
-}
 
 /* 14.5, not 13: the viewBox pads the 13x12 glyph by the round cap's 0.75px
    radius on each side, so sizing the SVG to 13 would draw the X at 11.7px.
@@ -278,10 +274,6 @@
   filter: brightness(0) saturate(100%) invert(97%) sepia(9%) saturate(556%) hue-rotate(310deg) brightness(105%) contrast(100%);
 }
 
-.custom-intro-popup__cta:focus-visible {
-  outline: 2px solid #fffdee;
-  outline-offset: 2px;
-}
 
 /* ---- Between the mobile board and the desktop card's natural width ---- */
 

@@ -78,3 +78,31 @@
 .custom-banner-picture {
     display: contents;
 }
+
+/* Video banner: solid brand maroon until the film is actually playing. The
+   video element (and the poster it would otherwise paint) stays transparent
+   over it; custom-banner-audio.js adds .is-ready on the first `playing`
+   event and it fades in. The inline aspect-ratio keeps the box full size
+   while it's still empty. */
+.custom-banner-container--video {
+    background-color: #570f13;
+}
+
+.custom-banner_desktop-video,
+.custom-banner_mobile-video {
+    background-color: #570f13;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.custom-banner_desktop-video.is-ready,
+.custom-banner_mobile-video.is-ready {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .custom-banner_desktop-video,
+    .custom-banner_mobile-video {
+        transition: none;
+    }
+}

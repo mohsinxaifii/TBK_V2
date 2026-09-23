@@ -12,6 +12,9 @@
           {% if forloop.last %}
             <div class="custom-home_values-item custom-home_values-item--extra">
               <img
+                loading="lazy"
+          fetchpriority="low"
+                decoding="async"
                 src="https://cdn.shopify.com/s/files/1/0764/0953/6706/files/Vector_13.png?v=1784200077"
                 alt=""
                 class="custom-home_values-icon custom-home_values-icon--extra"
@@ -20,6 +23,9 @@
           {% endif %}
           <div class="custom-home_values-item">
             <img
+              loading="lazy"
+          fetchpriority="low"
+              decoding="async"
               src="{{ block.settings.icon | image_url }}"
               alt="{{ block.settings.title }}"
               class="custom-home_values-icon"

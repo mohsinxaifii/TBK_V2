@@ -47,6 +47,7 @@
             width="{{ bg_image.width }}"
             height="{{ bg_image.height }}"
             loading="lazy"
+          fetchpriority="low"
             class="custom-home-testimonials-bg-image"
           >
         </picture>
@@ -91,6 +92,7 @@
                         width="{{ block.settings.image.width }}"
                         height="{{ block.settings.image.height }}"
                         loading="lazy"
+          fetchpriority="low"
                         class="custom-home-testimonials-avatar"
                       >
                     {%- endif -%}
@@ -127,6 +129,7 @@
               width="{{ section.settings.corner_image.width }}"
               height="{{ section.settings.corner_image.height }}"
               loading="lazy"
+          fetchpriority="low"
               class="custom-home-testimonials-corner"
             >
           {%- endif -%}
@@ -145,6 +148,7 @@
                   style="transform: rotate(180deg);"
                   height="{{ section.settings.arrow_image.height }}"
                   loading="lazy"
+          fetchpriority="low"
                   class="custom-home-testimonials-arrow"
                 >
               </button>
@@ -159,6 +163,7 @@
                   width="{{ section.settings.arrow_image.width }}"
                   height="{{ section.settings.arrow_image.height }}"
                   loading="lazy"
+          fetchpriority="low"
                   class="custom-home-testimonials-arrow"
                 >
               </button>

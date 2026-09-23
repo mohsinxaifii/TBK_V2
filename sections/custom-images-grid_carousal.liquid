@@ -5,11 +5,21 @@
   # Images set the height of the row; videos are cropped to match it. With no
   # image in the section there is nothing to match, so videos fall back to
   # their own aspect ratio.
+  #
+  # Every card is the same width, so the tallest image is the one with the
+  # smallest width/height ratio. Each card takes that ratio and the others
+  # cover-crop to it -- worked out here from the image data rather than from
+  # layout, so the row is the same height on every breakpoint and doesn't wait
+  # on lazy images to find out how tall it is.
   assign has_image = false
+  assign tallest_ratio = 0
   for block in section.blocks
     if block.settings.desktop_image != blank
       assign has_image = true
-      break
+      assign ratio = block.settings.desktop_image.aspect_ratio
+      if tallest_ratio == 0 or ratio < tallest_ratio
+        assign tallest_ratio = ratio
+      endif
     endif
   endfor
 -%}
@@ -18,7 +28,7 @@
   class="custom-images-grid_carousal-container{% unless has_image %} custom-images-grid_carousal-container--no-image{% endunless %}"
   data-section-id="{{ section.id }}"
   data-default-language="{{ section.settings.default_language }}"
-  style="--images-per-view: {{ section.settings.images_per_view }};"
+  style="--images-per-view: {{ section.settings.images_per_view }};{% if has_image %} --tallest-ratio: {{ tallest_ratio }};{% endif %}"
 >
   {% for block in section.blocks %}
     {%- liquid
@@ -47,6 +57,9 @@
     >
       {%- if image != blank -%}
         <img
+          loading="lazy"
+          fetchpriority="low"
+          decoding="async"
           src="{{ image | image_url }}"
           alt="{{ image.alt | escape }}"
           width="{{ image.width }}"
@@ -54,16 +67,14 @@
           class="custom-images-grid_carousal-image"
         >
       {%- else -%}
-        {{
-          video
-          | video_tag:
-            class: 'custom-images-grid_carousal-video',
-            autoplay: true,
-            loop: true,
-            muted: true,
-            controls: false,
-            playsinline: true
-        }}
+        {%- comment -%}
+          Not autoplay: custom-images-grid_carousal.js starts each clip once
+          it is near the viewport and the hero film has its first frame
+          (window.heroMedia) -- as autoplay, all of these (and, on mobile,
+          their four loop copies each) downloaded at page load, in
+          competition with the hero.
+        {%- endcomment -%}
+        {%- render 'banner-video', video: video, class: 'custom-images-grid_carousal-video', mp4_height: 720 -%}
       {%- endif -%}
     </{{ wrapper_tag }}>
   {% endfor %}

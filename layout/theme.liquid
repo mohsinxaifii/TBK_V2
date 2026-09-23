@@ -11,6 +11,67 @@
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
     {%- endif -%}
 
+    {%- comment -%}
+      window.heroMedia -- "the first thing on screen has its first frame".
+      Anything that downloads media the visitor can't see yet (the footer's
+      video strip, the audio player's track) waits on heroMedia.then(fn), so
+      the hero film gets the network to itself until its first frame is
+      decoded. custom-banner's inline starter claims it and calls done(); a
+      page with no hero film is released at DOMContentLoaded, and a film that
+      is slow to start is never waited on longer than 4s.
+
+      Lazy images can't be told to wait -- browsers fetch the ones within a
+      screen or two of the viewport straight away, whatever their priority --
+      but none of them fetches while display:none. So on the home page they
+      are held that way under .hero-pending until done(). They all sit below
+      the hero, so nothing visible moves; ScrollTrigger re-measures as they
+      arrive (site-animations.js). Measured on throttled slow 4G: the film's
+      first frame at ~1.1s held, ~2.8s with them competing.
+    {%- endcomment -%}
+    {%- if request.page_type == 'index' -%}
+      <style>
+        html.hero-pending img[loading='lazy'] {
+          display: none !important;
+        }
+      </style>
+      <script>
+        document.documentElement.classList.add('hero-pending');
+      </script>
+    {%- endif -%}
+    <script>
+      window.heroMedia = {
+        ready: false,
+        claimed: false,
+        queue: [],
+        claim: function () {
+          this.claimed = true;
+          setTimeout(this.done.bind(this), 4000);
+        },
+        done: function () {
+          if (this.ready) return;
+          this.ready = true;
+          document.documentElement.classList.remove('hero-pending');
+          this.queue.splice(0).forEach(function (fn) { fn(); });
+        },
+        then: function (fn) {
+          this.ready ? fn() : this.queue.push(fn);
+        },
+      };
+      document.addEventListener('DOMContentLoaded', function () {
+        if (!window.heroMedia.claimed) window.heroMedia.done();
+      });
+    </script>
+
+    {%- comment -%}
+      The home hero film streams from cdn.shopify.com/videos. Opening that
+      connection from the <head> saves its DNS + TLS round trips from the
+      film's first frame. No crossorigin: <video> fetches without CORS, so
+      only a no-cors connection is reused.
+    {%- endcomment -%}
+    {%- if request.page_type == 'index' -%}
+      <link rel="preconnect" href="https://cdn.shopify.com">
+    {%- endif -%}
+
     {%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
     {%- endunless -%}

@@ -223,3 +223,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+// ---- Deferred clip playback ----------------------------------------------
+// The clips render preload="none" without autoplay (see the section), so none
+// of them downloads at page load. Each starts once the hero film has its first
+// frame (window.heroMedia) and it is near the viewport, and pauses again when
+// it scrolls away. A separate DOMContentLoaded listener, registered after the
+// one above, so the mobile loop copies already exist and are covered too.
+document.addEventListener('DOMContentLoaded', () => {
+  const videos = document.querySelectorAll('.custom-images-grid_carousal-video');
+  if (!videos.length) return;
+
+  const play = (video) => {
+    video.muted = true;
+    video.playsInline = true;
+    if (video.preload === 'none') video.preload = 'auto';
+    const attempt = video.play();
+    if (attempt && typeof attempt.catch === 'function') attempt.catch(() => {});
+  };
+
+  const start = () => {
+    if (!('IntersectionObserver' in window)) {
+      videos.forEach(play);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) play(entry.target);
+          else if (!entry.target.paused) entry.target.pause();
+        });
+      },
+      { rootMargin: '300px 300px' }
+    );
+    videos.forEach((video) => observer.observe(video));
+  };
+
+  if (window.heroMedia) window.heroMedia.then(start);
+  else start();
+});

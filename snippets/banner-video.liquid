@@ -1,0 +1,68 @@
+{%- comment -%}
+  Hand-built <video> in place of video_tag, so the source order and
+  attributes are ours. Written for the custom-banner hero; the image carousel
+  uses it too, for the same fast start and no-download-until-played:
+
+  - One MP4 first, at a sensible size (mp4_height; the nearest smaller
+    rendition if that height doesn't exist). Measured on a throttled slow-4G
+    phone profile: first frame in ~1.0s from the MP4 against ~3.2s from HLS,
+    whose master playlist -> variant playlist -> segment chain costs extra
+    round trips before anything decodes -- and the MP4 played through
+    without stalling. Every browser plays H.264 MP4, so this is what they all
+    take.
+  - HLS after it, only as a fallback should the MP4 fail.
+  - No poster. The frame is solid #570f13 until the film plays (see
+    custom-banner.css), and video_tag's poster was a full-size image
+    downloaded only to be kept invisible.
+  - preload="none", no autoplay: the caller's script decides what plays (for
+    the hero, only the visible variant), so nothing downloads unasked.
+
+  Accepts:
+  - video: {Object} video setting
+  - class: {String}
+  - mp4_height: {Number} preferred MP4 rendition height
+{%- endcomment -%}
+{%- liquid
+  assign hls_url = blank
+  assign mp4_url = blank
+  assign mp4_best = 0
+  for source in video.sources
+    if source.format == 'm3u8'
+      assign hls_url = source.url
+    elsif source.format == 'mp4' and source.height <= mp4_height and source.height > mp4_best
+      assign mp4_url = source.url
+      assign mp4_best = source.height
+    endif
+  endfor
+  if mp4_url == blank
+    for source in video.sources
+      if source.format == 'mp4'
+        assign mp4_url = source.url
+        break
+      endif
+    endfor
+  endif
+-%}
+<video
+  class="{{ class }}"
+  style="aspect-ratio: {{ video.aspect_ratio }}"
+  muted
+  loop
+  playsinline
+  webkit-playsinline
+  disablepictureinpicture
+  disableremoteplayback
+  preload="none"
+  {% if video.alt != blank %}
+    aria-label="{{ video.alt | escape }}"
+  {% else %}
+    aria-hidden="true"
+  {% endif %}
+>
+  {%- if mp4_url != blank -%}
+    <source src="{{ mp4_url }}" type="video/mp4">
+  {%- endif -%}
+  {%- if hls_url != blank -%}
+    <source src="{{ hls_url }}" type="application/x-mpegURL">
+  {%- endif -%}
+</video>

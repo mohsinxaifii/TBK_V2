@@ -17,10 +17,16 @@
     display: none;
 }
 
-/* Every item stretches to the row, whose height comes from the tallest image.
-   The shorter images then fill that height (height: 100% resolves against the
-   stretched item) and are cropped with cover, so the row has an even bottom
-   edge. */
+/* Every card is shaped to the section's tallest image (--tallest-ratio, set
+   by the section from the image data), on every breakpoint. That image shows
+   whole; the shorter ones fill the same box and are cropped with cover, so the
+   row has an even bottom edge. Videos crop to it the same way (below). */
+.custom-images-grid_carousal-container:not(.custom-images-grid_carousal-container--no-image) .custom-images-grid_carousal-item {
+    aspect-ratio: var(--tallest-ratio);
+    align-self: start;
+    overflow: hidden;
+}
+
 .custom-images-grid_carousal-image {
     display: block;
     width: 100%;
@@ -75,8 +81,11 @@
 }
 
 @media(max-width: 768px) {
+    /* overflow-y stated: with overflow-x: auto it computes to auto too, and
+       the strip would pick up a stray vertical scroll. */
     .custom-images-grid_carousal-container {
         overflow-x: auto;
+        overflow-y: hidden;
         scroll-snap-type: x mandatory;
     }
 
@@ -99,34 +108,5 @@
 @media(max-width: 400px) {
     .custom-images-grid_carousal-item {
         width: 85%;
-    }
-}
-
-/* Phones only (Dawn's 749px, so 768px tablets keep the full-height strip).
-   The strip is capped at 600px and each image sits in the vertical middle of
-   its slot. Not applied to the video-only strip, which is on its own 3:4 frame
-   above and would have that overridden by a fixed height here.
-
-   overflow-y has to be stated: with overflow-x: auto the browser computes
-   overflow-y to auto as well, so a fixed height alone would turn the strip into
-   a vertical scroller for every image taller than it. */
-@media screen and (max-width: 749px) {
-    .custom-images-grid_carousal-container:not(.custom-images-grid_carousal-container--no-image) {
-        height: 600px;
-        overflow-y: hidden;
-    }
-
-    .custom-images-grid_carousal-container:not(.custom-images-grid_carousal-container--no-image) .custom-images-grid_carousal-item {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        overflow: hidden;
-        background-color: #570f13;
-    }
-
-    /* The strip is on a fixed 600px here with each image centred at its own
-       ratio, so the fill-and-crop from above doesn't apply. */
-    .custom-images-grid_carousal-container:not(.custom-images-grid_carousal-container--no-image) .custom-images-grid_carousal-image {
-        height: auto;
     }
 }

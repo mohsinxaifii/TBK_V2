@@ -6,11 +6,17 @@
   data-default-language="{{ section.settings.default_language }}"
 >
   <img
+    loading="lazy"
+          fetchpriority="low"
+    decoding="async"
     src="{{ section.settings.banner_image | image_url }}"
     alt="{{ section.settings.banner_image.alt | escape }}"
     class="custom-banner-text_desktop-image"
   >
   <img
+    loading="lazy"
+          fetchpriority="low"
+    decoding="async"
     src="{{ section.settings.mobile_banner_image | image_url  }}"
     alt="{{ section.settings.mobile_banner_image.alt | escape }}"
     class="custom-banner-text_mobile-image"
