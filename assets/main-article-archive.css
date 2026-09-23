@@ -4,6 +4,13 @@
   --hero-height: clamp(320px, 46vw, 680px);
 }
 
+/* Mobile hero is 402 x 516 in Figma (node 1375:1918). */
+@media screen and (max-width: 749px) {
+  .archive-article {
+    --hero-height: 516px;
+  }
+}
+
 /* Hero: a plain banner in normal flow that scrolls away with the page. */
 .archive-article__hero {
   position: relative;
