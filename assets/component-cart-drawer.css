@@ -48,15 +48,13 @@
   padding-inline-end: var(--scrollbar-width);
 }
 
-@media screen and (min-width: 750px) {
-
-  .mini-cart--open #MainContent,
-  .mini-cart--open .shopify-section-footer,
-  .mini-cart--opening #MainContent,
-  .mini-cart--opening .shopify-section-footer {
-    transform: translateX(-4rem);
-  }
-}
+/* The source theme slid the whole page 4rem to the left behind the drawer.
+   Dropped here for two reasons: transforming #MainContent and the footer means
+   compositing the entire page on every frame of the open, which is most of
+   what made this feel heavy; and a transformed ancestor becomes the containing
+   block for position:fixed descendants, which would quietly re-anchor anything
+   fixed inside main -- the same class of bug the intro popup is re-parented to
+   <body> to avoid. Standard drawers do not move the page anyway. */
 
 .mini-cart--open .shopify-section-header:not(.shopify-section-header-sticky) .header-wrapper,
 .mini-cart--opening .shopify-section-header:not(.shopify-section-header-sticky) .header-wrapper,
@@ -152,8 +150,8 @@
   /* Matches the intro popup's backdrop, so the two overlays on the site read
      as the same material. */
   background-color: rgba(0, 0, 0, 0.5);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
 }
 
 details[open]>.cart-drawer {
