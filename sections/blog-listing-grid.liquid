@@ -113,15 +113,12 @@
                 endif
               endif
 
-              # card_image / card_image_mobile are 2x exports of the Figma card
-              # frames (text and icons hidden), so a post that has them shows the
-              # designed cover as-is. Without them the card falls back to the
-              # desktop hero, then the featured image, centre-cropped. The mobile
-              # hero is never used here: it is framed for a full-bleed phone
-              # screen and crops badly inside these smaller cards.
-              assign designed_card_image = article.metafields.custom.card_image.value
-              assign card_image_mobile = article.metafields.custom.card_image_mobile.value
-              assign card_image = designed_card_image | default: article.metafields.custom.hero_image.value | default: article.image
+              # The story's own hero art, desktop and mobile, same as the article
+              # page uses. These are undesigned photographs — unlike the retired
+              # card_image exports, they carry no baked-in tint and no text, so
+              # the scrim below always renders to keep the index and title legible.
+              assign card_image_mobile = article.metafields.custom.hero_image_mobile.value
+              assign card_image = article.metafields.custom.hero_image.value | default: article.image
               assign card_alt = card_image.alt | default: article.title | escape
             -%}
             {%- comment -%}
@@ -131,8 +128,17 @@
             {%- capture padded_index -%}
               {%- render 'story-number', article: article, fallback: global_index -%}
             {%- endcapture -%}
+            {%- comment -%}
+              Each row carries its own column ratio, so it gets its own element:
+              a single grid cannot size track 1 as 382 on one row and 874 on the
+              next. The wrappers only exist for the alternating layout — the
+              default one stays flat and is still sized by blog-listing-grid.js.
+            {%- endcomment -%}
+            {%- if row_opens -%}
+              <div class="blog-listing-grid-row{% if card_role == 'full' %} blog-listing-grid-row--full{% elsif row_mirrored %} blog-listing-grid-row--mirrored{% endif %}">
+            {%- endif -%}
             <div
-              class="blog-listing-grid-item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+              class="blog-listing-grid-item{% if card_role != blank %} blog-listing-grid-item--{{ card_role }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
               {% if settings.animations_reveal_on_scroll %}
                 data-cascade
                 style="--animation-order: {{ forloop.index }};"
@@ -147,7 +153,9 @@
                           media="(max-width: 749px)"
                           srcset="
                             {{ card_image_mobile | image_url: width: 354 }} 354w,
-                            {{ card_image_mobile | image_url: width: 708 }} 708w
+                            {{ card_image_mobile | image_url: width: 536 }} 536w,
+                            {{ card_image_mobile | image_url: width: 708 }} 708w,
+                            {{ card_image_mobile | image_url: width: 804 }} 804w
                           "
                           sizes="100vw"
                         >
@@ -173,10 +181,7 @@
                     {{ 'lifestyle-1' | placeholder_svg_tag: 'blog-listing-grid-item-image placeholder-svg' }}
                   {%- endif -%}
 
-                  {%- comment -%} The Figma card has no gradient; any tint is already baked into the export. {%- endcomment -%}
-                  {%- if designed_card_image == blank -%}
-                    <div class="blog-listing-grid-item-scrim"></div>
-                  {%- endif -%}
+                  <div class="blog-listing-grid-item-scrim"></div>
 
                   <div class="blog-listing-grid-item-text">
                     <p class="blog-listing-grid-item-index">{{ padded_index }}</p>
@@ -208,6 +213,9 @@
                 </div>
               </a>
             </div>
+            {%- if row_closes -%}
+              </div>
+            {%- endif -%}
           {%- else -%}
             {%- if request.design_mode -%}
               <div class="blog-listing-grid-item">
