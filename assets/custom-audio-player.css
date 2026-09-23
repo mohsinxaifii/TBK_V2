@@ -817,7 +817,9 @@
         position: relative;
         inset: auto;
     }
-
+.custom-audio-player-card{
+    width: 80%;
+}
     .custom-audio-player-overlay .page-width {
         position: static;
         top: auto;
