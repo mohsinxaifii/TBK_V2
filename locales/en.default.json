@@ -84,6 +84,10 @@
         "label_html": "I agree to the {{ terms_link }} & {{ privacy_link }}",
         "privacy_policy": "Privacy Notice",
         "terms_of_service": "T&C"
+      },
+      "free_shipping": {
+        "congratulations_html": "You are eligible for free shipping.",
+        "remaining_html": "Spend {{ remaining_amount }} more to reach free shipping"
       }
     },
     "share": {
