@@ -617,6 +617,153 @@ class HeaderDrawer extends MenuDrawer {
 
 customElements.define('header-drawer', HeaderDrawer);
 
+/* ---- Cart drawer ------------------------------------------------------ *
+ * The mini-cart's open/close controller, ported from the beyondbeyond cart.
+ * MenuDrawer already gives the details/summary toggle and the focus trap, so
+ * this only adds what that cart needs on top:
+ *
+ *  - the page-scroll lock in TBK's own terms. The base class locks <body>,
+ *    but theme.liquid sets overflow-x on <html>, so it is <html>'s overflow
+ *    that governs the page; and Lenis drives wheel scrolling itself and
+ *    ignores overflow entirely, so it has to be stopped explicitly. Same
+ *    treatment HeaderDrawer already applies for the menu.
+ *  - the iOS body pin. iOS Safari treats `overflow: hidden` on the body as a
+ *    suggestion, and that stray scroll is also what collapses its toolbars
+ *    and resizes the viewport out from under the drawer.
+ *  - the `cart:refresh` re-render, which swaps the mini-cart and the icon
+ *    bubble without a page load.
+ */
+window.theme = window.theme || {};
+theme.config = theme.config || {
+  // iPadOS reports itself as a Mac, so touch points are what separate it from
+  // a desktop Safari.
+  isIOS:
+    /iP(hone|ad|od)/.test(window.navigator.userAgent) ||
+    (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1),
+};
+theme.routes = theme.routes || {
+  root_url: (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/',
+};
+
+class CartDrawer extends MenuDrawer {
+  constructor() {
+    super();
+    this.onCartRefreshListener = this.onCartRefresh.bind(this);
+    this.onPageShowListener = this.onPageShow.bind(this);
+  }
+
+  connectedCallback() {
+    document.addEventListener('cart:refresh', this.onCartRefreshListener);
+    window.addEventListener('pageshow', this.onPageShowListener);
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener('cart:refresh', this.onCartRefreshListener);
+    window.removeEventListener('pageshow', this.onPageShowListener);
+  }
+
+  // Leaving the page with the drawer open leaves the body pinned, and Safari's
+  // back button restores that state from the bfcache -- the page would come
+  // back unscrollable.
+  onPageShow(event) {
+    if (event.persisted) {
+      this.unlockScroll();
+      this.unlockPageScroll();
+    }
+  }
+
+  // MiniCart.open() calls this with no argument, so the summary is resolved
+  // here rather than being required of the caller.
+  openMenuDrawer(summaryElement = false) {
+    const summary = summaryElement || this.querySelector('summary');
+    if (!summary) return;
+
+    // Pinning last: the base class measures the scrollbar and the header's
+    // position first, and both read differently once the body is out of flow.
+    super.openMenuDrawer(summary);
+    this.lockPageScroll();
+    this.lockScroll();
+  }
+
+  closeMenuDrawer(event, elementToFocus = false) {
+    super.closeMenuDrawer(event, elementToFocus);
+
+    // The base class only closes when it is handed an event; without one the
+    // drawer stays open, so the locks have to stay on too.
+    if (event !== undefined) {
+      this.unlockPageScroll();
+      this.unlockScroll();
+    }
+  }
+
+  lockPageScroll() {
+    document.documentElement.style.overflow = 'hidden';
+    if (window.lenis) window.lenis.stop();
+  }
+
+  unlockPageScroll() {
+    document.documentElement.style.overflow = '';
+    if (window.lenis) window.lenis.start();
+  }
+
+  lockScroll() {
+    if (!theme.config.isIOS || this.scrollLocked) return;
+
+    this.lockedScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    document.body.style.top = `-${this.lockedScrollTop}px`;
+    document.body.classList.add('mini-cart--scroll-locked');
+    this.scrollLocked = true;
+  }
+
+  unlockScroll() {
+    if (!this.scrollLocked) return;
+
+    this.scrollLocked = false;
+    document.body.classList.remove('mini-cart--scroll-locked');
+    document.body.style.top = '';
+    window.scrollTo(0, this.lockedScrollTop);
+  }
+
+  async onCartRefresh(event) {
+    const miniCartElement = document.getElementById('mini-cart');
+    if (!miniCartElement) return;
+
+    const headerSectionId = this.getAttribute('data-header-section-id');
+    const rootUrl = theme.routes.root_url;
+
+    try {
+      const [miniCartResponse, headerResponse] = await Promise.all([
+        fetch(`${rootUrl}?section_id=mini-cart`),
+        fetch(`${rootUrl}?section_id=${headerSectionId}`),
+      ]);
+
+      if (!miniCartResponse.ok || !headerResponse.ok) {
+        throw new Error('Failed to fetch cart sections');
+      }
+
+      const [miniCartText, headerText] = await Promise.all([miniCartResponse.text(), headerResponse.text()]);
+
+      const parser = new DOMParser();
+      const miniCartSection = parser
+        .parseFromString(miniCartText, 'text/html')
+        .getElementById('shopify-section-mini-cart');
+      const cartIconBubble = parser.parseFromString(headerText, 'text/html').getElementById('cart-icon-bubble');
+
+      if (miniCartSection) miniCartElement.innerHTML = miniCartSection.innerHTML;
+
+      const cartIconBubbleElement = document.getElementById('cart-icon-bubble');
+      if (cartIconBubbleElement && cartIconBubble) {
+        cartIconBubbleElement.innerHTML = cartIconBubble.innerHTML;
+      }
+
+      if (event?.detail?.open === true) this.openMenuDrawer();
+    } catch (error) {
+      console.error('Error refreshing cart:', error);
+    }
+  }
+}
+customElements.define('theme-cart-drawer', CartDrawer);
+
 class ModalDialog extends HTMLElement {
   constructor() {
     super();
