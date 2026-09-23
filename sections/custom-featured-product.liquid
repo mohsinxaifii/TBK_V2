@@ -69,6 +69,7 @@
   {%- endif -%}
     <img
       loading="lazy"
+          fetchpriority="low"
       decoding="async"
       class="bg-image bg-image--right bg-image--desktop"
       src="{{ section.settings.bg_right_image | image_url }}"
@@ -78,6 +79,7 @@
     >
     <img
       loading="lazy"
+          fetchpriority="low"
       decoding="async"
       class="bg-image bg-image--right bg-image--mobile"
       src="{{ bg_right_image_mobile | image_url }}"
@@ -97,6 +99,7 @@
     <div class="custom-featured-product-left">
       <img
         loading="lazy"
+          fetchpriority="low"
         decoding="async"
         src="{{ section.settings['featured-product-left-bg'] | image_url }}"
         alt="{{ section.settings['featured-product-left-bg'].alt | escape }}"
@@ -170,6 +173,7 @@
         <div class="custom-featured-product-left-cta_container">
           <img
             loading="lazy"
+          fetchpriority="low"
             decoding="async"
             src="{{ section.settings.icon | image_url }}"
             alt="{{ section.settings.icon.alt | escape }}"

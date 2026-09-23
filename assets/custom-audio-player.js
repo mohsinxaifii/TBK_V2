@@ -18,6 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   players.forEach((container) => {
     const audio = container.querySelector('.custom-audio-player-audio');
+    // The markup ships preload="none" so the track's metadata doesn't compete
+    // with the home hero film; fetch it once the film has its first frame.
+    if (audio && window.heroMedia) {
+      window.heroMedia.then(() => {
+        if (audio.preload === 'none') audio.preload = 'metadata';
+      });
+    }
     const playButton = container.querySelector('.custom-audio-player-playpause');
     const playIcon = container.querySelector('.custom-audio-player-icon-play');
     const pauseIcon = container.querySelector('.custom-audio-player-icon-pause');
