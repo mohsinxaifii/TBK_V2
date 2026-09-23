@@ -29,7 +29,7 @@
    /* 1b. Extra families used by a single component each */
    --font-family-wordmark: 'Aurum';
    --font-family-devanagari: 'Ouma Devanagari', serif;
-   --font-family-script: 'Beaurencourt FY', cursive;
+   --font-family-script: 'Splash Script', cursive;
    --font-family-handwritten: 'Caveat', cursive;
    /* IBM Plex Serif, the featured-product size/price face on home. All that
      is left of the home-page Figma pass (2887:3776) after its type was
