@@ -360,9 +360,10 @@ a.mini-cart__promo-banner:hover {
   display: flex;
   flex-direction: column;
   row-gap: var(--cart-gutter);
-  /* No bottom gutter of its own: the pinned block below owns the gap at the scroll boundary,
-     so the spacing reads the same whether the list is mid-scroll or has run out. */
-  padding: var(--cart-gutter) var(--cart-gutter) 0;
+  /* No side gutter: the cards run the full width of the drawer. No bottom gutter
+     either -- the pinned block below owns the gap at the scroll boundary, so the
+     spacing reads the same whether the list is mid-scroll or has run out. */
+  padding: var(--cart-gutter) 0 0;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -385,12 +386,17 @@ a.mini-cart__promo-banner:hover {
   pointer-events: none;
 }
 
+/* Full-bleed: the cards span the drawer's whole width at every breakpoint, so
+   the side borders and the corner radius are dropped -- against the drawer edge
+   they read as a rendering seam rather than as the edge of a card. The top and
+   bottom rules stay, which is what still separates one card from the next. */
 .cart-card {
   display: block;
   padding: 1.2rem;
   background-color: var(--cart-surface);
   border: 0.1rem solid var(--cart-line);
-  border-radius: var(--cart-radius);
+  border-inline: 0;
+  border-radius: 0;
 }
 
 /* --------------------------------------------------------------------------
@@ -405,7 +411,9 @@ a.mini-cart__promo-banner:hover {
   display: flex;
   flex-direction: column;
   row-gap: var(--cart-gutter);
-  padding: var(--cart-gutter);
+  /* Side gutter dropped to match the scrolling pane above: every .cart-card
+     spans the drawer edge to edge. */
+  padding: var(--cart-gutter) 0;
   background-color: var(--cart-canvas);
 }
 
