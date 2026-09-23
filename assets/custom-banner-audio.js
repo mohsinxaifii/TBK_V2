@@ -22,6 +22,8 @@ const initBannerPlayback = (root) => {
     video.playsInline = true;
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
+    // Reveals it over the section's solid background (see custom-banner.css).
+    video.addEventListener('playing', () => video.classList.add('is-ready'), { once: true });
   });
 
   // Data Saver users get the poster until they touch the page.

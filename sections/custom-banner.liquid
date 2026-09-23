@@ -37,15 +37,17 @@
   {%- endif -%}
 
   <div class="custom-banner-sticky">
-    <div class="custom-banner-container{% if framed %} page-top-banner-container{% endif %}">
+    <div class="custom-banner-container{% if framed %} page-top-banner-container{% endif %}{% if show_video_audio_controls %} custom-banner-container--video{% endif %}">
       {%- comment -%}
         Both breakpoints' media sit in the markup and CSS toggles which one
         shows, so nothing here may fetch eagerly on its own: videos carry
         preload="none" and no autoplay attribute, and custom-banner-audio.js
         starts only the variant that is actually visible (see
-        initBannerPlayback). The poster is what paints first -- and what
-        stays up when iOS Low Power Mode refuses autoplay -- so it gets the
-        high-priority preload, scoped by media query to the one that shows.
+        initBannerPlayback). Until the video is actually playing the frame is
+        solid #570f13 -- the video (poster included) stays transparent and
+        fades in on its first `playing` event (.is-ready), so no poster or
+        half-loaded frame flashes in first. When iOS Low Power Mode refuses
+        autoplay it stays on that colour until the first tap starts it.
         Images get the same guarantee from <picture>: each swaps in a 1px
         blank at the other breakpoint, so the hidden one never downloads
         while the visible one still loads eagerly as the LCP candidate.
@@ -55,15 +57,6 @@
       {%- if section.settings.media_type == 'video' and section.settings.banner_video != blank -%}
         {%- assign desktop_video = section.settings.banner_video -%}
         {%- assign desktop_video_style = 'aspect-ratio: ' | append: desktop_video.aspect_ratio -%}
-        {%- if desktop_video.preview_image -%}
-          <link
-            rel="preload"
-            as="image"
-            href="{{ desktop_video.preview_image | image_url: width: 1920 }}"
-            media="(min-width: 750px)"
-            fetchpriority="high"
-          >
-        {%- endif -%}
         {{
           desktop_video
           | video_tag:
@@ -95,15 +88,6 @@
       {%- if section.settings.media_type == 'video' and section.settings.mobile_banner_video != blank -%}
         {%- assign mobile_video = section.settings.mobile_banner_video -%}
         {%- assign mobile_video_style = 'aspect-ratio: ' | append: mobile_video.aspect_ratio -%}
-        {%- if mobile_video.preview_image -%}
-          <link
-            rel="preload"
-            as="image"
-            href="{{ mobile_video.preview_image | image_url: width: 1080 }}"
-            media="(max-width: 749px)"
-            fetchpriority="high"
-          >
-        {%- endif -%}
         {{
           mobile_video
           | video_tag:
