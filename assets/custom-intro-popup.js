@@ -31,11 +31,7 @@
 
   function lockScroll() {
     scrollY = window.scrollY;
-<<<<<<< HEAD
     document.body.style.position = 'fixed';
-=======
-        document.body.style.position = 'fixed';
->>>>>>> eb7e8d0f901d824a4c29d168a99f81b2d34f36dc
     document.body.style.top = `-${scrollY}px`;
     document.body.style.left = '0';
     document.body.style.right = '0';
@@ -44,11 +40,7 @@
   }
 
   function unlockScroll() {
-<<<<<<< HEAD
     document.body.style.position = '';
-=======
-        document.body.style.position = '';
->>>>>>> eb7e8d0f901d824a4c29d168a99f81b2d34f36dc
     document.body.style.top = '';
     document.body.style.left = '';
     document.body.style.right = '';
