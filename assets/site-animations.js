@@ -9,8 +9,7 @@
  * sections inherits the treatment automatically.
  *
  * Coordination with existing scripts (never animate the same nodes):
- *   - custom-banner.js owns the hero media scale/darken + slide-over.
- *   - archive-hero-parallax.js owns the archive article hero.
+ *   - archive-hero-parallax.js owns the archive article hero's entrance.
  *   - custom-home-testimonials.js owns the testimonial cards.
  *   - custom-blogs-carousel.js owns the nodes INSIDE each slide.
  *   - blog-listing-header.js owns the expandable description's words.
@@ -696,12 +695,9 @@
   });
 
   /* ---- Blog listing grid (rituals, archives) ----
-   * Geometry-neutral by design: the section overlaps the pinned hero
-   * banner on rituals, where a lingering transform would hoist items
-   * into the positioned paint layer while the section background stays
-   * beneath the sticky hero. The whole reveal is a curtain clip on each
-   * item's media box (all item content lives inside it) — no transforms,
-   * and the CSS hover zoom on the images keeps working. */
+   * Geometry-neutral by design: the whole reveal is a curtain clip on
+   * each item's media box (all item content lives inside it) — no
+   * transforms, so the CSS hover zoom on the images keeps working. */
   register('.blog-listing-grid', {
     prep(ctx) {
       const s = ctx.root;
@@ -1273,8 +1269,8 @@
   };
 
   /* ================================================================ *
-   * Build phase — after every other DOMContentLoaded handler
-   * (custom-banner.js's layout pass shifts section positions).
+   * Build phase — after every other DOMContentLoaded handler, so any
+   * script that shifts section positions has already run.
    * ================================================================ */
   const build = () => {
     if (window.lenis && window.lenis.on) window.lenis.on('scroll', ScrollTrigger.update);
