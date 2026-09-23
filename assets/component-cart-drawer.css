@@ -189,20 +189,43 @@ details[open].menu-opening>.cart-drawer {
    Shell
    -------------------------------------------------------------------------- */
 
+/* ---- TBK skin --------------------------------------------------------- *
+ * The layout below is the ported cart unchanged; everything that carries the
+ * look of it comes through these tokens, so the whole drawer re-skins from
+ * this one block. The source's neutral greys are replaced by the site's cream
+ * and maroon: the cream is the surface, and the maroon does the work white and
+ * grey were doing there -- as a tint for rules and chips rather than as a flat
+ * fill, so the drawer stays light like the rest of the site.
+ *
+ * Radii come down from 1rem to the 4px the intro popup and buttons use, which
+ * is what makes the cards read as this theme's rather than the source's. They
+ * are two values here if you want them rounder again.
+ */
 .mini-cart {
   height: 100%;
 
-  --cart-canvas: #f4f5f7;
-  --cart-surface: #ffffff;
-  --cart-line: #e7e8ec;
-  --cart-line-strong: #d6d8de;
-  --cart-strong: #101114;
-  --cart-muted: #767a86;
-  --cart-chip: #f1f2f4;
+  --cart-canvas: #f6f1df;
+  --cart-surface: #fffdee;
+  --cart-line: rgba(87, 15, 19, 0.12);
+  --cart-line-strong: rgba(87, 15, 19, 0.26);
+  --cart-strong: #181818;
+  --cart-muted: rgba(24, 24, 24, 0.62);
+  --cart-chip: rgba(87, 15, 19, 0.07);
   --cart-success: #12894f;
-  --cart-radius: 1rem;
-  --cart-radius-sm: 0.7rem;
+  --cart-radius: 0.4rem;
+  --cart-radius-sm: 0.2rem;
   --cart-gutter: 1.2rem;
+
+  /* The source priced its lines in a --font-price-family only its own theme
+     defined; unmapped it would resolve to nothing here and those numbers would
+     fall back to the UA serif. Both faces are pointed at TBK's own tokens. */
+  --font-price-family: var(--font-family-body);
+
+  /* Dawn's body face is Assistant on this shop, but every custom section sets
+     Helvetica Neue explicitly, so the drawer would have been the one surface
+     in the theme still on Assistant. */
+  font-family: var(--font-family-body);
+  color: var(--cart-strong);
 }
 
 .mini-cart__inner {
@@ -228,7 +251,7 @@ details[open].menu-opening>.cart-drawer {
 
 .mini-cart__title {
   margin: 0;
-  font-family: var(--font-heading-family);
+  font-family: var(--font-family-display);
   font-size: 1.6rem;
   font-weight: 600;
   line-height: 1.2;
@@ -278,7 +301,7 @@ details[open].menu-opening>.cart-drawer {
   font-size: 1.4rem;
   font-weight: 400;
   line-height: 1.3;
-  color: #ffffff;
+  color: #fffdee;
   background-color: var(--cart-accent);
   text-decoration: none;
 }
@@ -367,7 +390,7 @@ a.mini-cart__promo-banner:hover {
 
 .cart-card__title {
   margin: 0 0 1.2rem;
-  font-family: var(--font-heading-family);
+  font-family: var(--font-family-display);
   font-size: 1.5rem;
   font-weight: 600;
   line-height: 1.2;
@@ -484,7 +507,7 @@ a.mini-cart__promo-banner:hover {
 .gift-tier-progress__tier.is-unlocked .gift-tier-progress__dot {
   background-color: var(--cart-accent);
   box-shadow: none;
-  color: #ffffff;
+  color: #fffdee;
 }
 
 .gift-tier-progress__label {
@@ -582,7 +605,7 @@ a.mini-cart__promo-banner:hover {
 }
 
 .cart-item__title {
-  font-family: var(--font-heading-family);
+  font-family: var(--font-family-display);
   font-size: 1.4rem;
   font-weight: 400;
   line-height: 1.3;
@@ -672,14 +695,14 @@ a.mini-cart__promo-banner:hover {
   height: var(--discount-tab-height);
   padding: 0 1.1rem;
   border-radius: 0 0 10px 10px;
-  font-family: var(--font-heading-family);
+  font-family: var(--font-family-display);
   font-size: 1.1rem;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0.02em;
   height: 20px;
   white-space: nowrap;
-  color: #ffffff;
+  color: #fffdee;
   background-color: var(--cart-accent);
   margin-bottom: -10px;
 }
@@ -690,7 +713,7 @@ a.mini-cart__promo-banner:hover {
   flex: 0 0 auto;
   width: 12px;
   height: 10px;
-  background-color: #00059b
+  background-color: #570f13
 }
 
 .cart-item__discount-tab-edge:first-child {
@@ -1240,7 +1263,7 @@ a.mini-cart__promo-banner:hover {
 }
 
 .cart-recommendations__title {
-  font-family: var(--font-heading-family);
+  font-family: var(--font-family-display);
   font-size: 1.3rem;
   line-height: 1.3;
   letter-spacing: 0;
@@ -1284,7 +1307,7 @@ a.mini-cart__promo-banner:hover {
   margin-inline-start: 0.6rem;
   border-radius: 50%;
   cursor: pointer;
-  color: #ffffff;
+  color: #fffdee;
   background-color: var(--cart-accent);
   transition: opacity var(--duration-default) ease;
 }
@@ -1511,13 +1534,13 @@ a.mini-cart__promo-banner:hover {
   height: 20px;
   padding: 0 1.1rem;
   border-radius: 0 0 10px 10px;
-  font-family: var(--font-heading-family);
+  font-family: var(--font-family-display);
   font-size: 1.1rem;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0.02em;
   white-space: nowrap;
-  color: #ffffff;
+  color: #fffdee;
   background-color: var(--cart-success);
   margin-bottom: -10px;
 }
@@ -1666,7 +1689,7 @@ a.mini-cart__promo-banner:hover {
   text-align: start;
   background-color: var(--cart-strong);
   border-color: var(--cart-strong);
-  color: #ffffff;
+  color: #fffdee;
 }
 
 .mini-cart__footer .button-container .button[name='checkout'] .button__label {
