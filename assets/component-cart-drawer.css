@@ -218,6 +218,14 @@ details[open].menu-opening>.cart-drawer {
   --cart-muted: rgba(24, 24, 24, 0.62);
   --cart-chip: rgba(87, 15, 19, 0.07);
   --cart-success: #12894f;
+  /* The accent the source theme drove from a colour setting (its default was a
+     bright blue). It is referenced sixteen times across this file -- the free
+     shipping bar, the gift-tier dots, focus rings, the quantity popover and the
+     round + on each recommendation card -- and was never defined on this side,
+     so every one of those declarations was invalid: the + button in particular
+     came out transparent with a cream icon on a cream card, i.e. invisible.
+     Brand maroon here, to sit with the rest of the theme. */
+  --cart-accent: #570f13;
   --cart-radius: 0.4rem;
   --cart-radius-sm: 0.2rem;
   --cart-gutter: 1.2rem;
