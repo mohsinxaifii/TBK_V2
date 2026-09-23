@@ -641,10 +641,6 @@ theme.config = theme.config || {
     /iP(hone|ad|od)/.test(window.navigator.userAgent) ||
     (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1),
 };
-theme.routes = theme.routes || {
-  root_url: (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/',
-};
-
 class CartDrawer extends MenuDrawer {
   static CLASS_OPEN = 'mini-cart--open';
   static CLASS_OPENING = 'mini-cart--opening';
