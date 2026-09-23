@@ -829,6 +829,75 @@ class DrawerCloseButton extends HTMLElement {
 }
 customElements.define('drawer-close-button', DrawerCloseButton);
 
+/*
+  The round + on each recommendation card. Without it those cards rendered as
+  a bare link with no add button at all.
+*/
+class AddToCart extends HTMLElement {
+  constructor() {
+    super();
+
+    this.miniCart = document.querySelector('mini-cart');
+    this.addEventListener('click', this.onClickHandler.bind(this));
+  }
+
+  onClickHandler() {
+    const variantId = this.dataset.variantId;
+
+    if (variantId) {
+      if (document.body.classList.contains('template-cart') || !theme.shopSettings.cartDrawer) {
+        Shopify.postLink(theme.routes.cart_add_url, {
+          parameters: {
+            id: variantId,
+            quantity: 1
+          },
+        });
+        return;
+      }
+
+      this.setAttribute('disabled', true);
+      this.classList.add('loading');
+      const sections = this.miniCart ? this.miniCart.getSectionsToRender().map((section) => section.id) : [];
+
+      const body = JSON.stringify({
+        id: variantId,
+        quantity: 1,
+        sections: sections,
+        sections_url: window.location.pathname
+      });
+
+      fetch(`${theme.routes.cart_add_url}`, { ...fetchConfig('javascript'), body })
+        .then((response) => response.json())
+        .then((parsedState) => {
+          if (parsedState.status === 422) {
+             document.dispatchEvent(new CustomEvent('ajaxProduct:error', {
+                detail: {
+                  errorMessage: parsedState.description
+                }
+              }));
+           }
+           else {
+            this.miniCart && this.miniCart.renderContents(parsedState);
+
+             document.dispatchEvent(new CustomEvent('ajaxProduct:added', {
+              detail: {
+                product: parsedState
+              }
+            }));
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+        })
+        .finally(() => {
+          this.classList.remove('loading');
+          this.removeAttribute('disabled');
+        });
+    }
+  }
+}
+customElements.define('add-to-cart', AddToCart);
+
 class FormState extends HTMLElement {
   constructor() {
     super();
