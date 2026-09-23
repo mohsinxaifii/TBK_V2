@@ -6,24 +6,37 @@ class MiniCart extends HTMLElement {
   connectedCallback() {
     this.header = document.querySelector('sticky-header');
     this.drawer = document.querySelector('theme-cart-drawer');
-    new IntersectionObserver(this.handleIntersection.bind(this)).observe(this);
+
+    /*
+      The source theme waited for an IntersectionObserver to fire before
+      fetching the cart's markup. That never works here: the panel is
+      position:fixed and translated fully off the right edge, so it does not
+      intersect the viewport until it is already opening -- which meant the
+      first open showed a spinner and then waited on a round trip before any
+      cart appeared. Fetching it up front during idle time instead makes the
+      first open as immediate as every one after it, and still keeps the
+      request out of the way of the page's own load.
+    */
+    this.requestContents();
   }
 
-  handleIntersection(entries, observer) {
-    if (!entries[0].isIntersecting) return;
-    observer.unobserve(this);
+  requestContents() {
+    if (this.contentsRequested) return this.contentsPromise;
+    this.contentsRequested = true;
 
-    fetch(this.dataset.url)
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('mini-cart').innerHTML =
-          this.getSectionInnerHTML(html, '.shopify-section');
-          
-          document.dispatchEvent(new CustomEvent('cartdrawer:opened'));
+    this.contentsPromise = fetch(this.dataset.url)
+      .then((response) => response.text())
+      .then((html) => {
+        this.innerHTML = this.getSectionInnerHTML(html, '.shopify-section');
+        document.dispatchEvent(new CustomEvent('cartdrawer:opened'));
       })
-      .catch(e => {
+      .catch((e) => {
+        // Let a later open try again rather than leaving the drawer empty.
+        this.contentsRequested = false;
         console.error(e);
       });
+
+    return this.contentsPromise;
   }
 
   open() {
@@ -31,7 +44,10 @@ class MiniCart extends HTMLElement {
     if (detailsElement.hasAttribute('open')) {
       return;
     }
-    
+
+    // If the idle fetch has not landed yet, the drawer still opens straight
+    // away and fills in as soon as it does -- the spinner is the placeholder.
+    this.requestContents();
     this.drawer.openMenuDrawer();
   }
 
