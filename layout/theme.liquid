@@ -566,12 +566,15 @@
     </script>
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
 
+    {%- render 'cart-js-variables' -%}
+
     {%- if settings.cart_type == 'drawer' -%}
       {{ 'component-cart-drawer.css' | asset_url | stylesheet_tag }}
       {{ 'component-cart.css' | asset_url | stylesheet_tag }}
       {{ 'component-totals.css' | asset_url | stylesheet_tag }}
       {{ 'component-price.css' | asset_url | stylesheet_tag }}
       {{ 'component-discounts.css' | asset_url | stylesheet_tag }}
+      {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
 
     {%- unless settings.type_body_font.system? -%}
@@ -642,10 +645,6 @@
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
-
-    {%- if settings.cart_type == 'drawer' -%}
-      {%- render 'cart-drawer' -%}
-    {%- endif -%}
 
     {% sections 'header-group' %}
 
@@ -725,7 +724,26 @@
     {%- endif -%}
 
     {%- if settings.cart_type == 'drawer' -%}
+      {%- comment -%}
+        cart-drawer.js defines <mini-cart>, the lazily-fetched drawer body; the
+        open/close controller <theme-cart-drawer> lives in global.js. The rest
+        are the cart's own behaviours: gift-tier progress and the terms
+        checkbox, the recommendations rail, and the variant picker on a cart
+        line. gift-tiers.js is loaded for the terms checkbox regardless of
+        whether gift tiers are configured -- it defines both elements.
+      {%- endcomment -%}
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'gift-tiers.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'cart-recommendations.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'cart-variant-picker.js' | asset_url }}" defer="defer"></script>
+      {%- comment -%} <gift-note>, the drawer's personalised-message field. {%- endcomment -%}
+      <script src="{{ 'gift-wrapping.js' | asset_url }}" defer="defer"></script>
+      {%- comment -%}
+        <quantity-popover> wraps every quantity stepper in the drawer. It was
+        only ever loaded by the cart page and the product grids, so the
+        steppers were dead on every other page.
+      {%- endcomment -%}
+      <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
   </body>
 </html>

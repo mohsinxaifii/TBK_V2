@@ -2,18 +2,8 @@
 <script src="{{ 'custom-intro-popup.js' | asset_url }}" defer="defer"></script>
 
 {%- liquid
-  assign cta_1_url = section.settings.cta_1_link | default: '/collections/the-bhandaar'
-  assign cta_2_url = section.settings.cta_2_link | default: '/pages/archives'
+  assign cta_url = section.settings.cta_1_link | default: '/collections/the-bhandaar'
 -%}
-{%- comment -%}
-  Split on the newline itself rather than running newline_to_br and replacing
-  its output: the break needs a class on it (mobile drops the forced split and
-  lets the heading wrap), and matching the filter's exact `<br />` spelling is
-  the kind of thing that breaks silently.
-{%- endcomment -%}
-{%- assign newline = '
-' -%}
-{%- assign heading_lines = section.settings.heading | strip | split: newline -%}
 
 {%- if section.settings.enabled -%}
   <div
@@ -36,26 +26,14 @@
       aria-modal="true"
       aria-labelledby="CustomIntroPopupHeading-{{ section.id }}"
     >
-      <button
-        type="button"
-        class="custom-intro-popup__close"
-        data-custom-intro-popup-close
-        aria-label="{{ 'accessibility.close' | t }}"
-      >
-        <svg class="custom-intro-popup__close-icon" viewBox="0 0 14.5 13.5" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0.750004 12.75L13.75 0.750004M0.750004 0.750004L13.75 12.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-      </button>
-
       <div class="custom-intro-popup__media">
         {%- if section.settings.image != blank -%}
           {%- comment -%}
-            Both images are the Figma frames exported with the copy and close
-            icon hidden, at 2x: 1728x1008 for the 864x504 desktop card and
-            708x1304 for the 354x652 mobile one. They are the card's
-            background, and the blurred maroon scrim behind the text is baked
-            into them, so nothing here re-crops -- the CSS fills a box of the
-            same ratio.
+            The photograph is a 3:4 portrait placed over the left of the card
+            rather than a full-bleed background — the right side is the card's
+            own maroon. Supply it plain: the falloff where the two meet is the
+            __scrim layer below, a real blurred rectangle as in the design
+            (3322:3709 / 3330:3765), not baked into the export.
 
             Eager, despite being off-screen: the overlay starts at display:none,
             and browsers don't fetch lazy images inside a hidden box — the photo
@@ -67,22 +45,22 @@
               <source
                 media="(max-width: 749px)"
                 srcset="
-                  {{ section.settings.image_mobile | image_url: width: 354 }} 354w,
-                  {{ section.settings.image_mobile | image_url: width: 708 }} 708w
+                  {{ section.settings.image_mobile | image_url: width: 601 }} 601w,
+                  {{ section.settings.image_mobile | image_url: width: 1202 }} 1202w
                 "
-                sizes="354px"
+                sizes="601px"
                 width="{{ section.settings.image_mobile.width }}"
                 height="{{ section.settings.image_mobile.height }}"
               >
             {%- endif -%}
             <img
               class="custom-intro-popup__image"
-              src="{{ section.settings.image | image_url: width: 864 }}"
+              src="{{ section.settings.image | image_url: width: 609 }}"
               srcset="
-                {{ section.settings.image | image_url: width: 864 }} 864w,
-                {{ section.settings.image | image_url: width: 1728 }} 1728w
+                {{ section.settings.image | image_url: width: 609 }} 609w,
+                {{ section.settings.image | image_url: width: 1218 }} 1218w
               "
-              sizes="864px"
+              sizes="609px"
               width="{{ section.settings.image.width }}"
               height="{{ section.settings.image.height }}"
               alt="{{ section.settings.image.alt | escape }}"
@@ -91,28 +69,58 @@
             >
           </picture>
         {%- endif -%}
+        <span class="custom-intro-popup__scrim"></span>
       </div>
+
+      <img
+        class="custom-intro-popup__wordmark"
+        src="{{ 'intro-popup-wordmark.svg' | asset_url }}"
+        alt=""
+        width="132"
+        height="68"
+        aria-hidden="true"
+      >
+
+      <button
+        type="button"
+        class="custom-intro-popup__close"
+        data-custom-intro-popup-close
+        aria-label="{{ 'accessibility.close' | t }}"
+      >
+        <svg class="custom-intro-popup__close-icon" viewBox="0 0 14.5 13.5" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0.750004 12.75L13.75 0.750004M0.750004 0.750004L13.75 12.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      {%- comment -%}
+        The two four-point stars. Desktop stacks them down the left edge of the
+        photo (3231:5352); mobile puts them in the bottom corners under the
+        button (3231:5330). Absolute at both sizes so one pair of elements
+        serves both, with the card's bottom padding on mobile keeping the copy
+        clear of them.
+      {%- endcomment -%}
+      <img
+        class="custom-intro-popup__ornament custom-intro-popup__ornament--start"
+        src="{{ 'intro-popup-ornament.svg' | asset_url }}"
+        alt=""
+        width="19"
+        height="19"
+        aria-hidden="true"
+      >
+      <img
+        class="custom-intro-popup__ornament custom-intro-popup__ornament--end"
+        src="{{ 'intro-popup-ornament.svg' | asset_url }}"
+        alt=""
+        width="19"
+        height="19"
+        aria-hidden="true"
+      >
 
       <div class="custom-intro-popup__content">
         <div class="custom-intro-popup__text">
           {%- if section.settings.heading != blank -%}
             <h2 class="custom-intro-popup__heading" id="CustomIntroPopupHeading-{{ section.id }}">
-              {%- for line in heading_lines -%}
-                {{- line | strip | escape -}}
-                {%- unless forloop.last -%}
-                  {%- comment -%}
-                    The space after the <br> is load-bearing. Mobile hides the
-                    break with display:none, and because the lines were split
-                    on the newline and stripped, there is otherwise no
-                    whitespace at all between them -- the heading ran together
-                    as "Welcome toThe Bikaneri Kitchen!". On desktop the break
-                    still fires and the space, now first on the new line, is
-                    collapsed away by normal whitespace processing, so it costs
-                    nothing there.
-                  {%- endcomment -%}
-                  <br class="custom-intro-popup__break">{{ ' ' }}
-                {%- endunless -%}
-              {%- endfor -%}
+              {{- section.settings.heading | escape -}}
             </h2>
           {%- endif -%}
           {%- if section.settings.body != blank -%}
@@ -120,18 +128,25 @@
           {%- endif -%}
         </div>
 
-        <div class="custom-intro-popup__actions">
-          {%- if section.settings.cta_1_label != blank -%}
-            <a class="custom-intro-popup__cta custom-intro-popup__cta--primary" href="{{ cta_1_url }}">
-              {{- section.settings.cta_1_label -}}
+        {%- if section.settings.welcome != blank -%}
+          <p class="custom-intro-popup__welcome">{{ section.settings.welcome | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.cta_1_label != blank -%}
+          <div class="custom-intro-popup__actions">
+            <a class="custom-intro-popup__cta" href="{{ cta_url }}">
+              <span class="custom-intro-popup__cta-label">{{ section.settings.cta_1_label }}</span>
+              <img
+                class="custom-intro-popup__cta-arrow"
+                src="{{ 'intro-popup-arrow.svg' | asset_url }}"
+                alt=""
+                width="24.4"
+                height="10.3095"
+                aria-hidden="true"
+              >
             </a>
-          {%- endif -%}
-          {%- if section.settings.cta_2_label != blank -%}
-            <a class="custom-intro-popup__cta custom-intro-popup__cta--secondary" href="{{ cta_2_url }}">
-              {{- section.settings.cta_2_label -}}
-            </a>
-          {%- endif -%}
-        </div>
+          </div>
+        {%- endif -%}
       </div>
     </div>
   </div>
@@ -184,54 +199,50 @@
       "type": "textarea",
       "id": "heading",
       "label": "Heading",
-      "default": "Welcome to\nThe Bikaneri Kitchen!",
-      "info": "Press Enter/Return to force a line break. The break is ignored on mobile, where the heading wraps on its own."
+      "default": "Some doors open into a place. Some open into a world.",
+      "info": "Wraps on its own at both sizes — no manual line breaks needed."
     },
     {
       "type": "textarea",
       "id": "body",
       "label": "Body text",
-      "default": "A place where preparations are crafted by hand and stories are preserved through time."
+      "default": "Ours opens into Bikaner.\nIts kitchens, its people, its stories, and the tastes they have carried for generations.",
+      "info": "Press Enter/Return for a line break."
+    },
+    {
+      "type": "text",
+      "id": "welcome",
+      "label": "Welcome line",
+      "default": "Welcome to The Bikaneri Kitchen",
+      "info": "The bold line between the body copy and the button."
     },
     {
       "type": "image_picker",
       "id": "image",
       "label": "Image (desktop)",
-      "info": "Shown at 432×504, so supply it already cropped at that ratio — it is not cropped again."
+      "info": "Fills the 864×504 card. Supply the plain photograph — the maroon falloff behind the text is drawn by the theme, so an export with it already baked in will read twice as dark."
     },
     {
       "type": "image_picker",
       "id": "image_mobile",
       "label": "Image (mobile)",
-      "info": "Shown at 330×326. Falls back to the desktop image, which would letterbox — supply this one."
+      "info": "Fills the 354×714 card. Falls back to the desktop image, which would crop heavily — supply this one."
     },
     {
       "type": "header",
-      "content": "Buttons"
+      "content": "Button"
     },
     {
       "type": "text",
       "id": "cta_1_label",
-      "label": "Primary button label",
-      "default": "Explore The Shop"
+      "label": "Button label",
+      "default": "Step Inside"
     },
     {
       "type": "url",
       "id": "cta_1_link",
-      "label": "Primary button link",
+      "label": "Button link",
       "info": "Defaults to /collections/the-bhandaar when left empty."
-    },
-    {
-      "type": "text",
-      "id": "cta_2_label",
-      "label": "Secondary button label",
-      "default": "Visit The Archive"
-    },
-    {
-      "type": "url",
-      "id": "cta_2_link",
-      "label": "Secondary button link",
-      "info": "Defaults to /pages/archives when left empty."
     }
   ],
   "presets": [

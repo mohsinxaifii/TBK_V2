@@ -246,7 +246,7 @@ class QuantityInput extends HTMLElement {
     event.preventDefault();
     const previousValue = this.input.value;
 
-    if (event.target.name === 'plus') {
+    if (event.currentTarget.name === 'plus') {
       if (parseInt(this.input.dataset.min) > parseInt(this.input.step) && this.input.value == 0) {
         this.input.value = this.input.dataset.min;
       } else {
@@ -616,6 +616,397 @@ class HeaderDrawer extends MenuDrawer {
 }
 
 customElements.define('header-drawer', HeaderDrawer);
+
+/* ---- Cart drawer ------------------------------------------------------ *
+ * The mini-cart's open/close controller, ported from the beyondbeyond cart.
+ * MenuDrawer already gives the details/summary toggle and the focus trap, so
+ * this only adds what that cart needs on top:
+ *
+ *  - the page-scroll lock in TBK's own terms. The base class locks <body>,
+ *    but theme.liquid sets overflow-x on <html>, so it is <html>'s overflow
+ *    that governs the page; and Lenis drives wheel scrolling itself and
+ *    ignores overflow entirely, so it has to be stopped explicitly. Same
+ *    treatment HeaderDrawer already applies for the menu.
+ *  - the iOS body pin. iOS Safari treats `overflow: hidden` on the body as a
+ *    suggestion, and that stray scroll is also what collapses its toolbars
+ *    and resizes the viewport out from under the drawer.
+ *  - the `cart:refresh` re-render, which swaps the mini-cart and the icon
+ *    bubble without a page load.
+ */
+window.theme = window.theme || {};
+theme.config = theme.config || {
+  // iPadOS reports itself as a Mac, so touch points are what separate it from
+  // a desktop Safari.
+  isIOS:
+    /iP(hone|ad|od)/.test(window.navigator.userAgent) ||
+    (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1),
+};
+class CartDrawer extends MenuDrawer {
+  static CLASS_OPEN = 'mini-cart--open';
+  static CLASS_OPENING = 'mini-cart--opening';
+
+  constructor() {
+    super();
+    this.onCartRefreshListener = this.onCartRefresh.bind(this);
+    this.onPageShowListener = this.onPageShow.bind(this);
+  }
+
+  connectedCallback() {
+    document.addEventListener('cart:refresh', this.onCartRefreshListener);
+    window.addEventListener('pageshow', this.onPageShowListener);
+
+    // The drawer's X is a <drawer-close-button>, which only announces itself
+    // with this event and leaves the closing to whatever contains it.
+    this.addEventListener('drawer:force-close', (event) => {
+      event.stopPropagation();
+      this.closeMenuDrawer(event, this.querySelector('summary'));
+    });
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener('cart:refresh', this.onCartRefreshListener);
+    window.removeEventListener('pageshow', this.onPageShowListener);
+  }
+
+  // Leaving the page with the drawer open leaves the body pinned, and Safari's
+  // back button restores that state from the bfcache -- the page would come
+  // back unscrollable.
+  onPageShow(event) {
+    if (event.persisted) {
+      document.body.classList.remove(CartDrawer.CLASS_OPEN, CartDrawer.CLASS_OPENING);
+      this.unlockScroll();
+      this.unlockPageScroll();
+    }
+  }
+
+  // MiniCart.open() calls this with no argument, so the summary is resolved
+  // here rather than being required of the caller.
+  // MiniCart.open() calls this with no argument, so the summary is resolved
+  // here rather than being required of the caller.
+  openMenuDrawer(summaryElement = false) {
+    const summary = summaryElement || this.querySelector('summary');
+    if (!summary) return;
+
+    // Pinning last: the base class measures the scrollbar and the header's
+    // position first, and both read differently once the body is out of flow.
+    super.openMenuDrawer(summary);
+
+    // The cart's stylesheet keys the backdrop off this class on <body>. The
+    // source theme applied it through a class-state system Dawn's MenuDrawer
+    // does not have, so without this the drawer opened with nothing behind it.
+    document.body.classList.add(CartDrawer.CLASS_OPEN);
+
+    this.lockPageScroll();
+    this.lockScroll();
+  }
+
+  closeMenuDrawer(event, elementToFocus = false) {
+    super.closeMenuDrawer(event, elementToFocus);
+
+    // The base class only closes when it is handed an event; without one the
+    // drawer stays open, so the locks and the backdrop have to stay on too.
+    if (event !== undefined) {
+      document.body.classList.remove(CartDrawer.CLASS_OPEN, CartDrawer.CLASS_OPENING);
+      this.unlockPageScroll();
+      this.unlockScroll();
+    }
+  }
+
+  /*
+    Hiding the page's overflow takes the scrollbar away with it, and the layout
+    then widens into the space it occupied -- the whole page, header included,
+    jumps sideways at the moment the drawer opens. Holding that width back as
+    padding keeps everything still. The cart's stylesheet also compensates the
+    header and announcement bar off --scrollbar-width, which nothing in this
+    theme had ever set, so those rules were inert until now.
+  */
+  lockPageScroll() {
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
+    document.documentElement.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) document.documentElement.style.paddingInlineEnd = `${scrollbarWidth}px`;
+    if (window.lenis) window.lenis.stop();
+  }
+
+  unlockPageScroll() {
+    document.documentElement.style.overflow = '';
+    document.documentElement.style.paddingInlineEnd = '';
+    document.documentElement.style.removeProperty('--scrollbar-width');
+    if (window.lenis) window.lenis.start();
+  }
+
+  lockScroll() {
+    if (!theme.config.isIOS || this.scrollLocked) return;
+
+    this.lockedScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    document.body.style.top = `-${this.lockedScrollTop}px`;
+    document.body.classList.add('mini-cart--scroll-locked');
+    this.scrollLocked = true;
+  }
+
+  unlockScroll() {
+    if (!this.scrollLocked) return;
+
+    this.scrollLocked = false;
+    document.body.classList.remove('mini-cart--scroll-locked');
+    document.body.style.top = '';
+    window.scrollTo(0, this.lockedScrollTop);
+  }
+
+  async onCartRefresh(event) {
+    const miniCartElement = document.getElementById('mini-cart');
+    if (!miniCartElement) return;
+
+    const headerSectionId = this.getAttribute('data-header-section-id');
+    const rootUrl = theme.routes.root_url;
+
+    try {
+      const [miniCartResponse, headerResponse] = await Promise.all([
+        fetch(`${rootUrl}?section_id=mini-cart`),
+        fetch(`${rootUrl}?section_id=${headerSectionId}`),
+      ]);
+
+      if (!miniCartResponse.ok || !headerResponse.ok) {
+        throw new Error('Failed to fetch cart sections');
+      }
+
+      const [miniCartText, headerText] = await Promise.all([miniCartResponse.text(), headerResponse.text()]);
+
+      const parser = new DOMParser();
+      const miniCartSection = parser
+        .parseFromString(miniCartText, 'text/html')
+        .getElementById('shopify-section-mini-cart');
+      const cartIconBubble = parser.parseFromString(headerText, 'text/html').getElementById('cart-icon-bubble');
+
+      if (miniCartSection) miniCartElement.innerHTML = miniCartSection.innerHTML;
+
+      const cartIconBubbleElement = document.getElementById('cart-icon-bubble');
+      if (cartIconBubbleElement && cartIconBubble) {
+        cartIconBubbleElement.innerHTML = cartIconBubble.innerHTML;
+      }
+
+      if (event?.detail?.open === true) this.openMenuDrawer();
+    } catch (error) {
+      console.error('Error refreshing cart:', error);
+    }
+  }
+}
+customElements.define('theme-cart-drawer', CartDrawer);
+
+/*
+  Storage guard used by the ported cart.js (it remembers an applied discount
+  code) and gift-tiers.js (it remembers the terms checkbox). It lives in the
+  source theme's global.js; without it both threw ReferenceError on every cart
+  render, which is what left the discount field and the terms checkbox dead.
+*/
+function isStorageSupported(type) {
+  // Return false if we are in an iframe without access to sessionStorage
+  if (window.self !== window.top) return false;
+
+  const testKey = 'tbk:test';
+  const storage = type === 'session' ? window.sessionStorage : window.localStorage;
+
+  try {
+    storage.setItem(testKey, '1');
+    storage.removeItem(testKey);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+/* ---- Elements the ported cart markup depends on ----------------------- *
+ * These three live in the source theme's global.js and are referenced right
+ * through the cart's snippets, so the drawer's close button, its prices and
+ * its form states are inert without them.
+ */
+class DrawerCloseButton extends HTMLElement {
+  constructor() {
+    super();
+
+    this.addEventListener('click', () => this.dispatchEvent(new CustomEvent('drawer:force-close', { bubbles: true, cancelable: true, composed: true })));
+  }
+}
+customElements.define('drawer-close-button', DrawerCloseButton);
+
+/*
+  The round + on each recommendation card. Without it those cards rendered as
+  a bare link with no add button at all.
+*/
+class AddToCart extends HTMLElement {
+  constructor() {
+    super();
+
+    this.miniCart = document.querySelector('mini-cart');
+    this.addEventListener('click', this.onClickHandler.bind(this));
+  }
+
+  onClickHandler() {
+    const variantId = this.dataset.variantId;
+
+    if (variantId) {
+      if (document.body.classList.contains('template-cart') || !theme.shopSettings.cartDrawer) {
+        Shopify.postLink(theme.routes.cart_add_url, {
+          parameters: {
+            id: variantId,
+            quantity: 1
+          },
+        });
+        return;
+      }
+
+      this.setAttribute('disabled', true);
+      this.classList.add('loading');
+      const sections = this.miniCart ? this.miniCart.getSectionsToRender().map((section) => section.id) : [];
+
+      const body = JSON.stringify({
+        id: variantId,
+        quantity: 1,
+        sections: sections,
+        sections_url: window.location.pathname
+      });
+
+      fetch(`${theme.routes.cart_add_url}`, { ...fetchConfig('javascript'), body })
+        .then((response) => response.json())
+        .then((parsedState) => {
+          if (parsedState.status === 422) {
+             document.dispatchEvent(new CustomEvent('ajaxProduct:error', {
+                detail: {
+                  errorMessage: parsedState.description
+                }
+              }));
+           }
+           else {
+            this.miniCart && this.miniCart.renderContents(parsedState);
+
+             document.dispatchEvent(new CustomEvent('ajaxProduct:added', {
+              detail: {
+                product: parsedState
+              }
+            }));
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+        })
+        .finally(() => {
+          this.classList.remove('loading');
+          this.removeAttribute('disabled');
+        });
+    }
+  }
+}
+customElements.define('add-to-cart', AddToCart);
+
+class FormState extends HTMLElement {
+  constructor() {
+    super();
+
+    this.formInputs = this.querySelectorAll('input,select,textarea');
+    this.form = this.querySelector('form');
+
+    this.formInputs.forEach((input) => {
+      input.addEventListener('input', this.onInputChange.bind(this));
+      input.addEventListener('blur', this.onInputChange.bind(this));
+    });
+
+    if (this.form) this.form.addEventListener('submit', this.onSubmitHandler.bind(this));
+  }
+
+  onInputChange(event) {
+    this.handleInputCheck(event.target);
+  }
+
+  onSubmitHandler(event) {
+    let valid = !0;
+
+    this.formInputs.forEach((input) => {
+      if (!this.handleInputCheck(input)) {
+        valid = !1;
+      }
+    });
+
+    if (!valid) {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  handleInputCheck(input) {
+    if (input.classList.contains('required')) {
+
+      if (input.value.length === 0 || input.value === input.dataset.empty) {
+        input.classList.remove('valid');
+        input.classList.add('invalid');
+        
+        return !1;
+      }
+      else {
+        input.classList.remove('invalid');
+        input.classList.add('valid');
+
+        return !0;
+      }
+    }
+
+    return !0;
+  }
+}
+customElements.define('form-state', FormState);
+
+class PriceMoney extends HTMLElement {
+  constructor() {
+    super();
+
+    if (this.shouldInit()) {
+      this.init();
+    }
+  }
+
+  shouldInit() {
+    if (document.body.dataset.priceSuperscript === undefined) {
+      return false;
+    }  
+
+    const moneyFormat = theme.shopSettings.moneyFormat.toLowerCase();
+    if (moneyFormat.indexOf('class=') !== -1) {
+      return false;
+    }
+    
+    return true;
+  }
+
+  init() {
+    const currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,TRY,UYU,VES,VND'.split(',');
+    const symbol = theme.shopSettings.moneyFormat.replace(/\{{.*}}/, '').trim();
+    const bdi = this.querySelector('bdi');
+    const price = bdi.textContent.replace(theme.shopSettings.isoCode,'');
+    let html = price.replace(' ', '');
+    let money_symbol_decimal = '.';
+    if (currencies_using_comma_decimals.includes(theme.shopSettings.isoCode)) {
+      money_symbol_decimal = ',';
+    }
+    if (price.includes(money_symbol_decimal)) {
+      if (price.lastIndexOf(symbol) + symbol.length === price.length) {
+        const price_without_symbol = price.slice(0, price.lastIndexOf(symbol));
+        const price_without_decimal = price.slice(0, price.lastIndexOf(money_symbol_decimal));
+        const decimal = price_without_symbol.replace(price_without_decimal, '').trim();
+        html = html.replace(decimal, `<sup class="price__suffix">${decimal}</sup>`);
+      }
+      else {
+        const price_without_decimal = price.slice(0, price.lastIndexOf(money_symbol_decimal));
+        const decimal = price.replace(price_without_decimal, '').trim();
+        html = html.replace(decimal, `<sup class="price__suffix">${decimal}</sup>`);
+      }
+    }
+    html = html.replace(symbol, `<span class="price__prefix">${symbol}</span>`);
+    if(theme.shopSettings.currencyCode){
+       html = html + " " + theme.shopSettings.isoCode;
+    }
+    bdi.innerHTML = html;
+  }
+}
+customElements.define('price-money', PriceMoney);
 
 class ModalDialog extends HTMLElement {
   constructor() {

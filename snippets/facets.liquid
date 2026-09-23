@@ -144,7 +144,7 @@
                   {%- for filter in results.filters -%}
                     {%- if filter.type != 'price_range' -%}
                       <fieldset class="shop-facets__group">
-                        <legend class="shop-facets__group-label">{{ filter.label | escape }}</legend>
+                        <legend class="shop-facets__group-label">Pack Size</legend>
                         {%- for value in filter.values -%}
                           {%- liquid
                             assign input_id = 'ShopFilter-' | append: filter.param_name | escape | append: '-' | append: forloop.index

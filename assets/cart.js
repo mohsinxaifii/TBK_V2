@@ -4,49 +4,24 @@ class CartRemoveButton extends HTMLElement {
 
     this.addEventListener('click', (event) => {
       event.preventDefault();
-      const cartItems = this.closest('cart-items') || this.closest('cart-drawer-items');
-      cartItems.updateQuantity(this.dataset.index, 0, event);
+      this.closest('cart-items').updateQuantity(this.dataset.index, 0);
     });
   }
 }
-
 customElements.define('cart-remove-button', CartRemoveButton);
 
-class CartItems extends window.StandardEvents.createViewEventElement(HTMLElement) {
-  constructor() {
-    super();
-    this.lineItemStatusElement =
-      document.getElementById('shopping-cart-line-item-status') || document.getElementById('CartDrawer-LineItemStatus');
-
-    const debouncedOnChange = debounce((event) => {
-      this.onChange(event);
-    }, ON_CHANGE_DEBOUNCE_TIMER);
-
-    this.addEventListener('change', debouncedOnChange.bind(this));
-  }
-
-  cartUpdateUnsubscriber = undefined;
-
-  static pendingCartDataPromise = null;
-
-  connectedCallback() {
-    // The factory base class auto-dispatches cart:view from the
-    // `view-event-payload` attribute (Liquid filter output). The drawer
-    // sets `view-event-trigger="manual"` to skip auto-dispatch.
-    super.connectedCallback();
-
-    this.cartUpdateUnsubscriber = subscribe(PUB_SUB_EVENTS.cartUpdate, (event) => {
-      if (event.source === 'cart-items') return;
-      return this.onCartUpdate();
-    });
-  }
-
-  // Fetches the full cart shape (used to resolve the cart:lines-update event
-  // promise after /cart/add.js, which only returns the added line — not the
-  // post-mutation cart aggregates). De-duplicated across concurrent callers.
+class CartItems extends HTMLElement {
+  /*
+    Dawn 15's product-form.js calls this static after every add, to resolve the
+    shopify:cart:lines-update promise Standard Events validates. The ported
+    CartItems had no such method, so the add threw here -- before it ever
+    reached renderContents, which is what opens the drawer. The add itself had
+    already gone through, which is why the cart updated but nothing appeared.
+    Carried over from Dawn's own cart.js so that contract still holds.
+  */
   static fetchCartData() {
     if (!CartItems.pendingCartDataPromise) {
-      const pendingCartDataPromise = fetch(`${routes.cart_url}.json`)
+      const pendingCartDataPromise = fetch(`${theme.routes.cart_url}.json`)
         .then((response) => response.json())
         .catch(() => null)
         .finally(() => {
@@ -58,358 +33,503 @@ class CartItems extends window.StandardEvents.createViewEventElement(HTMLElement
     return CartItems.pendingCartDataPromise;
   }
 
-  disconnectedCallback() {
-    if (this.cartUpdateUnsubscriber) {
-      this.cartUpdateUnsubscriber();
-    }
-  }
+  constructor() {
+    super();
 
-  resetQuantityInput(id) {
-    const input = this.querySelector(`#Quantity-${id}`);
-    input.value = input.getAttribute('value');
-    this.isEnterPressed = false;
-  }
+    this.lineItemStatusElement = document.getElementById('shopping-cart-line-item-status');
+    this.cartErrors = document.getElementById('cart-errors');
 
-  setValidity(event, index, message) {
-    event.target.setCustomValidity(message);
-    event.target.reportValidity();
-    this.resetQuantityInput(index);
-    event.target.select();
-  }
+    this.currentItemCount = Array.from(this.querySelectorAll('[name="updates[]"]'))
+      .reduce((total, quantityInput) => total + parseInt(quantityInput.value), 0);
 
-  validateQuantity(event) {
-    const inputValue = parseInt(event.target.value);
-    const index = event.target.dataset.index;
-    let message = '';
+    this.debouncedOnChange = debounce((event) => {
+      this.onChange(event);
+    }, 300);
 
-    if (inputValue < event.target.dataset.min) {
-      message = window.quickOrderListStrings.min_error.replace('[min]', event.target.dataset.min);
-    } else if (inputValue > parseInt(event.target.max)) {
-      message = window.quickOrderListStrings.max_error.replace('[max]', event.target.max);
-    } else if (inputValue % parseInt(event.target.step) !== 0) {
-      message = window.quickOrderListStrings.step_error.replace('[step]', event.target.step);
-    }
-
-    if (message) {
-      this.setValidity(event, index, message);
-    } else {
-      event.target.setCustomValidity('');
-      event.target.reportValidity();
-      this.updateQuantity(
-        index,
-        inputValue,
-        event,
-        document.activeElement.getAttribute('name'),
-        event.target.dataset.quantityVariantId
-      );
-    }
+    this.addEventListener('change', this.debouncedOnChange.bind(this));
   }
 
   onChange(event) {
-    this.validateQuantity(event);
-  }
-
-  onCartUpdate() {
-    if (this.tagName === 'CART-DRAWER-ITEMS') {
-      return fetch(`${routes.cart_url}?section_id=cart-drawer`)
-        .then((response) => response.text())
-        .then((responseText) => {
-          const html = new DOMParser().parseFromString(responseText, 'text/html');
-          const selectors = ['cart-drawer-items', '.cart-drawer__footer'];
-          for (const selector of selectors) {
-            const targetElement = document.querySelector(selector);
-            const sourceElement = html.querySelector(selector);
-            if (targetElement && sourceElement) {
-              targetElement.replaceWith(sourceElement);
-            }
-          }
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-    } else {
-      return fetch(`${routes.cart_url}?section_id=main-cart-items`)
-        .then((response) => response.text())
-        .then((responseText) => {
-          const html = new DOMParser().parseFromString(responseText, 'text/html');
-          const sourceQty = html.querySelector('cart-items');
-          this.innerHTML = sourceQty.innerHTML;
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-    }
+    if (event.target === null) return;
+    this.updateQuantity(event.target.dataset.index, event.target.value, document.activeElement.getAttribute('name'));
   }
 
   getSectionsToRender() {
-    return [
+    let sections = [
+      {
+        id: 'mini-cart',
+        section: document.getElementById('mini-cart')?.id,
+        selector: '.shopify-section',
+      },
       {
         id: 'main-cart-items',
-        section: document.getElementById('main-cart-items').dataset.id,
+        section: document.getElementById('main-cart-items')?.dataset.id,
         selector: '.js-contents',
       },
       {
         id: 'cart-icon-bubble',
         section: 'cart-icon-bubble',
-        selector: '.shopify-section',
+        selector: '.shopify-section'
       },
       {
         id: 'cart-live-region-text',
         section: 'cart-live-region-text',
-        selector: '.shopify-section',
+        selector: '.shopify-section'
       },
       {
         id: 'main-cart-footer',
-        section: document.getElementById('main-cart-footer').dataset.id,
+        section: document.getElementById('main-cart-footer')?.dataset.id,
         selector: '.js-contents',
-      },
+      }
     ];
+    if (document.querySelector('#main-cart-footer .free-shipping')) {
+      sections.push({
+        id: 'main-cart-footer',
+        section: document.getElementById('main-cart-footer')?.dataset.id,
+        selector: '.free-shipping',
+      });
+    }
+    return sections;
   }
 
-  updateQuantity(line, quantity, event, name, variantId) {
-    const eventTarget = event.currentTarget instanceof CartRemoveButton ? 'clear' : 'change';
-    const cartPerformanceUpdateMarker = CartPerformance.createStartingMarker(`${eventTarget}:user-action`);
-
+  updateQuantity(line, quantity, name) {
     this.enableLoading(line);
-
-    const action = quantity === 0 ? 'remove' : 'update';
-    const quantityInput = this.querySelector(`#Quantity-${line}`) || this.querySelector(`#Drawer-quantity-${line}`);
-    const lineVariantId = variantId || quantityInput?.dataset.quantityVariantId;
-    const lineKey = quantityInput?.dataset.quantityLineKey;
-    const linesUpdateDeferred = this.createCartLinesUpdateEvent(action, lineVariantId, quantity, lineKey);
-
-    // Cache sections before the fetch so we read dataset.id while elements still exist in the DOM
-    const sectionsToRender = this.getSectionsToRender();
+    const sections = this.getSectionsToRender().map((section) => section.section);
 
     const body = JSON.stringify({
       line,
       quantity,
-      sections: sectionsToRender.map((section) => section.section),
-      sections_url: window.location.pathname,
+      sections: sections,
+      sections_url: window.location.pathname
     });
 
-    fetch(`${routes.cart_change_url}`, { ...fetchConfig(), ...{ body } })
+    fetch(`${theme.routes.cart_change_url}`, {...fetchConfig(), ...{ body }})
       .then((response) => {
         return response.text();
       })
       .then((state) => {
         const parsedState = JSON.parse(state);
+        this.classList.toggle('is-empty', parsedState.item_count === 0);
+        const cartFooter = document.getElementById('main-cart-footer');
 
+        if (cartFooter) cartFooter.classList.toggle('is-empty', parsedState.item_count === 0);
         if (parsedState.errors) {
-          this.dispatchCartErrorEvent(parsedState.errors, 'INVALID');
-          linesUpdateDeferred?.reject(new Error(parsedState.errors));
-        } else {
-          this.resolveCartLinesUpdate(linesUpdateDeferred, parsedState);
+          this.updateErrorLiveRegions(line, parsedState.errors);
         }
+        this.getSectionsToRender().forEach((section => {
+          const element = document.getElementById(section.id);
+          if (element) {
+            const elementToReplace = element.querySelector(section.selector) || element;
 
-        CartPerformance.measure(`${eventTarget}:paint-updated-sections`, () => {
-          const quantityElement =
-            document.getElementById(`Quantity-${line}`) || document.getElementById(`Drawer-quantity-${line}`);
-          const items = document.querySelectorAll('.cart-item');
-
-          if (parsedState.errors) {
-            quantityElement.value = quantityElement.getAttribute('value');
-            this.updateLiveRegions(line, parsedState.errors);
-            return;
-          }
-
-          this.classList.toggle('is-empty', parsedState.item_count === 0);
-          const cartDrawerWrapper = document.querySelector('cart-drawer');
-          const cartFooter = document.getElementById('main-cart-footer');
-
-          if (cartFooter) cartFooter.classList.toggle('is-empty', parsedState.item_count === 0);
-          if (cartDrawerWrapper) cartDrawerWrapper.classList.toggle('is-empty', parsedState.item_count === 0);
-
-          sectionsToRender.forEach((section) => {
-            const elementToReplace =
-              document.getElementById(section.id).querySelector(section.selector) ||
-              document.getElementById(section.id);
-            elementToReplace.innerHTML = this.getSectionInnerHTML(
-              parsedState.sections[section.section],
-              section.selector
-            );
-          });
-          const updatedValue = parsedState.items[line - 1] ? parsedState.items[line - 1].quantity : undefined;
-          let message = '';
-          if (items.length === parsedState.items.length && updatedValue !== parseInt(quantityElement.value)) {
-            if (typeof updatedValue === 'undefined') {
-              message = window.cartStrings.error;
-            } else {
-              message = window.cartStrings.quantityError.replace('[quantity]', updatedValue);
+            if (elementToReplace && parsedState.sections[section.section]) {
+              elementToReplace.innerHTML =
+                this.getSectionInnerHTML(parsedState.sections[section.section], section.selector);
             }
           }
-          this.updateLiveRegions(line, message);
+        }));
+        
+        this.updateQuantityLiveRegions(line, parsedState.item_count);
+        
+        const lineItem = document.getElementById(`CartItem-${line}`);
+        if (lineItem && name) lineItem.querySelector(`[name="${name}"]`).focus();
+        this.disableLoading();
 
-          const lineItem =
-            document.getElementById(`CartItem-${line}`) || document.getElementById(`CartDrawer-Item-${line}`);
-          if (lineItem && lineItem.querySelector(`[name="${name}"]`)) {
-            cartDrawerWrapper
-              ? trapFocus(cartDrawerWrapper, lineItem.querySelector(`[name="${name}"]`))
-              : lineItem.querySelector(`[name="${name}"]`).focus();
-          } else if (parsedState.item_count === 0 && cartDrawerWrapper?.querySelector('.drawer__inner-empty')) {
-            trapFocus(cartDrawerWrapper.querySelector('.drawer__inner-empty'), cartDrawerWrapper.querySelector('a'));
-          } else if (document.querySelector('.cart-item') && cartDrawerWrapper) {
-            trapFocus(cartDrawerWrapper, document.querySelector('.cart-item__name'));
+        document.dispatchEvent(new CustomEvent('cart:updated', {
+          detail: {
+            cart: state
           }
-        });
-
-        publish(PUB_SUB_EVENTS.cartUpdate, { source: 'cart-items', cartData: parsedState, variantId: variantId });
+        }));
+        publish(PUB_SUB_EVENTS.cartUpdate, { source: 'cart-items' });
       })
-      .catch((e) => {
-        this.querySelectorAll('.loading__spinner').forEach((overlay) => overlay.classList.add('hidden'));
-        const errors = document.getElementById('cart-errors') || document.getElementById('CartDrawer-CartErrors');
-        if (errors) errors.textContent = window.cartStrings.error;
-        this.dispatchCartErrorEvent(window.cartStrings.error, 'SERVICE_UNAVAILABLE');
-        linesUpdateDeferred?.reject(e);
-      })
-      .finally(() => {
-        this.disableLoading(line);
-        CartPerformance.measureFromMarker(`${eventTarget}:user-action`, cartPerformanceUpdateMarker);
+      .catch(() => {
+        this.querySelectorAll('.loading-overlay').forEach((overlay) => overlay.classList.add('hidden'));
+        this.disableLoading();
+        if (this.cartErrors) {
+          this.cartErrors.textContent = theme.cartStrings.error;
+        }
       });
   }
-
-  createCartLinesUpdateEvent(action, variantId, quantity, lineKey) {
-    const { CartLinesUpdateEvent } = window.StandardEvents || {};
-    if (!CartLinesUpdateEvent || !variantId) return null;
-    // No AJAX line key on the row — likely cached HTML rendered before this
-    // attribute landed. Skip dispatch rather than emit an event with id: ''.
-    if (!lineKey) return null;
-
-    const deferred = CartLinesUpdateEvent.createPromise();
-    this.dispatchEvent(
-      new CartLinesUpdateEvent({
-        action,
-        context: 'cart',
-        lines: [{ id: lineKey, quantity }],
-        promise: deferred.promise,
-      })
-    );
-    return deferred;
-  }
-
-  resolveCartLinesUpdate(deferred, parsedState) {
-    if (!deferred) return;
-    const { CartLinesUpdateEvent } = window.StandardEvents || {};
-    if (!CartLinesUpdateEvent) return;
-
-    deferred.resolve({ cart: CartLinesUpdateEvent.createCartFromAjaxResponse(parsedState) });
-  }
-
-  dispatchCartErrorEvent(message, code) {
-    const { CartErrorEvent } = window.StandardEvents || {};
-    if (!CartErrorEvent) return;
-    this.dispatchEvent(new CartErrorEvent({ error: message, code }));
-  }
-
-  updateLiveRegions(line, message) {
+  
+  updateErrorLiveRegions(line, message) {
     const lineItemError =
       document.getElementById(`Line-item-error-${line}`) || document.getElementById(`CartDrawer-LineItemError-${line}`);
-    if (lineItemError) lineItemError.querySelector('.cart-item__error-text').textContent = message;
-
+    if (lineItemError) lineItemError.querySelector('.cart-item__error-text').innerHTML = message;
+  
     this.lineItemStatusElement.setAttribute('aria-hidden', true);
-
+  
     const cartStatus =
       document.getElementById('cart-live-region-text') || document.getElementById('CartDrawer-LiveRegionText');
     cartStatus.setAttribute('aria-hidden', false);
-
+  
     setTimeout(() => {
       cartStatus.setAttribute('aria-hidden', true);
     }, 1000);
   }
+  
+  updateQuantityLiveRegions(line, itemCount) {
+    if (this.currentItemCount === itemCount) {
+      const quantityError = document.getElementById(`Line-item-error-${line}`);
+      if (quantityError) {
+        quantityError.querySelector('.cart-item__error-text')
+          .innerHTML = theme.cartStrings.quantityError.replace(
+            '[quantity]',
+            document.getElementById(`Quantity-${line}`).value
+          ); 
+      }
+    }
+
+    this.currentItemCount = itemCount;
+    
+    if (this.lineItemStatusElement) this.lineItemStatusElement.setAttribute('aria-hidden', true);
+
+    const cartStatus = document.getElementById('cart-live-region-text');
+    if (cartStatus) {
+      cartStatus.setAttribute('aria-hidden', false);
+
+      setTimeout(() => {
+        cartStatus.setAttribute('aria-hidden', true);
+      }, 1e3);
+    }
+  }
 
   getSectionInnerHTML(html, selector) {
-    return new DOMParser().parseFromString(html, 'text/html').querySelector(selector).innerHTML;
+    return new DOMParser()
+      .parseFromString(html, 'text/html')
+      .querySelector(selector)?.innerHTML;
   }
 
   enableLoading(line) {
-    const mainCartItems = document.getElementById('main-cart-items') || document.getElementById('CartDrawer-CartItems');
-    mainCartItems.classList.add('cart__items--disabled');
+    const cartItems = document.getElementById('main-cart-items');
+    if (cartItems) cartItems.classList.add('cart__items--disabled');
 
-    const cartItemElements = this.querySelectorAll(`#CartItem-${line} .loading__spinner`);
-    const cartDrawerItemElements = this.querySelectorAll(`#CartDrawer-Item-${line} .loading__spinner`);
+    const loadingOverlay = this.querySelectorAll('.loading-overlay')[line - 1];
+    if (loadingOverlay) loadingOverlay.classList.remove('hidden');
 
-    [...cartItemElements, ...cartDrawerItemElements].forEach((overlay) => overlay.classList.remove('hidden'));
+    // Dim and freeze the whole row, not just its controls, so a quantity or
+    // remove press reads as busy end to end -- and a second press cannot land
+    // on a row whose request is still in flight.
+    const row = this.querySelectorAll('.cart-item')[line - 1];
+    if (row) row.classList.add('is-busy');
 
     document.activeElement.blur();
-    this.lineItemStatusElement.setAttribute('aria-hidden', false);
+    if (this.lineItemStatusElement) this.lineItemStatusElement.setAttribute('aria-hidden', false);
   }
 
-  disableLoading(line) {
-    const mainCartItems = document.getElementById('main-cart-items') || document.getElementById('CartDrawer-CartItems');
-    mainCartItems.classList.remove('cart__items--disabled');
+  disableLoading() {
+    const cartItems = document.getElementById('main-cart-items');
+    if (cartItems) cartItems.classList.remove('cart__items--disabled');
 
-    const cartItemElements = this.querySelectorAll(`#CartItem-${line} .loading__spinner`);
-    const cartDrawerItemElements = this.querySelectorAll(`#CartDrawer-Item-${line} .loading__spinner`);
+    // The drawer usually replaces this markup wholesale on success, but on an
+    // error path the same nodes stay put and must not be left frozen.
+    this.querySelectorAll('.cart-item.is-busy').forEach((row) => row.classList.remove('is-busy'));
+    this.querySelectorAll('.loading-overlay:not(.hidden)').forEach((o) => o.classList.add('hidden'));
+  }
 
-    cartItemElements.forEach((overlay) => overlay.classList.add('hidden'));
-    cartDrawerItemElements.forEach((overlay) => overlay.classList.add('hidden'));
+  renderContents(parsedState) {
+    this.getSectionsToRender().forEach((section => {
+      const element = document.getElementById(section.id);
+
+      if (element) {
+        element.innerHTML = this.getSectionInnerHTML(parsedState.sections[section.id], section.selector);
+      }
+    }));
   }
 }
-
 customElements.define('cart-items', CartItems);
 
-if (!customElements.get('cart-note')) {
-  customElements.define(
-    'cart-note',
-    class CartNote extends HTMLElement {
-      constructor() {
-        super();
+class CartNote extends HTMLElement {
+  constructor() {
+    super();
 
-        this.addEventListener(
-          'input',
-          debounce((event) => {
-            const newNote = event.target.value;
-            const noteDeferred = this.dispatchNoteUpdateEvent(newNote);
+    this.addEventListener('change', debounce((event) => {
+      const body = JSON.stringify({ note: event.target.value });
+      fetch(`${theme.routes.cart_update_url}`, {...fetchConfig(), ...{ body }});
+    }, 300));
+  }
+}
+customElements.define('cart-note', CartNote);
 
-            const body = JSON.stringify({ note: newNote });
-            fetch(`${routes.cart_update_url}`, { ...fetchConfig(), ...{ body } })
-              .then((r) => r.json())
-              .then((cart) => {
-                if (!cart || cart.errors) {
-                  throw Object.assign(new Error(cart?.errors), { code: 'INVALID' });
-                }
+class DiscountCode extends HTMLElement {
+  constructor() {
+    super();
 
-                if (noteDeferred) {
-                  const { CartNoteUpdateEvent } = window.StandardEvents || {};
-                  if (CartNoteUpdateEvent) {
-                    noteDeferred.resolve({ cart: CartNoteUpdateEvent.createCartFromAjaxResponse(cart) });
-                  }
-                }
-                CartPerformance.measureFromEvent('note-update:user-action', event);
-              })
-              .catch((e) => {
-                noteDeferred?.reject(e);
-                const { CartErrorEvent } = window.StandardEvents || {};
-                if (CartErrorEvent) {
-                  this.dispatchEvent(
-                    new CartErrorEvent({
-                      error: e.message || 'Note update failed',
-                      code: e.code || 'SERVICE_UNAVAILABLE',
-                    })
-                  );
-                }
-              });
-          }, ON_CHANGE_DEBOUNCE_TIMER)
-        );
+    this.input = this.querySelector('input[name="discount"]');
+    this.message = this.querySelector('.cart-discount__message');
+    this.applyButton = this.querySelector('.cart-discount__apply');
+
+    if (isStorageSupported('session')) {
+      this.setupDiscount();
+
+      this.addEventListener('change', (event) => {
+        if (event.target === this.input) {
+          window.sessionStorage.setItem('discount', event.target.value);
+        }
+      });
+    }
+
+    this.addEventListener('click', (event) => {
+      if (event.target.closest('.cart-discount__apply')) {
+        this.applyDiscount(this.input.value);
+        return;
       }
 
-      dispatchNoteUpdateEvent(newNote) {
-        const { CartNoteUpdateEvent } = window.StandardEvents || {};
-        if (!CartNoteUpdateEvent) return null;
+      const removeButton = event.target.closest('[data-remove-code]');
+      if (removeButton) {
+        this.removeDiscount(removeButton.dataset.removeCode);
+      }
+    });
 
-        const context = this.closest('dialog') || this.closest('cart-drawer') ? 'dialog' : 'cart';
-        const deferred = CartNoteUpdateEvent.createPromise();
+    this.addEventListener('keydown', (event) => {
+      if (event.target === this.input && event.key === 'Enter') {
+        event.preventDefault();
+        this.applyDiscount(this.input.value);
+      }
+    });
+  }
 
-        this.dispatchEvent(
-          new CartNoteUpdateEvent({
-            context,
-            note: newNote,
-            promise: deferred.promise,
-          })
-        );
+  setupDiscount() {
+    const discount = window.sessionStorage.getItem('discount');
+    if (discount !== null && this.input) {
+      this.input.value = discount;
+    }
+  }
 
-        return deferred;
+  async applyDiscount(code) {
+    code = (code || '').trim();
+    if (!code || this.loading) return;
+
+    this.setLoading(true);
+    this.showMessage(theme.discountStrings.applying);
+
+    // The parameter carries the cart's whole set of codes, so adding one means resending the
+    // codes already on the cart alongside it.
+    const codes = this.appliedCodes().filter((applied) => !this.sameCode(applied, code));
+    codes.push(code);
+
+    const state = await this.submitDiscount(codes.join(','));
+    if (!state) return;
+
+    // A code Shopify accepts but cannot apply to this cart comes back with the cart unchanged,
+    // so the discount applications are the source of truth for success rather than the status.
+    const applied = this.isCodeApplied(state, code);
+
+    if (isStorageSupported('session')) {
+      if (applied) {
+        window.sessionStorage.removeItem('discount');
+      } else {
+        window.sessionStorage.setItem('discount', code);
       }
     }
-  );
+
+    const current = this.commit(state);
+    if (applied) {
+      if (current.input) current.input.value = '';
+      current.showMessage(theme.discountStrings.applied.replace('[code]', code), 'success');
+    } else {
+      if (current.input) {
+        current.input.value = code;
+        current.input.focus();
+      }
+      current.showMessage(theme.discountStrings.invalid.replace('[code]', code), 'error');
+    }
+  }
+
+  async removeDiscount(code) {
+    if (this.loading) return;
+
+    this.setLoading(true);
+    this.showMessage(theme.discountStrings.removing);
+
+    // Dropping one code means resending the rest; an empty value clears every discount.
+    const remaining = this.appliedCodes().filter((applied) => !this.sameCode(applied, code));
+
+    const state = await this.submitDiscount(remaining.join(','));
+    if (!state) return;
+
+    if (isStorageSupported('session')) window.sessionStorage.removeItem('discount');
+    this.commit(state);
+  }
+
+  // /cart/update.js takes a `discount` parameter (Cart AJAX API, May 2025), so codes are applied
+  // without leaving the page. Asking for sections in the same call returns the cart and the
+  // re-rendered drawer together. Resolves to null when the request failed and was reported.
+  async submitDiscount(discount) {
+    const sections = this.getSectionsToRender();
+    const body = JSON.stringify({
+      discount,
+      sections: sections.map((section) => section.section).filter(Boolean),
+      sections_url: window.location.pathname
+    });
+
+    try {
+      const response = await fetch(`${theme.routes.cart_update_url}`, {...fetchConfig(), ...{ body }});
+      const state = await response.json();
+
+      if (!response.ok) {
+        this.setLoading(false);
+        this.showMessage(state.description || state.message || theme.discountStrings.error, 'error');
+        return null;
+      }
+
+      return state;
+    } catch (error) {
+      console.error(error);
+      this.setLoading(false);
+      this.showMessage(theme.discountStrings.error, 'error');
+      return null;
+    }
+  }
+
+  // Renders the new cart and returns the element the outcome should be shown on: the section
+  // render replaces this one, so messages have to land on its successor.
+  commit(state) {
+    this.renderSections(this.getSectionsToRender(), state.sections);
+
+    document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: JSON.stringify(state) } }));
+    publish(PUB_SUB_EVENTS.cartUpdate, { source: 'discount-code' });
+
+    const current = document.querySelector('discount-code') || this;
+    current.setLoading(false);
+    return current;
+  }
+
+  appliedCodes() {
+    return Array.from(this.querySelectorAll('[data-remove-code]')).map((button) => button.dataset.removeCode);
+  }
+
+  sameCode(a, b) {
+    return (a || '').trim().toLowerCase() === (b || '').trim().toLowerCase();
+  }
+
+  // Shopify reports an accepted code as a discount application on the cart or on the lines it
+  // touches; a code that is unknown or not applicable to this cart leaves nothing behind.
+  isCodeApplied(cart, code) {
+    const titles = (cart.cart_level_discount_applications || []).map((discount) => discount.title);
+
+    (cart.items || []).forEach((item) => {
+      (item.line_level_discount_allocations || []).forEach((allocation) => {
+        titles.push(allocation.discount_application?.title);
+      });
+      (item.discounts || []).forEach((discount) => titles.push(discount.title));
+    });
+
+    return titles.some((title) => this.sameCode(title, code));
+  }
+
+  getSectionsToRender() {
+    const miniCart = document.querySelector('mini-cart');
+    if (miniCart) return miniCart.getSectionsToRender();
+
+    return [{ id: 'mini-cart', section: 'mini-cart', selector: '.shopify-section' }];
+  }
+
+  renderSections(sections, rendered) {
+    sections.forEach((section) => {
+      const element = document.getElementById(section.id);
+      const html = rendered?.[section.section];
+      if (!element || !html) return;
+
+      const parsed = new DOMParser().parseFromString(html, 'text/html').querySelector(section.selector);
+      if (parsed) element.innerHTML = parsed.innerHTML;
+    });
+  }
+
+  setLoading(loading) {
+    this.loading = loading;
+    this.classList.toggle('cart-discount--loading', loading);
+    if (this.applyButton) this.applyButton.disabled = loading;
+  }
+
+  showMessage(text, status) {
+    if (!this.message) return;
+
+    this.message.textContent = text || '';
+    this.message.hidden = !text;
+    this.message.classList.toggle('cart-discount__message--error', status === 'error');
+    this.message.classList.toggle('cart-discount__message--success', status === 'success');
+  }
 }
+
+customElements.define('discount-code', DiscountCode);
+
+class ShippingCalculator extends HTMLElement {
+  constructor() {
+    super();
+
+    this.setupCountries();
+    
+    this.errors = this.querySelector('#ShippingCalculatorErrors');
+    this.success = this.querySelector('#ShippingCalculatorSuccess');
+    this.zip = this.querySelector('#ShippingCalculatorZip');
+    this.country = this.querySelector('#ShippingCalculatorCountry');
+    this.province = this.querySelector('#ShippingCalculatorProvince');
+    this.button = this.querySelector('button');
+    this.button.addEventListener('click', this.onSubmitHandler.bind(this));
+  }
+
+  setupCountries() {
+    if (Shopify && Shopify.CountryProvinceSelector) {
+      // eslint-disable-next-line no-new
+      new Shopify.CountryProvinceSelector('ShippingCalculatorCountry', 'ShippingCalculatorProvince', {
+        hideElement: 'ShippingCalculatorProvinceContainer'
+      });
+    }
+  }
+
+  onSubmitHandler(event) {
+    event.preventDefault();
+    
+    this.errors.classList.add('hidden');
+    this.success.classList.add('hidden');
+    this.zip.classList.remove('invalid');
+    this.country.classList.remove('invalid');
+    this.province.classList.remove('invalid');
+    this.button.classList.add('loading');
+    this.button.setAttribute('disabled', true);
+
+    const body = JSON.stringify({
+      shipping_address: {
+        zip: this.zip.value,
+        country: this.country.value,
+        province: this.province.value
+      }
+    });
+    let sectionUrl = `${theme.routes.cart_url}/shipping_rates.json`;
+
+    // remove double `/` in case shop might have /en or language in URL
+    sectionUrl = sectionUrl.replace('//', '/');
+
+    fetch(sectionUrl, { ...fetchConfig('javascript'), body })
+      .then((response) => response.json())
+      .then((parsedState) => {
+        if (parsedState.shipping_rates) {
+          this.success.classList.remove('hidden');
+          this.success.innerHTML = '';
+          
+          parsedState.shipping_rates.forEach((rate) => {
+            const child = document.createElement('p');
+            child.innerHTML = `${rate.name}: ${rate.price} ${Shopify.currency.active}`;
+            this.success.appendChild(child);
+          });
+        }
+        else {
+          let errors = [];
+          Object.entries(parsedState).forEach(([attribute, messages]) => {
+            errors.push(`${attribute.charAt(0).toUpperCase() + attribute.slice(1)} ${messages[0]}`);
+          });
+
+          this.errors.classList.remove('hidden');
+          this.errors.querySelector('.errors').innerHTML = errors.join('; ');
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {
+        this.button.classList.remove('loading');
+        this.button.removeAttribute('disabled');
+      });
+  }
+}
+
+customElements.define('shipping-calculator', ShippingCalculator);

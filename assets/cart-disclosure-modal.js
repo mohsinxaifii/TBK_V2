@@ -161,7 +161,7 @@ if (!customElements.get('cart-disclosure-modal')) {
     }
 
     restoreFocusTrap() {
-      const cartDrawer = this.opener?.closest('cart-drawer.active');
+      const cartDrawer = this.opener?.closest('cart-drawer.active, mini-cart');
       const cartNotification = this.opener?.closest('cart-notification')?.querySelector('#cart-notification.active');
 
       if (cartDrawer && typeof trapFocus === 'function') {

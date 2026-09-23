@@ -1,0 +1,21 @@
+{% comment %}
+  The cart drawer's own loading spinner.
+
+  It is a separate snippet from 'loading-spinner' because the two produce
+  different markup and both are needed: Dawn's emits `.loading__spinner` and is
+  used by nine other components in this theme, while the ported cart is written
+  around `.loading-overlay` — the drawer's stylesheet positions
+  `.cart-item__actions .loading-overlay`, and cart.js's enableLoading() finds
+  the right row with `querySelectorAll('.loading-overlay')[line - 1]`. Rendering
+  Dawn's shape here left both looking at nothing, so a line being updated or
+  removed gave no feedback at all.
+
+  Usage:
+  {%- render 'cart-loading-spinner' -%}
+{% endcomment %}
+
+<div class="loading-overlay hidden">
+  <div class="loading-overlay__spinner">
+    {% render 'icon', icon: 'spinner' %}
+  </div>
+</div>
