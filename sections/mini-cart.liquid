@@ -231,7 +231,7 @@
 
         <small class="cart-summary__tax-note rte">{% render 'cart-tax-note' %}</small>
       </div>
-
+{% comment %} 
       <cart-terms class="cart-terms">
         <label class="cart-terms__label">
           <input type="checkbox" id="CartTermsAgree" class="cart-terms__checkbox" checked />
@@ -255,7 +255,7 @@
           {%- endcapture -%}
           <span>{{ 'general.cart.terms.label_html' | t: terms_link: terms_link, privacy_link: privacy_link }}</span>
         </label>
-      </cart-terms>
+      </cart-terms> {% endcomment %}
 
       <div class="button-container">
         <button class="button" name="checkout" type="submit">
