@@ -138,7 +138,7 @@
   font-display: swap;
 }
 
-/* Beaurencourt FY -- script accent, footer note */
+/* Beaurencourt FY -- former footer-note script, kept registered */
 @font-face {
   font-family: 'Beaurencourt FY';
   src: url('{{ "BeaurencourtFY-Regular.otf" | asset_url }}') format('opentype');

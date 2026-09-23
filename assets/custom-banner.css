@@ -2,10 +2,11 @@
     position: relative;
 }
 
+/* Positioned + cropped for site-animations.js's cinematic open: it overlays an
+   absolutely positioned .ha-hero-veil here and scales .custom-banner-container
+   from 1.06 down to 1, which must not spill past the banner's own box. */
 .custom-banner-sticky {
-    position: sticky;
-    top: 0;
-    z-index: 0;
+    position: relative;
     overflow: hidden;
 }
 
@@ -42,14 +43,16 @@
     }
 }
 
-/* Scroll-cover reveal: applied by custom-banner.js to the section that follows this
-   banner. Its top margin is set inline (in JS) to the pinned media's actual rendered
-   height, pulling it flush against the sticky layer so it starts overlapping as soon
-   as the pin scroll begins — no blank gap, and no assumption about media height. */
-.custom-banner-cover-section {
-    position: relative;
-    z-index: 2;
-    background-color: rgb(var(--color-background));
-    box-shadow: 0 -3rem 6rem rgba(0, 0, 0, 0.3);
-    will-change: transform;
+/* Framed (off-index) banner: .page-top-banner-container brings the archives
+   frame — 80vh / 60vh / 50vh, #181818, overflow hidden — and its own rule
+   already covers <video>. The images need the same treatment, and they carry
+   the desktop/mobile display toggles above, so only the box is restated here
+   and `display` is deliberately left alone. */
+.custom-banner-container.page-top-banner-container .custom-banner_desktop-image,
+.custom-banner-container.page-top-banner-container .custom-banner_mobile-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }

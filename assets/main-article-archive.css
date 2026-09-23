@@ -1,20 +1,14 @@
 .archive-article {
   position: relative;
   background-color: #fffdee;
-  /* Single source of truth for the hero's pinned height, shared with the content
-     sheet's negative margin below so the two always match exactly. */
-  --hero-pin-height: clamp(320px, 46vw, 680px);
+  --hero-height: clamp(320px, 46vw, 680px);
 }
 
-/* Hero: pinned in place via position: sticky while .archive-article__content
-   (given a negative margin-top equal to the hero's own height, plus a higher
-   z-index) scrolls up and over it, like a sheet being drawn over the image. */
+/* Hero: a plain banner in normal flow that scrolls away with the page. */
 .archive-article__hero {
-  position: sticky;
-  top: 0;
-  z-index: 0;
+  position: relative;
   width: 100%;
-  height: var(--hero-pin-height);
+  height: var(--hero-height);
   overflow: hidden;
   background-color: #181818;
 }
@@ -40,21 +34,10 @@
 
 /* <picture> is an inline box and would otherwise sit in the flow between the
    hero and its caption. It carries no styling of its own — the absolutely
-   positioned <img> inside keeps every rule above, including the parallax
+   positioned <img> inside keeps every rule above, including the entrance
    transform archive-hero-parallax.js applies to .archive-article__hero-media. */
 .archive-article__hero-picture {
   display: contents;
-}
-
-/* Darkens as the content sheet rises to cover the hero; opacity is driven by
-   scroll progress in archive-hero-parallax.js. */
-.archive-article__hero-veil {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background-color: #000;
-  opacity: 0;
-  pointer-events: none;
 }
 
 .archive-article__hero-caption {
@@ -71,7 +54,7 @@
   width: 100%;
   left: 50%;
   /* Horizontal centering is applied via GSAP (xPercent: -50) in archive-hero-parallax.js
-     so the scroll/entrance transforms it also drives don't get clobbered by a competing
+     so the entrance transform it also drives doesn't get clobbered by a competing
      !important transform here. */
   transform: translateX(-50%);
 }
@@ -85,14 +68,10 @@
   }
 }
 
-/* Content sheet: sits in normal flow immediately after the hero (no negative
-   margin - that would shrink .archive-article's own height and leave the
-   sticky hero with no room to actually stick). As the page scrolls the height
-   of one hero, this sheet's own top edge naturally rises from the hero's
-   bottom edge up to the viewport top, covering the pinned hero as it goes. */
+/* Content sheet: sits in normal flow immediately after the hero and scrolls
+   with it. The rounded top edge is kept as styling; nothing overlaps here. */
 .archive-article__content {
   position: relative;
-  z-index: 1;
   background-color: #fffdee;
   padding-top: 64px;
   border-radius: 28px 28px 0 0;

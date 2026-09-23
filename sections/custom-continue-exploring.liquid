@@ -45,23 +45,71 @@
 
           {%- liquid
             assign display_count = display_count | plus: 1
-            assign index_padded = '00' | append: display_count | slice: -3, 3
-            assign tile_alt = blog_article.title | strip_html | default: shop.name | escape
+
+            # The story's own hero art, desktop and mobile — the same pair
+            # blog-listing-grid and the article page use.
+            assign tile_image_mobile = blog_article.metafields.custom.hero_image_mobile.value
+            assign tile_image = blog_article.metafields.custom.hero_image.value | default: blog_article.image
+            assign tile_alt = tile_image.alt | default: blog_article.title | strip_html | default: shop.name | escape
           -%}
+
+          {%- comment -%}
+            The tile's number is the article's own, not its position in this
+            rail — this list skips the post being read, so position here would
+            not match the number the same post shows in the listing grid or on
+            its own hero. See snippets/story-number.liquid.
+          {%- endcomment -%}
+          {%- capture index_padded -%}
+            {%- render 'story-number', article: blog_article, fallback: display_count -%}
+          {%- endcapture -%}
 
           <a href="{{ blog_article.url }}" class="continue-exploring__item{% unless section.settings.grayscale_images %} continue-exploring__item--color{% endunless %}">
             <span class="continue-exploring__media">
-              {%- if blog_article.image -%}
-                {{
-                  blog_article.image
-                  | image_url: width: 800
-                  | image_tag:
-                    class: 'continue-exploring__image',
-                    alt: tile_alt,
-                    loading: 'lazy',
-                    sizes: '(min-width: 750px) 25vw, 50vw',
-                    widths: '275, 400, 550, 700, 800'
-                }}
+              {%- if tile_image != blank -%}
+                {%- comment -%}
+                  Every tile here is the 382:654 portrait card, so both sources
+                  are cropped to that ratio server-side instead of being left for
+                  object-fit to crop in the browser: covering a portrait box with
+                  a wide file throws away most of every pixel downloaded. On an
+                  export that is already 382:654 the crop is a no-op.
+
+                  Widths are capped at what a portrait crop can actually yield.
+                  A 2880x1280 desktop hero gives 1280 x 0.584 = 748px of real
+                  width, and an 804x1032 mobile hero gives 603px; asking for
+                  more would declare a srcset width Shopify cannot deliver and
+                  the browser would pick a file softer than its descriptor
+                  promises.
+                {%- endcomment -%}
+                <picture class="continue-exploring__picture">
+                  {%- if tile_image_mobile != blank -%}
+                    <source
+                      media="(max-width: 749px)"
+                      srcset="
+                        {{ tile_image_mobile | image_url: width: 320, height: 548, crop: 'center' }} 320w,
+                        {{ tile_image_mobile | image_url: width: 400, height: 685, crop: 'center' }} 400w,
+                        {{ tile_image_mobile | image_url: width: 480, height: 822, crop: 'center' }} 480w,
+                        {{ tile_image_mobile | image_url: width: 603, height: 1032, crop: 'center' }} 603w
+                      "
+                      sizes="82vw"
+                    >
+                  {%- endif -%}
+                  <img
+                    class="continue-exploring__image"
+                    src="{{ tile_image | image_url: width: 764, height: 1308, crop: 'center' }}"
+                    srcset="
+                      {{ tile_image | image_url: width: 320, height: 548, crop: 'center' }} 320w,
+                      {{ tile_image | image_url: width: 400, height: 685, crop: 'center' }} 400w,
+                      {{ tile_image | image_url: width: 480, height: 822, crop: 'center' }} 480w,
+                      {{ tile_image | image_url: width: 640, height: 1096, crop: 'center' }} 640w,
+                      {{ tile_image | image_url: width: 748, height: 1280, crop: 'center' }} 748w
+                    "
+                    sizes="(min-width: 1400px) 330px, (min-width: 1280px) 24vw, (min-width: 990px) 31vw, (min-width: 750px) 47vw, 82vw"
+                    alt="{{ tile_alt }}"
+                    loading="lazy"
+                    width="382"
+                    height="654"
+                  >
+                </picture>
               {%- else -%}
                 {{ 'lifestyle-1' | placeholder_svg_tag: 'continue-exploring__image placeholder-svg' }}
               {%- endif -%}

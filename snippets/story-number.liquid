@@ -1,0 +1,23 @@
+{%- comment -%}
+  Renders an article's position in its blog's sequence as a zero-padded three
+  digit string ("001", "012").
+
+  The number comes from the custom.story_number metafield rather than from the
+  loop, so every place that shows it agrees: each blog runs its own sequence,
+  and only published posts hold a number. Deriving it from forloop position
+  instead would drift the moment a post in the middle is unpublished — the grid
+  would renumber what follows it while the article's own hero caption kept the
+  old value.
+
+  `fallback` covers a post with no number yet: an unpublished one being
+  previewed in the theme editor, or one published since the last renumber.
+  Pass the loop position so such a post still shows something sensible.
+
+  Usage:
+    {%- render 'story-number', article: article, fallback: forloop.index -%}
+{%- endcomment -%}
+{%- liquid
+  assign n = article.metafields.custom.story_number.value | default: fallback | default: 0
+  assign padded = '00' | append: n | slice: -3, 3
+  echo padded
+-%}

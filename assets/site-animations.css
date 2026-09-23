@@ -40,15 +40,3 @@
 .contact-page__image {
   overflow: hidden;
 }
-
-/* On rituals the listing sections scroll over the still-pinned hero
-   banner (position: sticky, z-index: 0). Positioned elements paint above
-   unpositioned backgrounds regardless of DOM order, so without their own
-   stacking position these sections' backgrounds vanish behind the hero
-   while their inner (positioned) content floats above it. Lift the whole
-   section so it covers the hero as one solid sheet, like the home page. */
-.blog-listing-header,
-.blog-listing-grid {
-  position: relative;
-  z-index: 1;
-}
