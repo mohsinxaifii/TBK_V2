@@ -722,20 +722,41 @@ a.product__text {
     width: calc(50% - 1.5rem - var(--grid-mobile-horizontal-spacing));
   }
 
-  /* With mobile thumbnails on, the viewer shows one image at a time like desktop */
+  /* With mobile thumbnails on, the viewer is a native scroll-snap strip, one
+     full-width image per snap: the browser moves it with the finger (and with
+     momentum), composited, so the swipe can't lag behind the touch the way
+     the old scripted slide did. media-gallery.js only follows along, syncing
+     the thumbnail/active state as the snapped image changes. */
   media-gallery[data-mobile-layout='show'] .product__media-list {
-    overflow: hidden;
-    isolation: isolate;
-    touch-action: pan-y pinch-zoom;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 0;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    touch-action: pan-x pan-y pinch-zoom;
+    margin-bottom: 0;
   }
 
-  media-gallery[data-mobile-layout='show'] .product__media-item:not(.is-active):not(.is-leaving) {
+  media-gallery[data-mobile-layout='show'] .product__media-list::-webkit-scrollbar {
     display: none;
   }
 
-  media-gallery[data-mobile-layout='show'] .product__media-item.is-active {
-    position: relative;
-    z-index: 1;
+  /* slider--mobile's end spacer is for peeking card rows, not a full-bleed
+     gallery: it would leave a sliver of empty strip after the last image. */
+  media-gallery[data-mobile-layout='show'] .product__media-list::after {
+    content: none;
+  }
+
+  media-gallery[data-mobile-layout='show'] .product__media-item {
+    flex: 0 0 100%;
+    width: 100%;
+    margin: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
 }
 
