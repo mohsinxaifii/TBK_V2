@@ -18,7 +18,11 @@
  * so the body.template-index prefix also buys the specificity to beat the
  * section rule it overrides.
  */
-
+  body.template-index .custom-featured-product-left .custom-featured-product__size,
+  body.template-index .custom-featured-product-left .custom-featured-product__meta-divider,
+  body.template-index .custom-featured-product-left .custom-featured-product__price {
+    font-family: var(--font-family-product-meta);
+  }
 @media screen and (min-width: 990px) {
   /* ---------------------------------------------------------------
      custom-featured-product — the purchase block only (2887:4206).
@@ -35,7 +39,6 @@
   body.template-index .custom-featured-product-left .custom-featured-product__size,
   body.template-index .custom-featured-product-left .custom-featured-product__meta-divider,
   body.template-index .custom-featured-product-left .custom-featured-product__price {
-    font-family: var(--font-family-product-meta);
     font-size: var(--font-home-product-meta-size-fluid);
     line-height: var(--font-home-product-meta-line-height-fluid);
     font-weight: var(--font-home-product-meta-weight);
