@@ -148,9 +148,9 @@
 
 .blog-listing-grid-item-index {
   margin: 0 0 0.4em;
-  font-family: var(--font-body-family);
+  font-family: 'Proxima Nova A';
   font-size: 1.6rem;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: 4px;
   text-transform: uppercase;
   color: currentColor;
