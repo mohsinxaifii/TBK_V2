@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function lockScroll() {
       scrollY = window.scrollY;
-            document.body.style.position = 'fixed';
+      document.body.style.position = 'fixed';
       document.body.style.top = `-${scrollY}px`;
       document.body.style.left = '0';
       document.body.style.right = '0';
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function unlockScroll() {
-            document.body.style.position = '';
+      document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.left = '';
       document.body.style.right = '';

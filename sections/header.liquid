@@ -529,6 +529,16 @@
 
       if (this.predictiveSearch && this.predictiveSearch.isOpen) return;
 
+      // While an overlay holds the page (menu drawer, cart, search), any
+      // scroll event is noise: a drag that runs past the end of the drawer's
+      // own list chains out to the page on iOS, as does the toolbar resize.
+      // Acting on it hid the header -- and the menu drawer, which lives in
+      // it -- off-screen with the page still locked, freezing the site.
+      if (window.scrollLock && window.scrollLock.isLocked()) {
+        this.currentScrollTop = scrollTop;
+        return;
+      }
+
       // Past the end of the page is iOS's overscroll bounce; its spring back
       // reads as a scroll up and would pop the header in at the footer.
       const maxScrollTop = document.documentElement.scrollHeight - window.innerHeight;
@@ -589,7 +599,7 @@
 
     closeSearchModal() {
       this.searchModal = this.searchModal || this.header.querySelector('details-modal');
-      this.searchModal.close(false);
+      if (this.searchModal) this.searchModal.close(false);
     }
   }
 
