@@ -880,18 +880,35 @@ a.mini-cart__promo-banner:hover {
   top: 100%;
 }
 
+/* The source theme's stepper sat on its own base styles; here it lands on top
+   of Dawn's, which fights it in three ways:
+     - base.css sets `min-height: calc(border*2 + 4.5rem)`, and a min-height
+       beats the height below, so the box came out ~47px instead of 28px;
+     - `.quantity::after` paints a box-shadow ring outside this border, which
+       is the heavy double outline the stepper had;
+     - `.quantity::before` fills the background behind it.
+   All three are turned off here rather than in base.css, so Dawn's own
+   steppers on the product and cart pages are untouched. */
 .mini-cart .quantity {
   width: auto;
   height: 2.8rem;
+  min-height: 2.8rem;
   border: 0.1rem solid var(--cart-line-strong);
   border-radius: var(--cart-radius-sm);
   overflow: hidden;
+}
+
+.mini-cart .quantity::before,
+.mini-cart .quantity::after {
+  content: none;
 }
 
 .mini-cart .quantity__button {
   flex: 0 0 2.4rem;
   width: 2.4rem;
   height: 2.6rem;
+  min-height: 2.6rem;
+  padding: 0;
   border-radius: 0;
   background-color: transparent;
 }
@@ -915,6 +932,7 @@ a.mini-cart__promo-banner:hover {
   width: 2.6rem;
   min-width: 2.6rem;
   height: 2.6rem;
+  min-height: 2.6rem;
   padding: 0;
   font-size: 1.3rem;
   font-weight: 500;
