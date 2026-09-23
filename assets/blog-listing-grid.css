@@ -33,41 +33,55 @@
 }
 
 /*
-  Rituals layout, repeating every three cards as in Figma (node 3005:3902):
-  narrow 382 + 24 gap + wide 874, then one full-width 1280. Every card is 654
-  tall, so the aspect ratios below match the exported card_image frames exactly
-  and nothing gets cropped. fr keeps the 382:874 split at any width.
+  Rituals layout (Figma node 3005:3902): a narrow 382 card beside a wide 874
+  one, 24 gap, mirrored on every other row so the wide cards zig-zag. Every
+  card is 654 tall, so the ratios below match the exported card_image frames
+  exactly and nothing gets cropped. fr keeps each split at any width.
+
+  Rows are real elements because a single grid cannot size its first track as
+  382 on one row and 874 on the next. Which card takes which role, and where
+  the rows break, is decided in blog-listing-grid.liquid from the card count.
 */
+.blog-listing-grid-list--alternating {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
 @media screen and (min-width: 750px) {
-  .blog-listing-grid-list--alternating {
+  .blog-listing-grid-row {
+    display: grid;
+    gap: 2.4rem;
     grid-template-columns: 382fr 874fr;
   }
 
-  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 1) {
-    grid-column: 1;
+  .blog-listing-grid-row--mirrored {
+    grid-template-columns: 874fr 382fr;
   }
 
-  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 2) {
-    grid-column: 2;
+  /* Odd card counts leave one card unpaired; it spans the row on its own. */
+  .blog-listing-grid-row--full {
+    grid-template-columns: 1fr;
   }
 
-  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 3),
-  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 1):last-child {
-    grid-column: 1 / -1;
-  }
-
-  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 1) .blog-listing-grid-item-media {
+  .blog-listing-grid-item--small .blog-listing-grid-item-media {
     aspect-ratio: 382 / 654;
   }
 
-  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 2) .blog-listing-grid-item-media {
+  .blog-listing-grid-item--big .blog-listing-grid-item-media {
     aspect-ratio: 874 / 654;
   }
 
-  /* The full-width row, plus a narrow card left with no partner on the last page. */
-  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 3) .blog-listing-grid-item-media,
-  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 1):last-child .blog-listing-grid-item-media {
+  .blog-listing-grid-item--full .blog-listing-grid-item-media {
     aspect-ratio: 1280 / 654;
+  }
+}
+
+/* Below 750 the rows collapse: one card per line, all the same shape. */
+@media screen and (max-width: 749px) {
+  .blog-listing-grid-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
   }
 }
 
