@@ -41,6 +41,17 @@
     .custom-banner_mobile-video {
         display: block;
     }
+
+    /* The mobile film shows a thin light edge down each side (baked into the
+       encode, plus iOS hairline rounding). A slight overscale pushes it past
+       the frame, where .custom-banner-sticky's overflow:hidden trims it --
+       ~1.5% per side, about 6px on a 390px screen. Safe to transform the
+       video itself: the cinematic open in site-animations.js only scales
+       .custom-banner-container, never the media inside it. */
+    .custom-banner_mobile-video {
+        transform: scale(1.03);
+        transform-origin: center;
+    }
 }
 
 /* Framed (off-index) banner: .page-top-banner-container brings the archives
