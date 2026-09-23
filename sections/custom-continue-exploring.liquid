@@ -46,10 +46,10 @@
           {%- liquid
             assign display_count = display_count | plus: 1
 
-            # Same designed card exports blog-listing-grid uses, desktop and
-            # mobile, with the same fallbacks behind the desktop one.
-            assign tile_image_mobile = blog_article.metafields.custom.card_image_mobile.value
-            assign tile_image = blog_article.metafields.custom.card_image.value | default: blog_article.metafields.custom.hero_image.value | default: blog_article.image
+            # The story's own hero art, desktop and mobile — the same pair
+            # blog-listing-grid and the article page use.
+            assign tile_image_mobile = blog_article.metafields.custom.hero_image_mobile.value
+            assign tile_image = blog_article.metafields.custom.hero_image.value | default: blog_article.image
             assign tile_alt = tile_image.alt | default: blog_article.title | strip_html | default: shop.name | escape
           -%}
 
@@ -73,10 +73,12 @@
                   a wide file throws away most of every pixel downloaded. On an
                   export that is already 382:654 the crop is a no-op.
 
-                  Widths stop at 1146: cropped to portrait, a card export is
-                  bounded by its 1308px height, so 764w is all the designed
-                  assets can actually deliver. The larger steps only pay off on
-                  the hero/featured-image fallbacks.
+                  Widths are capped at what a portrait crop can actually yield.
+                  A 2880x1280 desktop hero gives 1280 x 0.584 = 748px of real
+                  width, and an 804x1032 mobile hero gives 603px; asking for
+                  more would declare a srcset width Shopify cannot deliver and
+                  the browser would pick a file softer than its descriptor
+                  promises.
                 {%- endcomment -%}
                 <picture class="continue-exploring__picture">
                   {%- if tile_image_mobile != blank -%}
@@ -86,8 +88,7 @@
                         {{ tile_image_mobile | image_url: width: 320, height: 548, crop: 'center' }} 320w,
                         {{ tile_image_mobile | image_url: width: 400, height: 685, crop: 'center' }} 400w,
                         {{ tile_image_mobile | image_url: width: 480, height: 822, crop: 'center' }} 480w,
-                        {{ tile_image_mobile | image_url: width: 640, height: 1096, crop: 'center' }} 640w,
-                        {{ tile_image_mobile | image_url: width: 708, height: 1212, crop: 'center' }} 708w
+                        {{ tile_image_mobile | image_url: width: 603, height: 1032, crop: 'center' }} 603w
                       "
                       sizes="82vw"
                     >
@@ -100,9 +101,7 @@
                       {{ tile_image | image_url: width: 400, height: 685, crop: 'center' }} 400w,
                       {{ tile_image | image_url: width: 480, height: 822, crop: 'center' }} 480w,
                       {{ tile_image | image_url: width: 640, height: 1096, crop: 'center' }} 640w,
-                      {{ tile_image | image_url: width: 764, height: 1308, crop: 'center' }} 764w,
-                      {{ tile_image | image_url: width: 960, height: 1644, crop: 'center' }} 960w,
-                      {{ tile_image | image_url: width: 1146, height: 1962, crop: 'center' }} 1146w
+                      {{ tile_image | image_url: width: 748, height: 1280, crop: 'center' }} 748w
                     "
                     sizes="(min-width: 1400px) 330px, (min-width: 1280px) 24vw, (min-width: 990px) 31vw, (min-width: 750px) 47vw, 82vw"
                     alt="{{ tile_alt }}"
