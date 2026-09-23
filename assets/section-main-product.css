@@ -63,7 +63,7 @@ product-info variant-selects {
   }
 
   .product__info-wrapper {
-    padding: 7rem 7rem 0 7rem;
+    padding: 7rem 7rem 7rem 7rem;
   }
 
   .product__info-wrapper--extra-padding {
