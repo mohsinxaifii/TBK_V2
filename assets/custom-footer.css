@@ -127,7 +127,8 @@
 }
 
 /* Note — script paragraph sitting opposite the menu columns.
-   Figma: 505px column, Beaurencourt FY 20/32, 0.4px tracking, accent colour. */
+   Figma: 505px column, script face at 20/32, 0.4px tracking, accent colour.
+   The face is Splash Script, via --font-family-script. */
 .custom-footer__note {
   flex: 0 1 50.5rem;
   max-width: 50.5rem;
