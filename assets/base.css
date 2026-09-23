@@ -2608,7 +2608,7 @@ input[type='checkbox'] {
     font-size: var(--font-section-heading-size-mobile);
     line-height: var(--font-section-heading-line-height-mobile);
     letter-spacing: var(--font-section-heading-letter-spacing-mobile);
-    max-width: 80%;
+    max-width: 90%;
     margin: 0 auto 20px;
   }
 
