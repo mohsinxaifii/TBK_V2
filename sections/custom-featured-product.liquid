@@ -68,6 +68,8 @@
     <div class="custom-featured-product__media">
   {%- endif -%}
     <img
+      loading="lazy"
+      decoding="async"
       class="bg-image bg-image--right bg-image--desktop"
       src="{{ section.settings.bg_right_image | image_url }}"
       alt="{{ section.settings.bg_right_image.alt | escape }}"
@@ -75,6 +77,8 @@
       height="{{ section.settings.bg_right_image.height }}"
     >
     <img
+      loading="lazy"
+      decoding="async"
       class="bg-image bg-image--right bg-image--mobile"
       src="{{ bg_right_image_mobile | image_url }}"
       alt="{{ bg_right_image_mobile.alt | escape }}"
@@ -92,6 +96,8 @@
       <div class="custom-featured-product__panel custom-featured-product__panel--mobile"></div>
     <div class="custom-featured-product-left">
       <img
+        loading="lazy"
+        decoding="async"
         src="{{ section.settings['featured-product-left-bg'] | image_url }}"
         alt="{{ section.settings['featured-product-left-bg'].alt | escape }}"
         width="{{ section.settings['featured-product-left-bg'].width }}"
@@ -163,6 +169,8 @@
       <div class="custom-featured-product-left-inner_lower">
         <div class="custom-featured-product-left-cta_container">
           <img
+            loading="lazy"
+            decoding="async"
             src="{{ section.settings.icon | image_url }}"
             alt="{{ section.settings.icon.alt | escape }}"
             width="{{ section.settings.icon.width }}"

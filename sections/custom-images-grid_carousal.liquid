@@ -47,6 +47,8 @@
     >
       {%- if image != blank -%}
         <img
+          loading="lazy"
+          decoding="async"
           src="{{ image | image_url }}"
           alt="{{ image.alt | escape }}"
           width="{{ image.width }}"
