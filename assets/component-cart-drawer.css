@@ -571,6 +571,36 @@ a.mini-cart__promo-banner:hover {
   display: block;
 }
 
+/* ---- Undo Dawn's cart-page layout inside the drawer -------------------- *
+ * component-cart-items.css is loaded site-wide, and below 750px it re-lays
+ * .cart-item as a four-column grid for the cart page's table view. The drawer
+ * reuses those class names, so on a phone:
+ *   - the card stopped filling the row. A grid's auto column sizes to its
+ *     content, so the card came out 290px inside a 372px drawer while every
+ *     ancestor was full width -- which is what looked broken.
+ *   - `gap: 1.5rem` and `margin-bottom: 3.5rem` added spacing the drawer
+ *     already handles with row-gap.
+ *   - .cart-item__quantity-wrapper was allowed to wrap, so the stepper and the
+ *     bin could drop onto separate lines.
+ * Reset here rather than in base.css: the cart page still needs Dawn's version.
+ */
+@media screen and (max-width: 749px) {
+  .mini-cart .cart-item {
+    display: block;
+    grid-template: none;
+    gap: 0;
+    margin-bottom: 0;
+  }
+
+  .mini-cart .cart-item__media {
+    grid-row: auto;
+  }
+
+  .mini-cart .cart-item__quantity-wrapper {
+    flex-wrap: nowrap;
+  }
+}
+
 .cart-items__list {
   display: flex;
   flex-direction: column;
