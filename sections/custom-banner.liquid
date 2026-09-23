@@ -141,16 +141,22 @@
               if (attempt && attempt.catch) attempt.catch(function () {});
             };
             play();
-            // Watchdog: a first request that stalls (flaky mobile network,
-            // a dropped HLS segment) otherwise leaves the frame empty for
-            // good. Reload the source and try again, a couple of times.
+            // Watchdog: a first request that dies (flaky mobile network)
+            // otherwise leaves the frame empty for good. Only a download that
+            // has made no progress for 5s counts -- a slow one that is still
+            // arriving must be left alone, since load() restarts it from zero.
             var retries = 0;
+            var lastProgress = Date.now();
+            video.addEventListener('progress', function () { lastProgress = Date.now(); });
             var check = function () {
               if (video.readyState >= 2 || retries >= 2) return;
-              retries++;
-              video.load();
-              play();
-              setTimeout(check, 5000);
+              if (Date.now() - lastProgress >= 5000) {
+                retries++;
+                lastProgress = Date.now();
+                video.load();
+                play();
+              }
+              setTimeout(check, 1000);
             };
             setTimeout(check, 5000);
           })(document.currentScript.parentElement);
