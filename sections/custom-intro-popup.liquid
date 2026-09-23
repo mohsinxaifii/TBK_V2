@@ -48,6 +48,8 @@
                   {{ section.settings.image_mobile | image_url: width: 708 }} 708w
                 "
                 sizes="354px"
+                width="{{ section.settings.image_mobile.width }}"
+                height="{{ section.settings.image_mobile.height }}"
               >
             {%- endif -%}
             <img
@@ -58,6 +60,8 @@
                 {{ section.settings.image | image_url: width: 1728 }} 1728w
               "
               sizes="864px"
+              width="{{ section.settings.image.width }}"
+              height="{{ section.settings.image.height }}"
               alt="{{ section.settings.image.alt | escape }}"
               loading="eager"
               fetchpriority="low"
