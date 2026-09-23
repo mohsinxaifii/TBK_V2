@@ -127,11 +127,11 @@
 }
 
 /* Note — script paragraph sitting opposite the menu columns.
-   Figma: 505px column, script face at 20/32, 0.4px tracking, accent colour.
-   The face is Splash Script, via --font-family-script. */
+   Figma 3308:11960: 523px column, Splash 24/34, 0.48px tracking, accent colour.
+   The face comes from --font-family-script (Google Fonts 'Splash'). */
 .custom-footer__note {
-  flex: 0 1 50.5rem;
-  max-width: 50.5rem;
+  flex: 0 1 52.3rem;
+  max-width: 52.3rem;
   color: var(--custom-footer-accent);
   font-family: var(--font-family-script);
   font-weight: var(--font-weight-regular);
