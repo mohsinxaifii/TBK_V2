@@ -831,3 +831,15 @@
   ]
 }
 {% endschema %}
+
+{%- comment -%}
+  cart.js defines <cart-items>, <cart-remove-button>, <cart-note>,
+  <discount-code> and <shipping-calculator>. The cart page used to be the only
+  thing that loaded it, but every one of those elements also renders inside the
+  drawer, which is on every page -- so the drawer's quantity steppers, remove
+  buttons, note, discount field and shipping estimate were all inert markup
+  everywhere except /cart. Loaded from the header, it is present on every page,
+  and main-cart-items no longer loads it a second time (a second execution
+  would throw on the repeated customElements.define).
+{%- endcomment -%}
+<script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
