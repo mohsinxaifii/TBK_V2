@@ -113,10 +113,11 @@
                 endif
               endif
 
-              # The story's own hero art, desktop and mobile, same as the article
-              # page uses. These are undesigned photographs — unlike the retired
-              # card_image exports, they carry no baked-in tint and no text, so
-              # the scrim below always renders to keep the index and title legible.
+              # The story's own hero art, desktop and mobile, same pair the article
+              # page uses. These are undesigned photographs: unlike the Figma card
+              # exports this grid used to read from custom.card_image, they carry
+              # no baked-in tint and no text, so the scrim below always renders to
+              # keep the index and title legible over them.
               assign card_image_mobile = article.metafields.custom.hero_image_mobile.value
               assign card_image = article.metafields.custom.hero_image.value | default: article.image
               assign card_alt = card_image.alt | default: article.title | escape
