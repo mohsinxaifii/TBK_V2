@@ -69,7 +69,23 @@ const initBannerPlayback = (root) => {
 
     active.preload = 'auto';
     const attempt = active.play();
-    if (attempt && typeof attempt.catch === 'function') attempt.catch(armGestureRetry);
+    if (attempt && typeof attempt.catch === 'function') {
+      attempt.catch(() => {
+        // Resuming with sound (after scrolling back, or returning to the tab)
+        // isn't a user gesture, so iOS refuses it and the film sat paused.
+        // Drop back to muted -- always allowed -- and let the button know.
+        if (!active.muted) {
+          videos.forEach((video) => {
+            video.muted = true;
+          });
+          root.dispatchEvent(new CustomEvent('custom-banner:force-muted'));
+          const retry = active.play();
+          if (retry && typeof retry.catch === 'function') retry.catch(armGestureRetry);
+          return;
+        }
+        armGestureRetry();
+      });
+    }
   };
 
   if ('IntersectionObserver' in window) {
@@ -207,9 +223,35 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
 
+    // Unmuting also has to (re)start playback -- a video paused by Low Power
+    // Mode or off-screen would otherwise just sit there "unmuted". Called
+    // straight from the click, which is the user gesture iOS requires for
+    // playing with sound.
+    const playVisible = () => {
+      videos.forEach((video) => {
+        if (!video.paused || !video.getClientRects().length) return;
+        video.preload = 'auto';
+        const attempt = video.play();
+        if (attempt && typeof attempt.catch === 'function') attempt.catch(() => {});
+      });
+    };
+
     muteButton.addEventListener('click', () => {
       bumpMuteButton();
       setMuted(!isMuted);
+      if (!isMuted) playVisible();
+    });
+
+    // The playback controller had to fall back to muted on its own.
+    pinSpace.addEventListener('custom-banner:force-muted', () => {
+      if (isMuted) return;
+      isMuted = true;
+      if (hasGsap) videos.forEach((video) => gsap.killTweensOf(video));
+      muteButton.classList.remove('is-unmuted');
+      muteButton.setAttribute('aria-pressed', 'true');
+      muteButton.setAttribute('aria-label', 'Unmute video');
+      morphMuteIcon(true);
+      updateCursorTagLabel('Unmute Video');
     });
 
     // --- Cursor-attached "mute/unmute" tag -----------------------------------
@@ -381,6 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.target.closest(CURSOR_EXCLUDED_SELECTOR)) return;
         bumpMuteButton();
         setMuted(!isMuted);
+        if (!isMuted) playVisible();
       });
     }
 

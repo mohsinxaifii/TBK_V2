@@ -23,11 +23,40 @@
     transform-origin: center;
 }
 
-.custom-banner-mute-toggle:hover,
 .custom-banner-mute-toggle.is-unmuted {
     background: #570f13;
     border-color: #570f13;
     color: #FFFDEE;
+}
+
+/* Hover only where it's real: iOS keeps :hover on the last thing tapped, so
+   the button stayed filled -- the "unmuted" look -- after tapping it back to
+   muted, and read as not having responded. */
+@media (hover: hover) and (pointer: fine) {
+    .custom-banner-mute-toggle:hover {
+        background: #570f13;
+        border-color: #570f13;
+        color: #FFFDEE;
+    }
+}
+
+/* Invisible hit area past the visible circle: 36px on mobile is under the
+   44px minimum, and near-misses were simply lost. */
+.custom-banner-mute-toggle::before {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+}
+
+.custom-banner-mute-toggle {
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.custom-banner-mute-toggle > * {
+    pointer-events: none;
 }
 
 .custom-banner-mute-toggle:active {
