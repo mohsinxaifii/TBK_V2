@@ -29,7 +29,11 @@
    /* 1b. Extra families used by a single component each */
    --font-family-wordmark: 'Aurum';
    --font-family-devanagari: 'Ouma Devanagari', serif;
+<<<<<<< HEAD
+   --font-family-script: 'Splash', cursive;
+=======
    --font-family-script: 'Splash Script', cursive;
+>>>>>>> 1e6f6405b2fa2cd34a24d6abf8c17195ec4dd5a1
    --font-family-handwritten: 'Caveat', cursive;
    /* IBM Plex Serif, the featured-product size/price face on home. All that
      is left of the home-page Figma pass (2887:3776) after its type was
@@ -438,11 +442,11 @@
    --font-footer-copyright-weight: var(--font-weight-thin);
    --font-footer-copyright-line-height: 20px;
    --font-footer-copyright-letter-spacing: 0.48px;
-   --font-footer-note-size: 20px;
-   --font-footer-note-line-height: 32px;
-   --font-footer-note-letter-spacing: 0.4px;
-   --font-footer-note-size-mobile: 18px;
-   --font-footer-note-line-height-mobile: 28px;
+   --font-footer-note-size: 24px;
+   --font-footer-note-line-height: 34px;
+   --font-footer-note-letter-spacing: 0.48px;
+   --font-footer-note-size-mobile: 22px;
+   --font-footer-note-line-height-mobile: 30px;
 
    /* ---- 404 page ---- */
    --font-404-button-size: 16px;
