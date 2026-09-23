@@ -204,7 +204,13 @@ class CartItems extends HTMLElement {
 
     const loadingOverlay = this.querySelectorAll('.loading-overlay')[line - 1];
     if (loadingOverlay) loadingOverlay.classList.remove('hidden');
-    
+
+    // Dim and freeze the whole row, not just its controls, so a quantity or
+    // remove press reads as busy end to end -- and a second press cannot land
+    // on a row whose request is still in flight.
+    const row = this.querySelectorAll('.cart-item')[line - 1];
+    if (row) row.classList.add('is-busy');
+
     document.activeElement.blur();
     if (this.lineItemStatusElement) this.lineItemStatusElement.setAttribute('aria-hidden', false);
   }
@@ -212,6 +218,11 @@ class CartItems extends HTMLElement {
   disableLoading() {
     const cartItems = document.getElementById('main-cart-items');
     if (cartItems) cartItems.classList.remove('cart__items--disabled');
+
+    // The drawer usually replaces this markup wholesale on success, but on an
+    // error path the same nodes stay put and must not be left frozen.
+    this.querySelectorAll('.cart-item.is-busy').forEach((row) => row.classList.remove('is-busy'));
+    this.querySelectorAll('.loading-overlay:not(.hidden)').forEach((o) => o.classList.add('hidden'));
   }
 
   renderContents(parsedState) {
