@@ -14,10 +14,10 @@
       "name": "Custom Banner",
       "settings": {
         "media_type": "video",
-        "banner_image": "shopify:\/\/shop_images\/Wireframe_-_4_1_b731baef-29b5-4baf-ba49-6ecb7f7b7d0a.jpg",
-        "mobile_banner_image": "shopify:\/\/shop_images\/Frame_5.jpg",
-        "banner_video": "shopify:\/\/files\/videos\/TBK Brand Film (1)_8fa9514b-b42c-44a4-a720-d3f8113f499a.mp4",
-        "mobile_banner_video": "shopify:\/\/files\/videos\/Video-61169.mp4"
+        "banner_image": "shopify://shop_images/Wireframe_-_4_1_b731baef-29b5-4baf-ba49-6ecb7f7b7d0a.jpg",
+        "mobile_banner_image": "shopify://shop_images/Frame_5.jpg",
+        "banner_video": "shopify://files/videos/TBK Brand Film (1)_8fa9514b-b42c-44a4-a720-d3f8113f499a.mp4",
+        "mobile_banner_video": "shopify://files/videos/Video-61169.mp4"
       }
     },
     "custom_featured_product_rwnxPP": {
@@ -27,15 +27,15 @@
         "reverse_layout": false,
         "featured_product": "paraat-bhujia",
         "bg_left_color": "#570f13",
-        "bg_right_image": "shopify:\/\/shop_images\/Frame_4.png",
-        "bg_right_image_mobile": "shopify:\/\/shop_images\/Frame_4.png",
-        "featured-product-left-bg": "shopify:\/\/shop_images\/Frame_1321319393_3.jpg",
+        "bg_right_image": "shopify://shop_images/Frame_4.png",
+        "bg_right_image_mobile": "shopify://shop_images/Frame_4.png",
+        "featured-product-left-bg": "shopify://shop_images/Frame_1321319393_3.jpg",
         "top_left_caption": "our first",
         "heading": "Paraat Bhujia",
-        "description": "<p>Its story begins in the royal kitchens of Maharaja Dungar Singh Ji, with moth, gram flour, spices and the instinct of experienced hands. Cooked over the bhatti and gathered warm into the paraat, those fine golden strands became a taste inseparable from Bikaner, carried from one generation of hands to another.<\/p>",
+        "description": "<p>Its story begins in the royal kitchens of Maharaja Dungar Singh Ji, with moth, gram flour, spices and the instinct of experienced hands. Cooked over the bhatti and gathered warm into the paraat, those fine golden strands became a taste inseparable from Bikaner, carried from one generation of hands to another.</p>",
         "size": "330 gm",
         "tax_note": "(Inclusive of all taxes.)",
-        "icon": "shopify:\/\/shop_images\/Vector_1.png",
+        "icon": "shopify://shop_images/Vector_1.png",
         "cta": "BUY NOW",
         "top_right_caption": "PARAAT BHUJIA"
       }
@@ -46,7 +46,7 @@
         "value_DE3bCT": {
           "type": "value",
           "settings": {
-            "icon": "shopify:\/\/shop_images\/ChatGPT_Image_Jul_9_2026_05_27_59_PM_1.png",
+            "icon": "shopify://shop_images/ChatGPT_Image_Jul_9_2026_05_27_59_PM_1.png",
             "title": "Made in high Oleic sunflower oil",
             "floater": "High oleic sunflower oil is used for its clean flavour and stability, helping retain the distinct taste of bhujia."
           }
@@ -54,7 +54,7 @@
         "value_iXAcUw": {
           "type": "value",
           "settings": {
-            "icon": "shopify:\/\/shop_images\/ChatGPT_Image_Jul_9_2026_05_29_49_PM_1.png",
+            "icon": "shopify://shop_images/ChatGPT_Image_Jul_9_2026_05_29_49_PM_1.png",
             "title": "No re-use of oil, for purity of taste",
             "floater": "Fresh oil is used for every batch, keeping the flavour clean and balanced."
           }
@@ -62,7 +62,7 @@
         "value_8pQkUR": {
           "type": "value",
           "settings": {
-            "icon": "shopify:\/\/shop_images\/ChatGPT_Image_Jul_9_2026_05_31_29_PM_1.png",
+            "icon": "shopify://shop_images/ChatGPT_Image_Jul_9_2026_05_31_29_PM_1.png",
             "title": "Slow-cooked in traditional Bhatti",
             "floater": "Each batch is slow-cooked in a traditional bhatti, allowing the heat to be carefully controlled throughout."
           }
@@ -70,7 +70,7 @@
         "value_W467ek": {
           "type": "value",
           "settings": {
-            "icon": "shopify:\/\/shop_images\/ChatGPT_Image_Jul_9_2026_05_33_11_PM_1.png",
+            "icon": "shopify://shop_images/ChatGPT_Image_Jul_9_2026_05_33_11_PM_1.png",
             "title": "Made with low sodium salt",
             "floater": "Low sodium salt keeps the seasoning measured, allowing the flavour of the ingredients to remain clear."
           }
@@ -78,7 +78,7 @@
         "value_8mgV7n": {
           "type": "value",
           "settings": {
-            "icon": "shopify:\/\/shop_images\/ChatGPT_Image_Jul_9_2026_05_35_34_PM_1.png",
+            "icon": "shopify://shop_images/ChatGPT_Image_Jul_9_2026_05_35_34_PM_1.png",
             "title": "Prepared by skilled hands in batches",
             "floater": "Each batch is prepared by experienced hands, carrying forward a craft passed down through generations."
           }
@@ -103,15 +103,15 @@
         "reverse_layout": true,
         "featured_product": "handmade-bhujia",
         "bg_left_color": "#570f13",
-        "bg_right_image": "shopify:\/\/shop_images\/Frame_4_77881c9d-3024-4964-9e21-b704c7fe1794.png",
-        "bg_right_image_mobile": "shopify:\/\/shop_images\/Frame_4_77881c9d-3024-4964-9e21-b704c7fe1794.png",
-        "featured-product-left-bg": "shopify:\/\/shop_images\/Frame_1321319393_3.jpg",
+        "bg_right_image": "shopify://shop_images/Frame_4_77881c9d-3024-4964-9e21-b704c7fe1794.png",
+        "bg_right_image_mobile": "shopify://shop_images/Frame_4_77881c9d-3024-4964-9e21-b704c7fe1794.png",
+        "featured-product-left-bg": "shopify://shop_images/Frame_1321319393_3.jpg",
         "top_left_caption": "our classic",
         "heading": "Handmade Bhujia",
-        "description": "<p>Made in the tradition of Bikaner's experienced hands, our Handmade Bhujia begins with moth and gram flour, a measured blend of spices and a method guided by instinct. Hand-pressed into fine strands and cooked over the bhatti, it has a delicate crispness and lingering savoury depth that speak as much of its making as of the place it comes from.<\/p>",
+        "description": "<p>Made in the tradition of Bikaner's experienced hands, our Handmade Bhujia begins with moth and gram flour, a measured blend of spices and a method guided by instinct. Hand-pressed into fine strands and cooked over the bhatti, it has a delicate crispness and lingering savoury depth that speak as much of its making as of the place it comes from.</p>",
         "size": "120 gm X 3",
         "tax_note": "(Inclusive of all taxes.)",
-        "icon": "shopify:\/\/shop_images\/Vector_1.png",
+        "icon": "shopify://shop_images/Vector_1.png",
         "cta": "BUY NOW",
         "top_right_caption": "HANDMADE BHUJIA"
       }
@@ -152,8 +152,8 @@
         "subtitle_line_hUrimG": {
           "type": "subtitle_line",
           "settings": {
-            "hindi": "<p>कहते हैं कुछ स्वाद किसी रसोई में नहीं, किसी ज़मीन में जन्म लेते हैं।<br\/><br\/>करीब डेढ़ सौ साल पहले थार के बीच बसे बीकानेर में एक ऐसा ही स्वाद जन्म लेने वाला था।<br\/><br\/>साल था अठारह सौ सतहत्तर। बीकानेर के महाराजा डूंगर सिंह जी ने अपने शाही रसोइयों के सामने एक इच्छा रखी — कुछ ऐसा बनाया जाए, जो पहले कभी न बना हो।<br\/><br\/>लेकिन एक बुज़ुर्ग रसोईदारनी की नज़र एक छोटे से दाने पर जाकर रुकी। मोठ — थार की गर्म, सूखी मिट्टी में पनपने वाला दाना। उसने मोठ के साथ बेसन लिया, फिर काली मिर्च, लाल मिर्च, इलायची और लौंग।<br\/><br\/>सामान साधारण था, हाथ अनुभवी। आटा गूँधा गया, बारीक जाली से दबाकर गर्म तेल में उतारा गया, और निकले महीन सुनहरे लच्छे।<br\/><br\/>कहते हैं उस नए स्वाद को उस दिन एक नाम मिला — भुजिया। पर शायद उसकी असली कहानी उसके बाद शुरू हुई।<br\/><br\/>राजमहल की रसोई से वो हुनर बीकानेर की गलियों तक पहुँचा। एक हाथ से दूसरे हाथ, एक पीढ़ी से अगली पीढ़ी। वक़्त बदलता गया, बनाने वाले हाथ बदलते गए, लेकिन मोठ रहा, मसाले रहे, बटी रही, और हाथ का वो हुनर भी।<br\/><br\/>धीरे-धीरे भुजिया सिर्फ़ बीकानेर में बनने वाली चीज़ नहीं रही — भुजिया में ही बीकानेर बस गया।<br\/><br\/>और शायद इसीलिए, आज भी जब बीकानेरी भुजिया की एक मुट्ठी हाथ में आती है, तो उसमें सिर्फ़ स्वाद नहीं मिलता। उसमें मिलती है एक धरती, एक हुनर, और कई पीढ़ियों की याद।<br\/><br\/>एक महाराजा की सोच से जन्मी, एक रसोईदारनी के हाथों से बनी, और थार की मिट्टी में पली — ये कहानी है बीकानेरी भुजिया की।<\/p>",
-            "english": "<p>Come, come, come! Today, I am going to tell you a story that perhaps even your grandparents have never heard. It is a story of salt and spice, and of a Maharaja’s grand feast. This is the story of Bhujia!<br\/><br\/>Our story begins nearly a century and a half ago. In the middle of a sea of sand stood Bikaner. Walls of red sandstone, palaces reaching towards the sky, and the vast Thar stretching in every direction. At the time, the throne of Bikaner was held by Maharaja Shri Dungar Singhji. The year was 1877.<br\/><br\/>A grand feast was being prepared at the palace. Guests were expected from far and wide. The Maharaja summoned the finest cooks of his royal kitchen and commanded, “Make something that has never been made before. Something born of this very land. Something that carries the spirit of Bikaner within it.”<br\/><br\/>The cooks were left wondering. What could they possibly make?<br\/><br\/>Among them stood an elderly cook, quietly observing. Silver in her hair. Years of skill written into her hands. She said nothing. She simply smiled and walked towards the pantry.<br\/><br\/>There she found moth beans, small desert beans that flourished in the scorching soil of the Thar. She took some gram flour. Then black pepper, red chilli, cardamom and clove. She looked at everything before her and said, “This is all I need.”<br\/><br\/>And then, the kitchen came alive. The dough was kneaded. It was pressed through a fine sieve straight into bubbling hot oil. Out came fine, golden strands.<br\/><br\/>The aroma was such that even the guards outside the kitchen began to wonder, “What in the world are they making in there?”<br\/><br\/>A platter was carried before the Maharaja. Every eye turned towards it. The Maharaja picked up a strand. Then another. Then another handful. Before long, even the guests were reaching for more.<br\/><br\/>The Maharaja asked, “What is this?”<br\/><br\/>The elderly cook bowed her head and replied, “It does not have a name yet, Your Highness.”<br\/><br\/>The Maharaja smiled. And, as the story goes, that day this new taste found its name, Bhujia.<br\/><br\/>But wait, the story is not over yet.<br\/><br\/>Years passed. The art of making Bhujia travelled from one pair of hands to another. From the royal kitchens into the lanes of Bikaner. From the lanes to its shops. And from the shops into homes.<br\/><br\/>Generations changed. The hands that made it changed. But the moth beans, the spices, the fire, and the age-old skill of making it continued to be passed on.<br\/><br\/>And slowly, Bhujia was no longer simply a taste made in Bikaner. Bikaner itself came to live within Bhujia.<br\/><br\/>So the next time you pick up a handful of Bikaneri Bhujia, remember. Born from a Maharaja’s idea. Brought to life by an elderly cook’s hands. And nurtured by the soil of the Thar.<br\/><br\/>This is the story of our Bikaneri Bhujia.<\/p>"
+            "hindi": "<p>कहते हैं कुछ स्वाद किसी रसोई में नहीं, किसी ज़मीन में जन्म लेते हैं।<br/><br/>करीब डेढ़ सौ साल पहले थार के बीच बसे बीकानेर में एक ऐसा ही स्वाद जन्म लेने वाला था।<br/><br/>साल था अठारह सौ सतहत्तर। बीकानेर के महाराजा डूंगर सिंह जी ने अपने शाही रसोइयों के सामने एक इच्छा रखी — कुछ ऐसा बनाया जाए, जो पहले कभी न बना हो।<br/><br/>लेकिन एक बुज़ुर्ग रसोईदारनी की नज़र एक छोटे से दाने पर जाकर रुकी। मोठ — थार की गर्म, सूखी मिट्टी में पनपने वाला दाना। उसने मोठ के साथ बेसन लिया, फिर काली मिर्च, लाल मिर्च, इलायची और लौंग।<br/><br/>सामान साधारण था, हाथ अनुभवी। आटा गूँधा गया, बारीक जाली से दबाकर गर्म तेल में उतारा गया, और निकले महीन सुनहरे लच्छे।<br/><br/>कहते हैं उस नए स्वाद को उस दिन एक नाम मिला — भुजिया। पर शायद उसकी असली कहानी उसके बाद शुरू हुई।<br/><br/>राजमहल की रसोई से वो हुनर बीकानेर की गलियों तक पहुँचा। एक हाथ से दूसरे हाथ, एक पीढ़ी से अगली पीढ़ी। वक़्त बदलता गया, बनाने वाले हाथ बदलते गए, लेकिन मोठ रहा, मसाले रहे, बटी रही, और हाथ का वो हुनर भी।<br/><br/>धीरे-धीरे भुजिया सिर्फ़ बीकानेर में बनने वाली चीज़ नहीं रही — भुजिया में ही बीकानेर बस गया।<br/><br/>और शायद इसीलिए, आज भी जब बीकानेरी भुजिया की एक मुट्ठी हाथ में आती है, तो उसमें सिर्फ़ स्वाद नहीं मिलता। उसमें मिलती है एक धरती, एक हुनर, और कई पीढ़ियों की याद।<br/><br/>एक महाराजा की सोच से जन्मी, एक रसोईदारनी के हाथों से बनी, और थार की मिट्टी में पली — ये कहानी है बीकानेरी भुजिया की।</p>",
+            "english": "<p>Come, come, come! Today, I am going to tell you a story that perhaps even your grandparents have never heard. It is a story of salt and spice, and of a Maharaja’s grand feast. This is the story of Bhujia!<br/><br/>Our story begins nearly a century and a half ago. In the middle of a sea of sand stood Bikaner. Walls of red sandstone, palaces reaching towards the sky, and the vast Thar stretching in every direction. At the time, the throne of Bikaner was held by Maharaja Shri Dungar Singhji. The year was 1877.<br/><br/>A grand feast was being prepared at the palace. Guests were expected from far and wide. The Maharaja summoned the finest cooks of his royal kitchen and commanded, “Make something that has never been made before. Something born of this very land. Something that carries the spirit of Bikaner within it.”<br/><br/>The cooks were left wondering. What could they possibly make?<br/><br/>Among them stood an elderly cook, quietly observing. Silver in her hair. Years of skill written into her hands. She said nothing. She simply smiled and walked towards the pantry.<br/><br/>There she found moth beans, small desert beans that flourished in the scorching soil of the Thar. She took some gram flour. Then black pepper, red chilli, cardamom and clove. She looked at everything before her and said, “This is all I need.”<br/><br/>And then, the kitchen came alive. The dough was kneaded. It was pressed through a fine sieve straight into bubbling hot oil. Out came fine, golden strands.<br/><br/>The aroma was such that even the guards outside the kitchen began to wonder, “What in the world are they making in there?”<br/><br/>A platter was carried before the Maharaja. Every eye turned towards it. The Maharaja picked up a strand. Then another. Then another handful. Before long, even the guests were reaching for more.<br/><br/>The Maharaja asked, “What is this?”<br/><br/>The elderly cook bowed her head and replied, “It does not have a name yet, Your Highness.”<br/><br/>The Maharaja smiled. And, as the story goes, that day this new taste found its name, Bhujia.<br/><br/>But wait, the story is not over yet.<br/><br/>Years passed. The art of making Bhujia travelled from one pair of hands to another. From the royal kitchens into the lanes of Bikaner. From the lanes to its shops. And from the shops into homes.<br/><br/>Generations changed. The hands that made it changed. But the moth beans, the spices, the fire, and the age-old skill of making it continued to be passed on.<br/><br/>And slowly, Bhujia was no longer simply a taste made in Bikaner. Bikaner itself came to live within Bhujia.<br/><br/>So the next time you pick up a handful of Bikaneri Bhujia, remember. Born from a Maharaja’s idea. Brought to life by an elderly cook’s hands. And nurtured by the soil of the Thar.<br/><br/>This is the story of our Bikaneri Bhujia.</p>"
           }
         }
       },
@@ -162,11 +162,11 @@
       ],
       "name": "Custom Audio Player",
       "settings": {
-        "banner_image": "shopify:\/\/shop_images\/Wireframe_-_10.jpg",
-        "mobile_banner_image": "shopify:\/\/shop_images\/Frame_1321317972_45afb4e3-0468-4667-91f9-4f7cf4cb61cd.jpg",
+        "banner_image": "shopify://shop_images/Wireframe_-_10.jpg",
+        "mobile_banner_image": "shopify://shop_images/Frame_1321317972_45afb4e3-0468-4667-91f9-4f7cf4cb61cd.jpg",
         "heading": "Aao Sune Kahani\nBikaneri Bhujia Ki",
-        "audio_url": "",
-        "audio_url_english": "",
+        "audio_url": "https://cdn.shopify.com/s/files/1/0764/0953/6706/files/file.mp3?v=1790187924",
+        "audio_url_english": "https://cdn.shopify.com/s/files/1/0764/0953/6706/files/file.mp3?v=1790187924",
         "default_language": "hi"
       }
     },
@@ -174,9 +174,9 @@
       "type": "custom-banner-text",
       "name": "Custom Banner Text",
       "settings": {
-        "banner_image": "shopify:\/\/shop_images\/Frame_12.jpg",
-        "mobile_banner_image": "shopify:\/\/shop_images\/Frame_1321319440_1.jpg",
-        "heading": "<p>From <em>the <\/em>royal Kitchen to <em>your <\/em>Celebrations<\/p>"
+        "banner_image": "shopify://shop_images/Frame_12.jpg",
+        "mobile_banner_image": "shopify://shop_images/Frame_1321319440_1.jpg",
+        "heading": "<p>From <em>the </em>royal Kitchen to <em>your </em>Celebrations</p>"
       }
     },
     "custom_images_grid_carousal_9HXCxw": {
@@ -185,7 +185,7 @@
         "image_hUxcYN": {
           "type": "image",
           "settings": {
-            "desktop_image": "shopify:\/\/shop_images\/New_11_1_1.png",
+            "desktop_image": "shopify://shop_images/New_11_1_1.png",
             "link": "",
             "open_in_new_tab": false
           }
@@ -193,7 +193,7 @@
         "image_fnmVPi": {
           "type": "image",
           "settings": {
-            "desktop_image": "shopify:\/\/shop_images\/lifestyle_2.png",
+            "desktop_image": "shopify://shop_images/lifestyle_2.png",
             "link": "",
             "open_in_new_tab": false
           }
@@ -201,7 +201,7 @@
         "image_RNaA8A": {
           "type": "image",
           "settings": {
-            "desktop_image": "shopify:\/\/shop_images\/lifestyle_3_1.png",
+            "desktop_image": "shopify://shop_images/lifestyle_3_1.png",
             "link": "",
             "open_in_new_tab": false
           }
@@ -209,7 +209,7 @@
         "image_Q8mn7i": {
           "type": "image",
           "settings": {
-            "desktop_image": "shopify:\/\/shop_images\/Frame_8_0d97b58e-3f5c-498f-9221-3d56269b410f.png",
+            "desktop_image": "shopify://shop_images/Frame_8_0d97b58e-3f5c-498f-9221-3d56269b410f.png",
             "link": "",
             "open_in_new_tab": false
           }
@@ -232,72 +232,72 @@
         "slide_U3kqPV": {
           "type": "slide",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tbk-rituals-carousel-come-for-tea.jpg",
+            "image": "shopify://shop_images/tbk-rituals-carousel-come-for-tea.jpg",
             "tag_1": "CULTURE",
             "tag_2": "TECHNIQUES",
             "tag_3": "Traditions",
             "caption": "Rituals",
             "heading": "I Had Only Come For Tea",
-            "description": "<p>An Afternoon in a Sindhi Home<\/p><p>Every home has a language. Some speak through walls, others through heirlooms. A Sindhi home, I discovered, speaks through what it places in front of you before it asks anything in return.<\/p>",
+            "description": "<p>An Afternoon in a Sindhi Home</p><p>Every home has a language. Some speak through walls, others through heirlooms. A Sindhi home, I discovered, speaks through what it places in front of you before it asks anything in return.</p>",
             "cta_text": "Read More",
-            "link": "shopify:\/\/blogs\/rituals\/i-had-only-come-for-tea"
+            "link": "shopify://blogs/rituals/i-had-only-come-for-tea"
           }
         },
         "slide_amw3Ht": {
           "type": "slide",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tbk-rituals-carousel-moongodi.jpg",
+            "image": "shopify://shop_images/tbk-rituals-carousel-moongodi.jpg",
             "tag_1": "CULTURE",
             "tag_2": "TECHNIQUES",
             "tag_3": "Traditions",
             "caption": "Rituals",
             "heading": "The Season of Moongodi",
-            "description": "<p>In the winters of Marwar, the kitchen no longer remained downstairs. It climbed to the terrace. The bedsheets were stretched neatly across the floor, their corners held down by brass lottas so the winter breeze would not disturb them. A heavy steel paraat rested in the warmest patch of sunlight, filled with pale urad batter that had been soaking since the previous evening. Someone tested the batter with a spoon, watched it fall back into the bowl, nodded quietly, and began placing the first wadi onto the cloth.<\/p>",
+            "description": "<p>In the winters of Marwar, the kitchen no longer remained downstairs. It climbed to the terrace. The bedsheets were stretched neatly across the floor, their corners held down by brass lottas so the winter breeze would not disturb them. A heavy steel paraat rested in the warmest patch of sunlight, filled with pale urad batter that had been soaking since the previous evening. Someone tested the batter with a spoon, watched it fall back into the bowl, nodded quietly, and began placing the first wadi onto the cloth.</p>",
             "cta_text": "Read More",
-            "link": "shopify:\/\/blogs\/rituals\/the-season-of-moongodi"
+            "link": "shopify://blogs/rituals/the-season-of-moongodi"
           }
         },
         "slide_4LjnHX": {
           "type": "slide",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tbk-rituals-carousel-hour-between.jpg",
+            "image": "shopify://shop_images/tbk-rituals-carousel-hour-between.jpg",
             "tag_1": "CULTURE",
             "tag_2": "TECHNIQUES",
             "tag_3": "Traditions",
             "caption": "Rituals",
             "heading": "The Hour Between",
-            "description": "<p>When Business Learnt to Pause<\/p><p>Across the business communities of western India, there is an hour that has quietly survived every generation. It is neither part of the workday nor entirely home. It begins somewhere between the closing of a ledger and the first handful of namkeen. A pause where conversations have long carried far more than business.<\/p>",
+            "description": "<p>When Business Learnt to Pause</p><p>Across the business communities of western India, there is an hour that has quietly survived every generation. It is neither part of the workday nor entirely home. It begins somewhere between the closing of a ledger and the first handful of namkeen. A pause where conversations have long carried far more than business.</p>",
             "cta_text": "Read More",
-            "link": "shopify:\/\/blogs\/rituals\/the-hour-between"
+            "link": "shopify://blogs/rituals/the-hour-between"
           }
         },
         "slide_7xGQwy": {
           "type": "slide",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tbk-rituals-carousel-extra-plate.jpg",
+            "image": "shopify://shop_images/tbk-rituals-carousel-extra-plate.jpg",
             "tag_1": "CULTURE",
             "tag_2": "TECHNIQUES",
             "tag_3": "Traditions",
             "caption": "Rituals",
             "heading": "The Extra Plate",
-            "description": "<p>No One Asked Who Was Coming<\/p><p>Across many Indian homes, one extra plate was never an accident. It was a quiet habit, passed from one generation to the next. Long before guests announced their arrival, the kitchen had already prepared a place for them.<\/p>",
+            "description": "<p>No One Asked Who Was Coming</p><p>Across many Indian homes, one extra plate was never an accident. It was a quiet habit, passed from one generation to the next. Long before guests announced their arrival, the kitchen had already prepared a place for them.</p>",
             "cta_text": "Read More",
-            "link": "shopify:\/\/blogs\/rituals\/the-extra-plate"
+            "link": "shopify://blogs/rituals/the-extra-plate"
           }
         },
         "slide_KtFEnP": {
           "type": "slide",
           "disabled": true,
           "settings": {
-            "image": "shopify:\/\/shop_images\/tbk-rituals-carousel-baithak.jpg",
+            "image": "shopify://shop_images/tbk-rituals-carousel-baithak.jpg",
             "tag_1": "CULTURE",
             "tag_2": "TECHNIQUES",
             "tag_3": "Traditions",
             "caption": "Rituals",
             "heading": "Baithak",
-            "description": "<p>As remembered by Jai Agarwal, Bikaner<\/p><p>Some inherit land. Some inherit jewellery. Some inherit a family business. In merchant homes across western India, another inheritance quietly passes from one generation to the next not through documents, but through conversations. We called it the baithak.<\/p>",
+            "description": "<p>As remembered by Jai Agarwal, Bikaner</p><p>Some inherit land. Some inherit jewellery. Some inherit a family business. In merchant homes across western India, another inheritance quietly passes from one generation to the next not through documents, but through conversations. We called it the baithak.</p>",
             "cta_text": "Read More",
-            "link": "\/blogs\/rituals\/baithak"
+            "link": "/blogs/rituals/baithak"
           }
         }
       },
@@ -320,9 +320,9 @@
         "testimonial_hiNmt1": {
           "type": "testimonial",
           "settings": {
-            "content": "<p>जब रंग मंच पर शब्दों का एहसास कम हुआ,<br\/>तेरा क्या और मेरा क्या के ऊपर ही तर्क हुआ,<br\/>तब बीकानेरी भुजिया की खुशबू ने,<br\/>मिट्टी से जुड़ी हुई इस स्वाद ने,<br\/>भावनाओं को वापस महसूस करवाया,<br\/>नए इरादों को फिर से जुड़वाया,<br\/>नए यादों को फिर से बुनवाया,<br\/>और यह समझाया,<br\/>की रास्ते कितने भी कठिन ना हो जाएँ,<br\/>सच्चे स्वाद का असर,<br\/>हर टूटे हुए तार को फिर से जोड़ता है,<br\/>हर भूले हुए राह को फिर से खोजता है।<br\/>हम मिले एक दूसरे से,<br\/>हम मिले बीकानेरी भुजिया से।<\/p>",
+            "content": "<p>जब रंग मंच पर शब्दों का एहसास कम हुआ,<br/>तेरा क्या और मेरा क्या के ऊपर ही तर्क हुआ,<br/>तब बीकानेरी भुजिया की खुशबू ने,<br/>मिट्टी से जुड़ी हुई इस स्वाद ने,<br/>भावनाओं को वापस महसूस करवाया,<br/>नए इरादों को फिर से जुड़वाया,<br/>नए यादों को फिर से बुनवाया,<br/>और यह समझाया,<br/>की रास्ते कितने भी कठिन ना हो जाएँ,<br/>सच्चे स्वाद का असर,<br/>हर टूटे हुए तार को फिर से जोड़ता है,<br/>हर भूले हुए राह को फिर से खोजता है।<br/>हम मिले एक दूसरे से,<br/>हम मिले बीकानेरी भुजिया से।</p>",
             "hindi": true,
-            "image": "shopify:\/\/shop_images\/tbk-testimonial-namit-nayak.png",
+            "image": "shopify://shop_images/tbk-testimonial-namit-nayak.png",
             "name": "Namit Nayak",
             "location": ""
           }
@@ -330,9 +330,9 @@
         "testimonial_5VFqLj": {
           "type": "testimonial",
           "settings": {
-            "content": "<p>I bought it for the family and ended up keeping one pack at work. That is the advantage of the three-pack. The bhujia itself is beautifully crisp and surprisingly light. Excellent with afternoon tea.<\/p>",
+            "content": "<p>I bought it for the family and ended up keeping one pack at work. That is the advantage of the three-pack. The bhujia itself is beautifully crisp and surprisingly light. Excellent with afternoon tea.</p>",
             "hindi": false,
-            "image": "shopify:\/\/shop_images\/tbk-testimonial-dhruv-mehta.png",
+            "image": "shopify://shop_images/tbk-testimonial-dhruv-mehta.png",
             "name": "Dhruv Mehta",
             "location": ""
           }
@@ -340,9 +340,9 @@
         "testimonial_OrhowB": {
           "type": "testimonial",
           "settings": {
-            "content": "<p>In our house, something crunchy always appears when people sit down together. We opened this when friends came over and everyone had an opinion about bhujia. By the end, everyone was eating from the same tin. That probably says enough.<\/p>",
+            "content": "<p>In our house, something crunchy always appears when people sit down together. We opened this when friends came over and everyone had an opinion about bhujia. By the end, everyone was eating from the same tin. That probably says enough.</p>",
             "hindi": false,
-            "image": "shopify:\/\/shop_images\/tbk-testimonial-ayesha-mirchandani.png",
+            "image": "shopify://shop_images/tbk-testimonial-ayesha-mirchandani.png",
             "name": "Ayesha Mirchandani",
             "location": ""
           }
@@ -350,9 +350,9 @@
         "testimonial_nYFRJ6": {
           "type": "testimonial",
           "settings": {
-            "content": "<p>We opened one pack thinking the other two would last. They didn’t. It has that wonderful combination of being fine and crisp without feeling too sharp or oily. Very easy to put on the table for everyone.<\/p>",
+            "content": "<p>We opened one pack thinking the other two would last. They didn’t. It has that wonderful combination of being fine and crisp without feeling too sharp or oily. Very easy to put on the table for everyone.</p>",
             "hindi": false,
-            "image": "shopify:\/\/shop_images\/tbk-testimonial-mihir-patel.png",
+            "image": "shopify://shop_images/tbk-testimonial-mihir-patel.png",
             "name": "Mihir Patel",
             "location": ""
           }
@@ -360,9 +360,9 @@
         "testimonial_ENGKOk": {
           "type": "testimonial",
           "settings": {
-            "content": "<p>My mother tasted it first and immediately asked where it was from. That was probably my favourite reaction. There is something very old-school about the flavour, but the overall experience feels beautifully refined.<\/p>",
+            "content": "<p>My mother tasted it first and immediately asked where it was from. That was probably my favourite reaction. There is something very old-school about the flavour, but the overall experience feels beautifully refined.</p>",
             "hindi": false,
-            "image": "shopify:\/\/shop_images\/tbk-testimonial-rhea-advani.png",
+            "image": "shopify://shop_images/tbk-testimonial-rhea-advani.png",
             "name": "Rhea Advani",
             "location": ""
           }
@@ -370,9 +370,9 @@
         "testimonial_COXMru": {
           "type": "testimonial",
           "settings": {
-            "content": "<p>The test for me was whether it reminded me of the bhujia we would bring back from Bikaner. It did. Not because it was excessively spicy, but because the moth and masala had that depth I associate with the real thing.<\/p>",
+            "content": "<p>The test for me was whether it reminded me of the bhujia we would bring back from Bikaner. It did. Not because it was excessively spicy, but because the moth and masala had that depth I associate with the real thing.</p>",
             "hindi": false,
-            "image": "shopify:\/\/shop_images\/tbk-testimonial-nandani-rathi.png",
+            "image": "shopify://shop_images/tbk-testimonial-nandani-rathi.png",
             "name": "Nandini Rathi",
             "location": ""
           }
@@ -380,9 +380,9 @@
         "testimonial_adyTR0": {
           "type": "testimonial",
           "settings": {
-            "content": "<p>I grew up eating bhujia in Rajasthan, so there is a certain taste you instinctively look for. This has that familiar moth flavour, but what stayed with me was how light and balanced it felt. It reminded me of home without trying too hard.<\/p>",
+            "content": "<p>I grew up eating bhujia in Rajasthan, so there is a certain taste you instinctively look for. This has that familiar moth flavour, but what stayed with me was how light and balanced it felt. It reminded me of home without trying too hard.</p>",
             "hindi": false,
-            "image": "shopify:\/\/shop_images\/tbk-testimonial-radhika-daga.png",
+            "image": "shopify://shop_images/tbk-testimonial-radhika-daga.png",
             "name": "Radhika Daga",
             "location": ""
           }
@@ -390,9 +390,9 @@
         "testimonial_q3BnjD": {
           "type": "testimonial",
           "settings": {
-            "content": "<p>It reminded me of visiting relatives in Rajasthan and finding a tin of bhujia already waiting on the table. There is a comfort to this flavour that is difficult to describe unless you have grown up around it.<\/p>",
+            "content": "<p>It reminded me of visiting relatives in Rajasthan and finding a tin of bhujia already waiting on the table. There is a comfort to this flavour that is difficult to describe unless you have grown up around it.</p>",
             "hindi": false,
-            "image": "shopify:\/\/shop_images\/tbk-testimonial-aakanksha-bhandari.png",
+            "image": "shopify://shop_images/tbk-testimonial-aakanksha-bhandari.png",
             "name": "Aakanksha Bhandari",
             "location": ""
           }
@@ -400,9 +400,9 @@
         "testimonial_eG1vp8": {
           "type": "testimonial",
           "settings": {
-            "content": "<p>We have eaten Bikaneri bhujia all our lives, which also makes us difficult customers. This tasted familiar, but much more considered. The spice, the fineness and especially the clean finish stood out.<\/p>",
+            "content": "<p>We have eaten Bikaneri bhujia all our lives, which also makes us difficult customers. This tasted familiar, but much more considered. The spice, the fineness and especially the clean finish stood out.</p>",
             "hindi": false,
-            "image": "shopify:\/\/shop_images\/tbk-testimonial-raghav-agarwal.png",
+            "image": "shopify://shop_images/tbk-testimonial-raghav-agarwal.png",
             "name": "Raghav Agarwal",
             "location": ""
           }
@@ -410,9 +410,9 @@
         "testimonial_HEJRWM": {
           "type": "testimonial",
           "settings": {
-            "content": "<p>What I appreciated most was the restraint. Nothing overwhelms you. You can taste the moth, the spices are beautifully measured, and it doesn’t leave that heavy feeling afterwards. It is the kind of bhujia you keep going back to.<\/p>",
+            "content": "<p>What I appreciated most was the restraint. Nothing overwhelms you. You can taste the moth, the spices are beautifully measured, and it doesn’t leave that heavy feeling afterwards. It is the kind of bhujia you keep going back to.</p>",
             "hindi": false,
-            "image": "shopify:\/\/shop_images\/tbk-testimonial-rishika-jain.png",
+            "image": "shopify://shop_images/tbk-testimonial-rishika-jain.png",
             "name": "Rishika Jain",
             "location": ""
           }
@@ -420,9 +420,9 @@
         "testimonial_o4J41Z": {
           "type": "testimonial",
           "settings": {
-            "content": "<p>I like snacks where the spice doesn’t overpower everything else. This is beautifully balanced and remarkably light for bhujia. You start with a small handful and somehow find yourself opening the tin again.<\/p>",
+            "content": "<p>I like snacks where the spice doesn’t overpower everything else. This is beautifully balanced and remarkably light for bhujia. You start with a small handful and somehow find yourself opening the tin again.</p>",
             "hindi": false,
-            "image": "shopify:\/\/shop_images\/tbk-testimonial-niyati-jain.png",
+            "image": "shopify://shop_images/tbk-testimonial-niyati-jain.png",
             "name": "Niyati Jain",
             "location": ""
           }
@@ -443,10 +443,10 @@
       ],
       "name": "Custom Home Testimonials",
       "settings": {
-        "background_image": "shopify:\/\/shop_images\/home-testimonials-bg.jpg",
-        "background_image_mobile": "shopify:\/\/shop_images\/Frame_1321319441.jpg",
-        "corner_image": "shopify:\/\/shop_images\/Vector_2.png",
-        "arrow_image": "shopify:\/\/shop_images\/Vector_22_2.png",
+        "background_image": "shopify://shop_images/home-testimonials-bg.jpg",
+        "background_image_mobile": "shopify://shop_images/Frame_1321319441.jpg",
+        "corner_image": "shopify://shop_images/Vector_2.png",
+        "arrow_image": "shopify://shop_images/Vector_22_2.png",
         "caption": "Testimonials",
         "heading": "From the table!",
         "autoplay": true,
@@ -461,10 +461,10 @@
         "slide_karigars_3": {
           "type": "slide",
           "settings": {
-            "portrait": "shopify:\/\/shop_images\/Frame_1321317929_1.jpg",
+            "portrait": "shopify://shop_images/Frame_1321317929_1.jpg",
             "header": "BEHIND THE CRAFT",
             "title": "The Karigars",
-            "content": "<p>For <strong>Dhiman Singhji, <\/strong>the work has never been about making more, but making it right. Years of practice have shaped a way of working where the hand leads, and the eye decides when a batch is ready. There is a quiet satisfaction in knowing that the method remains unchanged. In a time where most things are made by machines, he believes there are still a few who understand the value of craft done by hand. To him, it is not just preparation, but a responsibility to keep the original form of these recipes intact.<br\/><br\/><\/p>"
+            "content": "<p>For <strong>Dhiman Singhji, </strong>the work has never been about making more, but making it right. Years of practice have shaped a way of working where the hand leads, and the eye decides when a batch is ready. There is a quiet satisfaction in knowing that the method remains unchanged. In a time where most things are made by machines, he believes there are still a few who understand the value of craft done by hand. To him, it is not just preparation, but a responsibility to keep the original form of these recipes intact.<br/><br/></p>"
           }
         }
       },
@@ -473,7 +473,7 @@
       ],
       "name": "Custom Image Content",
       "settings": {
-        "bg_image": "shopify:\/\/shop_images\/Frame_1321317927.jpg"
+        "bg_image": "shopify://shop_images/Frame_1321317927.jpg"
       }
     },
     "custom_bg_heading_ykifF8": {
@@ -495,10 +495,10 @@
         "heading": "Some doors open into a place. Some open into a world.",
         "body": "Ours opens into Bikaner.\nIts kitchens, its people, its stories, and the tastes they have carried for generations.",
         "welcome": "Welcome to The Bikaneri Kitchen",
-        "image": "shopify:\/\/shop_images\/tbk-intro-popup-colonnade.png",
-        "image_mobile": "shopify:\/\/shop_images\/tbk-intro-popup-colonnade.png",
+        "image": "shopify://shop_images/tbk-intro-popup-colonnade.png",
+        "image_mobile": "shopify://shop_images/tbk-intro-popup-colonnade.png",
         "cta_1_label": "Step Inside",
-        "cta_1_link": "\/collections\/the-bhandaar"
+        "cta_1_link": "/collections/the-bhandaar"
       }
     }
   },
