@@ -113,7 +113,7 @@
 }
 
 .blog-listing-grid-item .blog-listing-grid-item-image {
-  filter: grayscale() brightness(0.9);
+  filter: grayscale() brightness(0.7);
   transition: all 0.3s ease-in;
 }
 
