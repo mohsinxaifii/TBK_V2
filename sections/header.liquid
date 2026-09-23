@@ -394,7 +394,7 @@
       {%- endcapture -%}
 
       {%- if use_cart_drawer -%}
-        <theme-cart-drawer data-header-section-id="{{ section.id }}">
+        <theme-cart-drawer data-header-section-id="{{ section.id }}" data-breakpoint="tablet">
           <details class="cart-drawer-container">
             <summary class="header__icon focus-inset" aria-label="{{ 'templates.cart.cart' | t }}">
               <span class="header__icon header__icon--summary header__icon--cart" id="cart-icon-bubble">
