@@ -737,7 +737,6 @@ a.product__text {
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    touch-action: pan-x pan-y pinch-zoom;
     margin-bottom: 0;
   }
 
