@@ -1591,5 +1591,113 @@
         "label": "Enable International Flow"
       }
     ]
+  },
+  {
+    "name": "Cart drawer",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Settings for the cart drawer: free-shipping progress, gift tiers, recommendations, the shipping calculator and the promo banner."
+      },
+      {
+        "type": "image_picker",
+        "id": "cart_checkout_image",
+        "label": "t:settings_schema.cart-drawer.settings.cart_checkout_image.label"
+      },
+      {
+        "type": "image_picker",
+        "id": "cart_powered_by_image",
+        "label": "t:settings_schema.cart-drawer.settings.cart_powered_by_image.label"
+      },
+      {
+        "type": "text",
+        "id": "cart_powered_by_text",
+        "label": "t:settings_schema.cart-drawer.settings.cart_powered_by_text.label"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_promo_banner_enabled",
+        "default": false,
+        "label": "t:settings_schema.cart-drawer.settings.cart_promo_banner_enabled.label"
+      },
+      {
+        "type": "url",
+        "id": "cart_promo_banner_link",
+        "label": "t:settings_schema.cart-drawer.settings.cart_promo_banner_link.label"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "cart_promo_banner_text",
+        "default": "Get <strong>10% OFF</strong> sitewide",
+        "label": "t:settings_schema.cart-drawer.settings.cart_promo_banner_text.label"
+      },
+      {
+        "type": "collection",
+        "id": "cart_recommendations_collection",
+        "label": "t:settings_schema.cart-drawer.settings.cart_recommendations_collection.label",
+        "info": "t:settings_schema.cart-drawer.settings.cart_recommendations_collection.info"
+      },
+      {
+        "type": "text",
+        "id": "cart_recommendations_heading",
+        "default": "You may also like",
+        "label": "t:settings_schema.cart-drawer.settings.cart_recommendations_heading.label",
+        "info": "t:settings_schema.cart-drawer.settings.cart_recommendations_heading.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "empty_cart_button_secondary",
+        "default": true,
+        "label": "t:settings_schema.cart-drawer.settings.empty_cart_button_secondary.label"
+      },
+      {
+        "type": "collection_list",
+        "id": "empty_cart_collections",
+        "label": "t:settings_schema.cart-drawer.settings.empty_cart_collections.label"
+      },
+      {
+        "type": "richtext",
+        "id": "empty_cart_message",
+        "label": "t:settings_schema.cart-drawer.settings.empty_cart_message.label"
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_minimum_amount",
+        "default": "100",
+        "label": "t:settings_schema.cart-drawer.settings.free_shipping_minimum_amount.label",
+        "info": "t:settings_schema.cart-drawer.settings.free_shipping_minimum_amount.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "gift_tiers_enabled",
+        "default": false,
+        "label": "t:settings_schema.cart-drawer.settings.gift_tiers_enabled.label"
+      },
+      {
+        "type": "text",
+        "id": "gift_tiers_heading",
+        "default": "Unlock complimentary gifts as your cart value grows",
+        "label": "t:settings_schema.cart-drawer.settings.gift_tiers_heading.label"
+      },
+      {
+        "type": "text",
+        "id": "shipping_calculator_default_country",
+        "default": "United States",
+        "label": "t:settings_schema.cart-drawer.settings.shipping_calculator_default_country.label",
+        "info": "t:settings_schema.cart-drawer.settings.shipping_calculator_default_country.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_free_shipping_message",
+        "default": false,
+        "label": "t:settings_schema.cart-drawer.settings.show_free_shipping_message.label"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_shipping_calculator",
+        "default": true,
+        "label": "t:settings_schema.cart-drawer.settings.show_shipping_calculator.label"
+      }
+    ]
   }
 ]
