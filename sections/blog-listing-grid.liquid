@@ -43,7 +43,6 @@
           {%- for article in blog.articles -%}
             {%- liquid
               assign global_index = paginate.current_offset | plus: forloop.index
-              assign padded_index = '00' | append: global_index | slice: -3, 3
 
               # card_image / card_image_mobile are 2x exports of the Figma card
               # frames (text and icons hidden), so a post that has them shows the
@@ -56,6 +55,13 @@
               assign card_image = designed_card_image | default: article.metafields.custom.hero_image.value | default: article.image
               assign card_alt = card_image.alt | default: article.title | escape
             -%}
+            {%- comment -%}
+              Paginated position is only the fallback now; the number itself
+              lives on the article. See snippets/story-number.liquid.
+            {%- endcomment -%}
+            {%- capture padded_index -%}
+              {%- render 'story-number', article: article, fallback: global_index -%}
+            {%- endcapture -%}
             <div
               class="blog-listing-grid-item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
               {% if settings.animations_reveal_on_scroll %}
