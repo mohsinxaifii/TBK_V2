@@ -255,7 +255,8 @@
 
 @media(max-width:768px) {
   .blog-listing-grid-heading {
-    margin-bottom: 36px !important;
+    margin: 0 0 36px 0 !important;
+    max-width: unset;
   }
 
   .blog-listing-grid-subtitle {
