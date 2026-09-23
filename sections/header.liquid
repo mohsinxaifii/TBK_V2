@@ -361,7 +361,19 @@
         %}
       {%- endif -%}
       {% render 'header-search', input_id: 'Search-In-Modal' %}
-      <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link focus-inset" id="cart-icon-bubble">
+      {%- comment -%}
+        The cart icon is the drawer's own <summary>: theme-cart-drawer drives a
+        details/summary pair, and the mini-cart's CSS keys its open state off
+        `details[open]`. On the cart page itself, and whenever the drawer is
+        switched off in settings, it falls back to a plain link to /cart.
+      {%- endcomment -%}
+      {%- liquid
+        assign use_cart_drawer = false
+        if request.page_type != 'cart' and settings.cart_type == 'drawer'
+          assign use_cart_drawer = true
+        endif
+      -%}
+      {%- capture cart_icon_contents -%}
         <span class="svg-wrapper">
           <img
             src="https://cdn.shopify.com/s/files/1/0764/0953/6706/files/Group_823.png?v=1783590048"
@@ -379,7 +391,39 @@
             <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
           </div>
         {%- endif -%}
-      </a>
+      {%- endcapture -%}
+
+      {%- if use_cart_drawer -%}
+        <theme-cart-drawer data-header-section-id="{{ section.id }}">
+          <details class="cart-drawer-container">
+            <summary class="header__icon focus-inset" aria-label="{{ 'templates.cart.cart' | t }}">
+              <span class="header__icon header__icon--summary header__icon--cart" id="cart-icon-bubble">
+                {{ cart_icon_contents }}
+              </span>
+            </summary>
+            {%- comment -%}
+              Empty until it scrolls into view: MiniCart fetches ?section_id=mini-cart
+              on first intersection, so the cart's markup costs nothing on a page
+              where the shopper never opens it.
+            {%- endcomment -%}
+            <mini-cart
+              class="cart-drawer focus-inset"
+              id="mini-cart"
+              data-url="{{ routes.root }}?section_id=mini-cart"
+            >
+              <div class="loading-overlay">
+                <div class="loading-overlay__spinner">
+                  {% render 'icon', icon: 'spinner' %}
+                </div>
+              </div>
+            </mini-cart>
+          </details>
+        </theme-cart-drawer>
+      {%- else -%}
+        <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link focus-inset" id="cart-icon-bubble">
+          {{ cart_icon_contents }}
+        </a>
+      {%- endif -%}
       {% comment %}
         {%- if shop.customer_accounts_enabled -%}
           <a
