@@ -1008,7 +1008,14 @@
     },
     build(ctx) {
       onEnter(ctx.root, () => {
-        const tl = gsap.timeline();
+        // fadeRise leaves its end transform inline, and a lingering transform —
+        // even an identity one — keeps each card on its own composited layer,
+        // where the browser resamples the cover photo and leaves it visibly
+        // soft. Dropping the transform once the reveal lands puts the cards
+        // back on the page's own raster at full resolution.
+        const tl = gsap.timeline({
+          onComplete: () => gsap.set(ctx.items, { clearProps: 'transform' }),
+        });
         fadeRise(tl, ctx.subtitle, 0, { duration: 0.8 });
         maskRise(tl, ctx.heading, 0.1);
         fadeRise(tl, ctx.items, 0.4, { duration: 1.05, stagger: 0.1 });
