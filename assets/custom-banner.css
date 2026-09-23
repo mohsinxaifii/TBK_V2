@@ -56,3 +56,9 @@
     height: 100%;
     object-fit: cover;
 }
+
+/* Layout-neutral wrapper: the breakpoint <source> is all it is for, so the
+   <img> keeps behaving as a direct child of the container. */
+.custom-banner-picture {
+    display: contents;
+}

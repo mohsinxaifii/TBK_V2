@@ -46,9 +46,15 @@
         initBannerPlayback). The poster is what paints first -- and what
         stays up when iOS Low Power Mode refuses autoplay -- so it gets the
         high-priority preload, scoped by media query to the one that shows.
+        Images get the same guarantee from <picture>: each swaps in a 1px
+        blank at the other breakpoint, so the hidden one never downloads
+        while the visible one still loads eagerly as the LCP candidate.
+        The inline aspect-ratio reserves the video's box before metadata
+        arrives; the framed layout's height:100% overrides it.
       {%- endcomment -%}
       {%- if section.settings.media_type == 'video' and section.settings.banner_video != blank -%}
         {%- assign desktop_video = section.settings.banner_video -%}
+        {%- assign desktop_video_style = 'aspect-ratio: ' | append: desktop_video.aspect_ratio -%}
         {%- if desktop_video.preview_image -%}
           <link
             rel="preload"
@@ -63,6 +69,7 @@
           | video_tag:
             class: 'custom-banner_desktop-video',
             image_size: '1920x',
+            style: desktop_video_style,
             loop: true,
             muted: true,
             controls: false,
@@ -70,7 +77,9 @@
             preload: 'none'
         }}
       {%- else -%}
-        {{
+        <picture class="custom-banner-picture">
+          <source media="(max-width: 749px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+          {{
           section.settings.banner_image
           | image_url: width: 3000
           | image_tag:
@@ -79,11 +88,13 @@
             sizes: '100vw',
             loading: 'eager',
             fetchpriority: 'high'
-        }}
+          }}
+        </picture>
       {%- endif -%}
 
       {%- if section.settings.media_type == 'video' and section.settings.mobile_banner_video != blank -%}
         {%- assign mobile_video = section.settings.mobile_banner_video -%}
+        {%- assign mobile_video_style = 'aspect-ratio: ' | append: mobile_video.aspect_ratio -%}
         {%- if mobile_video.preview_image -%}
           <link
             rel="preload"
@@ -98,6 +109,7 @@
           | video_tag:
             class: 'custom-banner_mobile-video',
             image_size: '1080x',
+            style: mobile_video_style,
             loop: true,
             muted: true,
             controls: false,
@@ -105,7 +117,9 @@
             preload: 'none'
         }}
       {%- else -%}
-        {{
+        <picture class="custom-banner-picture">
+          <source media="(min-width: 750px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+          {{
           section.settings.mobile_banner_image
           | image_url: width: 1500
           | image_tag:
@@ -114,7 +128,8 @@
             sizes: '100vw',
             loading: 'eager',
             fetchpriority: 'high'
-        }}
+          }}
+        </picture>
       {%- endif -%}
 
       {%- if show_video_audio_controls -%}
