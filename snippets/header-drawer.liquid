@@ -270,7 +270,8 @@
             -%}
             {%- capture extra_links -%}
               {%- for handle in extra_handles -%}
-                {%- assign extra_menu = linklists[handle.strip] -%}
+                {%- assign extra_handle = handle | strip -%}
+                {%- assign extra_menu = linklists[extra_handle] -%}
                 {%- for link in extra_menu.links -%}
                   {%- assign needle = '|' | append: link.url | append: '|' -%}
                   {%- if shown_urls contains needle -%}
