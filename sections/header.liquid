@@ -843,3 +843,10 @@
   would throw on the repeated customElements.define).
 {%- endcomment -%}
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
+
+{%- comment -%}
+  Safety net: any add-to-cart form that is not owned by <product-form> would
+  otherwise post natively and get redirected to /cart. Loaded here, beside
+  cart.js, so it is present on every page.
+{%- endcomment -%}
+<script src="{{ 'cart-add-interceptor.js' | asset_url }}" defer="defer"></script>
