@@ -5,18 +5,10 @@
     width: 100%;
 }
 
-/* Every card holds a 3:4 portrait frame, whatever the media inside it is, so
-   the row stays even no matter what has been uploaded. The media is centred and
-   cropped to fill rather than letterboxed -- see the image and video rules. */
 .custom-images-grid_carousal-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
     flex: 0 0 auto;
     width: calc(100% / var(--images-per-view, 4));
-    aspect-ratio: 3 / 4;
-    overflow: hidden;
-    background-color: #570f13;
 }
 
 /* Loop copies added by the JS for the mobile strip; the desktop row shows
@@ -28,17 +20,16 @@
 .custom-images-grid_carousal-image {
     display: block;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
+    height: auto;
 }
 
-/* The card now sets its own height from the 3:4 ratio, so a video no longer has
-   to stretch the item to match the images beside it -- it just fills the frame.
-   Absolute positioning stays: it keeps the video from contributing any height
-   of its own and fighting the ratio. */
+/* Video items take their height from the row (i.e. from the images) instead of
+   from the video: the video is taken out of flow so it adds no height of its
+   own, then the item stretches to the row and the video is cropped to fill it. */
 .custom-images-grid_carousal-item--video {
     position: relative;
+    align-self: stretch;
+    overflow: hidden;
 }
 
 .custom-images-grid_carousal-video {
@@ -49,6 +40,25 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
+}
+
+/* ---- Video-only sections (the footer's social strip) ------------------- *
+ * A section with no images at all gets a fixed 3:4 frame per card, with the
+ * video centred and cropped to fill it. Its three clips are shot in different
+ * formats, so without this the row came out ragged -- one portrait card beside
+ * two short landscape ones, with empty space under them.
+ *
+ * Scoped to --no-image on purpose: the image carousels on the home and rituals
+ * pages keep taking their height from the artwork, which is already uniform.
+ */
+.custom-images-grid_carousal-container--no-image .custom-images-grid_carousal-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: start;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background-color: #570f13;
 }
 
 @media(max-width: 768px) {
@@ -73,15 +83,25 @@
     }
 }
 
-/* The strip used to be pinned to 600px with each image centred inside its slot.
-   The 3:4 ratio now gives every card its height, so that fixed height is gone --
-   it would have overridden the ratio and brought the uneven crops back.
+/* Phones only (Dawn's 749px, so 768px tablets keep the full-height strip).
+   The strip is capped at 600px and each image sits in the vertical middle of
+   its slot. Not applied to the video-only strip, which is on its own 3:4 frame
+   above and would have that overridden by a fixed height here.
 
-   overflow-y still has to be stated: with overflow-x: auto the browser computes
-   overflow-y to auto as well, which would leave the strip able to scroll
-   vertically by a sub-pixel rounding of the card height. */
+   overflow-y has to be stated: with overflow-x: auto the browser computes
+   overflow-y to auto as well, so a fixed height alone would turn the strip into
+   a vertical scroller for every image taller than it. */
 @media screen and (max-width: 749px) {
-    .custom-images-grid_carousal-container {
+    .custom-images-grid_carousal-container:not(.custom-images-grid_carousal-container--no-image) {
+        height: 600px;
         overflow-y: hidden;
+    }
+
+    .custom-images-grid_carousal-container:not(.custom-images-grid_carousal-container--no-image) .custom-images-grid_carousal-item {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        background-color: #570f13;
     }
 }
