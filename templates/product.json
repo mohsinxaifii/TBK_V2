@@ -169,8 +169,8 @@
         "banner_image": "shopify://shop_images/Wireframe_-_10.jpg",
         "mobile_banner_image": "shopify://shop_images/Frame_1321317972_45afb4e3-0468-4667-91f9-4f7cf4cb61cd.jpg",
         "heading": "Aao Sune Kahani\nBikaneri Bhujia Ki",
-        "audio_url": "https://cdn.shopify.com/s/files/1/0764/0953/6706/files/Story_1.mp3?v=1785132523",
-        "audio_url_english": "https://cdn.shopify.com/s/files/1/0764/0953/6706/files/Story_1.mp3?v=1785132523",
+        "audio_url": "",
+        "audio_url_english": "",
         "default_language": "hi"
       }
     },
