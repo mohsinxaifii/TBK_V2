@@ -734,6 +734,14 @@
       <script src="{{ 'gift-tiers.js' | asset_url }}" defer="defer"></script>
       <script src="{{ 'cart-recommendations.js' | asset_url }}" defer="defer"></script>
       <script src="{{ 'cart-variant-picker.js' | asset_url }}" defer="defer"></script>
+      {%- comment -%} <gift-note>, the drawer's personalised-message field. {%- endcomment -%}
+      <script src="{{ 'gift-wrapping.js' | asset_url }}" defer="defer"></script>
+      {%- comment -%}
+        <quantity-popover> wraps every quantity stepper in the drawer. It was
+        only ever loaded by the cart page and the product grids, so the
+        steppers were dead on every other page.
+      {%- endcomment -%}
+      <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
   </body>
 </html>
