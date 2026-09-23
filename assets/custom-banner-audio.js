@@ -1,3 +1,86 @@
+// --- Playback ---------------------------------------------------------------
+// The section renders both breakpoints' videos with preload="none" and no
+// autoplay attribute (see custom-banner.liquid), so this is the only thing
+// that ever starts one. Driving it from here rather than the attribute is
+// what makes iOS reliable: Safari only autoplays when the muted *property*
+// is true at play() time, and in Low Power Mode it rejects autoplay outright
+// -- the play() promise rejection is the only signal, so the next touch
+// retries it instead of leaving the poster up for good. It also means only
+// the variant CSS is showing ever downloads, and playback stops while the
+// banner is off-screen or the tab is hidden.
+const BANNER_MOBILE_QUERY = window.matchMedia('(max-width: 749px)');
+
+const initBannerPlayback = (root) => {
+  const desktopVideo = root.querySelector('.custom-banner_desktop-video');
+  const mobileVideo = root.querySelector('.custom-banner_mobile-video');
+  const videos = [desktopVideo, mobileVideo].filter(Boolean);
+  if (!videos.length) return;
+
+  videos.forEach((video) => {
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+  });
+
+  // Data Saver users get the poster until they touch the page.
+  const saveData = !!(navigator.connection && navigator.connection.saveData);
+  let autoplayAllowed = !saveData;
+  let inView = true;
+  let gestureArmed = false;
+
+  // Null when the visible breakpoint shows an image instead of a video.
+  const activeVideo = () => (BANNER_MOBILE_QUERY.matches ? mobileVideo : desktopVideo);
+
+  const armGestureRetry = () => {
+    if (gestureArmed) return;
+    gestureArmed = true;
+    const retry = () => {
+      gestureArmed = false;
+      autoplayAllowed = true;
+      ['touchstart', 'pointerdown', 'keydown'].forEach((type) => document.removeEventListener(type, retry));
+      sync();
+    };
+    ['touchstart', 'pointerdown', 'keydown'].forEach((type) =>
+      document.addEventListener(type, retry, { passive: true })
+    );
+  };
+
+  const sync = () => {
+    const active = activeVideo();
+    const shouldPlay = active && inView && !document.hidden;
+
+    videos.forEach((video) => {
+      if (video !== active || !shouldPlay) video.pause();
+    });
+
+    if (!shouldPlay || !active.paused) return;
+    if (!autoplayAllowed) {
+      armGestureRetry();
+      return;
+    }
+
+    active.preload = 'auto';
+    const attempt = active.play();
+    if (attempt && typeof attempt.catch === 'function') attempt.catch(armGestureRetry);
+  };
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(
+      (entries) => {
+        inView = entries[entries.length - 1].isIntersecting;
+        sync();
+      },
+      { rootMargin: '200px 0px' }
+    ).observe(root);
+  }
+
+  BANNER_MOBILE_QUERY.addEventListener('change', sync);
+  document.addEventListener('visibilitychange', sync);
+  sync();
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   const banners = document.querySelectorAll('[data-custom-banner-pin]');
   if (!banners.length) return;
@@ -17,6 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   banners.forEach((pinSpace) => {
+    initBannerPlayback(pinSpace);
+
     const container = pinSpace.querySelector('.custom-banner-container');
     const muteButton = pinSpace.querySelector('.custom-banner-mute-toggle');
     const videos = Array.from(
