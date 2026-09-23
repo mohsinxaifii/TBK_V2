@@ -62,7 +62,12 @@
         "percent_off": " {{ percent }}% ",
         "placeholder": "Enter Coupon Code",
         "remove": "Remove discount {{ code }}",
-        "view_applied": "View discounts"
+        "view_applied": "View discounts",
+        "applying": "Applying…",
+        "applied": "{{ code }} applied",
+        "invalid": "{{ code }} isn’t valid for this cart",
+        "error": "Couldn’t apply that code. Please try again.",
+        "removing": "Removing…"
       },
       "gift_note": {
         "button": "Apply",
