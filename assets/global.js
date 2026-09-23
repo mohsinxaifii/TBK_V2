@@ -246,7 +246,7 @@ class QuantityInput extends HTMLElement {
     event.preventDefault();
     const previousValue = this.input.value;
 
-    if (event.target.name === 'plus') {
+    if (event.currentTarget.name === 'plus') {
       if (parseInt(this.input.dataset.min) > parseInt(this.input.step) && this.input.value == 0) {
         this.input.value = this.input.dataset.min;
       } else {
@@ -658,6 +658,13 @@ class CartDrawer extends MenuDrawer {
   connectedCallback() {
     document.addEventListener('cart:refresh', this.onCartRefreshListener);
     window.addEventListener('pageshow', this.onPageShowListener);
+
+    // The drawer's X is a <drawer-close-button>, which only announces itself
+    // with this event and leaves the closing to whatever contains it.
+    this.addEventListener('drawer:force-close', (event) => {
+      event.stopPropagation();
+      this.closeMenuDrawer(event, this.querySelector('summary'));
+    });
   }
 
   disconnectedCallback() {
