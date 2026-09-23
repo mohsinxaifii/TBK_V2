@@ -35,6 +35,16 @@
     }
 }
 
+/* The hairline on some phones: the media's height is whatever the image's
+   natural ratio works out to at that viewport width (396.266px at 393, 431.563
+   at 428, and so on), and a box on a fractional boundary is anti-aliased at the
+   device pixel it lands on. The slide and the viewport around it were both
+   transparent, so that sliver sampled straight through to <body>, which is
+   white -- which is why it showed on some devices and not others.
+
+   Two defences, neither of which moves anything: the boxes around the media
+   carry its colour, so a seam can only ever blend dark into dark; and the media
+   paints one pixel beyond its own edge. */
 .custom-blogs-carousel-media {
     position: relative;
     width: 100%;
@@ -42,6 +52,12 @@
     flex-shrink: 0;
     overflow: hidden;
     background: #2b0c0f;
+    box-shadow: 0 0 0 1px #2b0c0f;
+}
+
+.custom-blogs-carousel-viewport,
+.custom-blogs-carousel-slide {
+    background-color: #2b0c0f;
 }
 
 @media screen and (min-width: 750px) {
