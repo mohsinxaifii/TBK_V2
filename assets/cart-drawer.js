@@ -53,12 +53,12 @@ class MiniCart extends HTMLElement {
 
   renderContents(parsedState) {
     this.productId = parsedState.id;
-    this.getSectionsToRender().forEach((section => {
-      if (document.getElementById(section.id)) {
-        document.getElementById(section.id).innerHTML =
-          this.getSectionInnerHTML(parsedState.sections[section.id], section.selector);
-      }
-    }));
+    this.getSectionsToRender().forEach((section) => {
+      const target = document.getElementById(section.id);
+      const html = parsedState.sections?.[section.id];
+      if (!target || !html) return;
+      target.innerHTML = this.getSectionInnerHTML(html, section.selector);
+    });
 
     // GoKwik's side-cart owns the add-to-cart drawer once it's active; opening
     // the native drawer too would stack both on top of each other.
@@ -77,11 +77,6 @@ class MiniCart extends HTMLElement {
       {
         id: 'cart-icon-bubble',
         section: 'cart-icon-bubble',
-        selector: '.shopify-section'
-      },
-      {
-        id: 'mobile-cart-icon-bubble',
-        section: 'mobile-cart-icon-bubble',
         selector: '.shopify-section'
       }
     ];
