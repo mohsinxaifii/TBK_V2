@@ -6,8 +6,16 @@
 {%- comment -%}
   data-custom-banner-pin is custom-banner-audio.js's root hook; the scroll pin
   it was originally named for is gone.
+
+  --framed gives the banner the archives page-top_banner treatment: a fixed
+  viewport-height frame with the media cover-cropped inside it. Index is left
+  out on purpose — its hero is the brand film, which has to keep its own
+  aspect ratio rather than be cropped to a viewport fraction.
 {%- endcomment -%}
-<div class="custom-banner-pin-space" data-custom-banner-pin>
+<div
+  class="custom-banner-pin-space{% unless request.page_type == 'index' %} custom-banner-pin-space--framed{% endunless %}"
+  data-custom-banner-pin
+>
   {%- assign show_video_audio_controls = false -%}
   {%- if section.settings.media_type == 'video' -%}
     {%- if section.settings.banner_video != blank or section.settings.mobile_banner_video != blank -%}
