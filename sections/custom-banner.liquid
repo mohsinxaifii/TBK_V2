@@ -1,21 +1,34 @@
+{%- comment -%}
+  Off index this banner borrows the archives top banner wholesale: the same
+  .page-top-banner-container frame (80vh / 60vh / 50vh, media cover-cropped),
+  the same page-title + rule + shop-name caption, and the same reveal, which
+  site-animations.js and page-top_banner.js both key off that class. Index is
+  left out on purpose — its hero is the brand film, which has to keep its own
+  aspect ratio rather than be cropped to a viewport fraction.
+{%- endcomment -%}
+{%- liquid
+  assign framed = true
+  if request.page_type == 'index'
+    assign framed = false
+  endif
+-%}
+
 {{ 'custom-banner.css' | asset_url | stylesheet_tag }}
 {{ 'custom-banner-audio.css' | asset_url | stylesheet_tag }}
+{%- if framed -%}
+  {{ 'page-top_banner.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
 <script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'custom-banner-audio.js' | asset_url }}" defer="defer"></script>
+{%- if framed -%}
+  <script src="{{ 'page-top_banner.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
 
 {%- comment -%}
   data-custom-banner-pin is custom-banner-audio.js's root hook; the scroll pin
   it was originally named for is gone.
-
-  --framed gives the banner the archives page-top_banner treatment: a fixed
-  viewport-height frame with the media cover-cropped inside it. Index is left
-  out on purpose — its hero is the brand film, which has to keep its own
-  aspect ratio rather than be cropped to a viewport fraction.
 {%- endcomment -%}
-<div
-  class="custom-banner-pin-space{% unless request.page_type == 'index' %} custom-banner-pin-space--framed{% endunless %}"
-  data-custom-banner-pin
->
+<div class="custom-banner-pin-space" data-custom-banner-pin>
   {%- assign show_video_audio_controls = false -%}
   {%- if section.settings.media_type == 'video' -%}
     {%- if section.settings.banner_video != blank or section.settings.mobile_banner_video != blank -%}
@@ -24,7 +37,7 @@
   {%- endif -%}
 
   <div class="custom-banner-sticky">
-    <div class="custom-banner-container">
+    <div class="custom-banner-container{% if framed %} page-top-banner-container{% endif %}">
       {%- if section.settings.media_type == 'video' and section.settings.banner_video != blank -%}
         {{
           section.settings.banner_video
@@ -104,6 +117,14 @@
               <span class="custom-banner-cursor-tag-text">Unmute Video</span>
             </span>
           </span>
+        </div>
+      {%- endif -%}
+
+      {%- if framed and page.title != blank -%}
+        <div class="page-top-banner-container-inner">
+          <p>{{ page.title }}</p>
+          <hr>
+          <p>{{ shop.name }}</p>
         </div>
       {%- endif -%}
     </div>
