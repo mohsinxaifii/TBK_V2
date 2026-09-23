@@ -63,29 +63,28 @@
   pointer-events: none;
 }
 
+/* The photo no longer fills the card: the design places a 609x812 portrait
+   frame over the left side (3330:3733), bleeding off the top, bottom and left
+   edges, and leaves the right side as the card's own maroon. The frame is in
+   percentages so it tracks the card when that scales down. */
 .custom-intro-popup__picture {
   position: absolute;
-  inset: 0;
+  left: -8.912%;
+  top: -50.992%;
+  width: 70.486%;
+  height: 161.111%;
   display: block;
 }
 
-/* The photo is 3:2 against the card's wider 864:504, so `cover` scales it to
-   the card's width and trims the top and bottom. The design frames that window
-   above centre, keeping the arches in shot behind the musicians — 35% is where
-   its own placement (3231:5365) puts the visible band. */
+/* The frame is 3:4 and so is the photograph, so `cover` fills it without
+   cropping. A replacement at another ratio is cropped to fit rather than
+   letterboxed. */
 .custom-intro-popup__image {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 35%;
-}
-
-/* Desktop has no flat wash over the photo — only the blurred scrim. */
-.custom-intro-popup__tint {
-  display: none;
-  position: absolute;
-  inset: 0;
+  object-position: center;
 }
 
 /* The maroon falloff behind the copy: a real rectangle with a 49.45px blur, as
@@ -96,8 +95,8 @@
   position: absolute;
   left: 43.4%;
   top: -21.23%;
-  width: 62.85%;
-  height: 138.49%;
+  width: 56.597%;
+  height: 138.492%;
   background: rgba(87, 15, 19, 0.96);
   filter: blur(49.45px);
 }
@@ -320,10 +319,12 @@
     padding: 48px 24px 83px;
   }
 
-  /* An even wash over the whole photo before the scrim goes on top. */
-  .custom-intro-popup__tint {
-    display: block;
-    background: rgba(87, 15, 19, 0.23);
+  /* Same photograph, framed taller and pulled further left (3330:3789). */
+  .custom-intro-popup__picture {
+    left: -33.051%;
+    top: -51.12%;
+    width: 169.774%;
+    height: 112.185%;
   }
 
   /* Rotated to lie across the card: a wide, short band low down, darkening the
@@ -336,15 +337,9 @@
     background: rgba(74, 0, 4, 0.94);
   }
 
-  /* The mobile photo is taller than the card, so `cover` trims the sides here
-     instead; the design holds the group left of centre (3231:5458). */
-  .custom-intro-popup__image {
-    object-position: 24% center;
-  }
-
   .custom-intro-popup__wordmark {
-    left: 31.36%;
-    top: 16.39%;
+    left: 31.356%;
+    top: 25.35%;
     width: 124px;
   }
 
