@@ -66,16 +66,14 @@
           class="custom-images-grid_carousal-image"
         >
       {%- else -%}
-        {{
-          video
-          | video_tag:
-            class: 'custom-images-grid_carousal-video',
-            autoplay: true,
-            loop: true,
-            muted: true,
-            controls: false,
-            playsinline: true
-        }}
+        {%- comment -%}
+          Not autoplay: custom-images-grid_carousal.js starts each clip once
+          it is near the viewport and the hero film has its first frame
+          (window.heroMedia) -- as autoplay, all of these (and, on mobile,
+          their four loop copies each) downloaded at page load, in
+          competition with the hero.
+        {%- endcomment -%}
+        {%- render 'banner-video', video: video, class: 'custom-images-grid_carousal-video', mp4_height: 720 -%}
       {%- endif -%}
     </{{ wrapper_tag }}>
   {% endfor %}

@@ -12,6 +12,38 @@
     {%- endif -%}
 
     {%- comment -%}
+      window.heroMedia -- "the first thing on screen has its first frame".
+      Anything that downloads media the visitor can't see yet (the footer's
+      video strip, the audio player's track) waits on heroMedia.then(fn), so
+      the hero film gets the network to itself until its first frame is
+      decoded. custom-banner's inline starter claims it and calls done(); a
+      page with no hero film is released at DOMContentLoaded, and a film that
+      is slow to start is never waited on longer than 4s.
+    {%- endcomment -%}
+    <script>
+      window.heroMedia = {
+        ready: false,
+        claimed: false,
+        queue: [],
+        claim: function () {
+          this.claimed = true;
+          setTimeout(this.done.bind(this), 4000);
+        },
+        done: function () {
+          if (this.ready) return;
+          this.ready = true;
+          this.queue.splice(0).forEach(function (fn) { fn(); });
+        },
+        then: function (fn) {
+          this.ready ? fn() : this.queue.push(fn);
+        },
+      };
+      document.addEventListener('DOMContentLoaded', function () {
+        if (!window.heroMedia.claimed) window.heroMedia.done();
+      });
+    </script>
+
+    {%- comment -%}
       The home hero film streams from cdn.shopify.com/videos. Opening that
       connection from the <head> saves its DNS + TLS round trips from the
       film's first frame. No crossorigin: <video> fetches without CORS, so

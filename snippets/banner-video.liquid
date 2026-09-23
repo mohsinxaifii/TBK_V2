@@ -1,6 +1,7 @@
 {%- comment -%}
-  Hand-built <video> for the custom-banner hero, in place of video_tag, so the
-  source order and attributes are ours:
+  Hand-built <video> in place of video_tag, so the source order and
+  attributes are ours. Written for the custom-banner hero; the image carousel
+  uses it too, for the same fast start and no-download-until-played:
 
   - One MP4 first, at a sensible size (mp4_height; the nearest smaller
     rendition if that height doesn't exist). Measured on a throttled slow-4G
@@ -13,8 +14,8 @@
   - No poster. The frame is solid #570f13 until the film plays (see
     custom-banner.css), and video_tag's poster was a full-size image
     downloaded only to be kept invisible.
-  - preload="none", no autoplay: the section's inline starter plays only the
-    visible variant, so the hidden one never downloads.
+  - preload="none", no autoplay: the caller's script decides what plays (for
+    the hero, only the visible variant), so nothing downloads unasked.
 
   Accepts:
   - video: {Object} video setting

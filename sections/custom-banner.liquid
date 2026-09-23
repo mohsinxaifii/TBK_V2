@@ -113,19 +113,46 @@
         <script>
           (function (root) {
             var videos = root.querySelectorAll('.custom-banner_desktop-video, .custom-banner_mobile-video');
+            var reveal = function () { this.classList.add('is-ready'); };
             for (var i = 0; i < videos.length; i++) {
-              videos[i].addEventListener('playing', function () { this.classList.add('is-ready'); }, { once: true });
+              // First decoded frame is enough to lift the maroon: a paused
+              // first frame (autoplay refused) still beats an empty block.
+              videos[i].addEventListener('loadeddata', reveal, { once: true });
+              videos[i].addEventListener('playing', reveal, { once: true });
             }
             if (navigator.connection && navigator.connection.saveData) return;
             var mobile = window.matchMedia('(max-width: 749px)').matches;
             var video = root.querySelector(mobile ? '.custom-banner_mobile-video' : '.custom-banner_desktop-video');
             if (!video) return;
+            // Hold every other deferred media download (window.heroMedia, see
+            // theme.liquid) until this film has its first frame.
+            var hero = window.heroMedia;
+            if (hero) {
+              hero.claim();
+              video.addEventListener('loadeddata', function () { hero.done(); }, { once: true });
+              video.addEventListener('error', function () { hero.done(); }, { once: true });
+            }
             video.muted = true;
             video.defaultMuted = true;
             video.playsInline = true;
             video.preload = 'auto';
-            var attempt = video.play();
-            if (attempt && attempt.catch) attempt.catch(function () {});
+            var play = function () {
+              var attempt = video.play();
+              if (attempt && attempt.catch) attempt.catch(function () {});
+            };
+            play();
+            // Watchdog: a first request that stalls (flaky mobile network,
+            // a dropped HLS segment) otherwise leaves the frame empty for
+            // good. Reload the source and try again, a couple of times.
+            var retries = 0;
+            var check = function () {
+              if (video.readyState >= 2 || retries >= 2) return;
+              retries++;
+              video.load();
+              play();
+              setTimeout(check, 5000);
+            };
+            setTimeout(check, 5000);
           })(document.currentScript.parentElement);
         </script>
 

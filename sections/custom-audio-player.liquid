@@ -114,7 +114,7 @@
           {%- endcomment -%}
           <audio
             class="custom-audio-player-audio"
-            preload="metadata"
+            preload="none"
             data-src-hi="{{ section.settings.audio_url | default: section.settings.audio_url_english }}"
             data-src-en="{{ section.settings.audio_url_english | default: section.settings.audio_url }}"
           ></audio>
