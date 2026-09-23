@@ -11,6 +11,28 @@ class CartRemoveButton extends HTMLElement {
 customElements.define('cart-remove-button', CartRemoveButton);
 
 class CartItems extends HTMLElement {
+  /*
+    Dawn 15's product-form.js calls this static after every add, to resolve the
+    shopify:cart:lines-update promise Standard Events validates. The ported
+    CartItems had no such method, so the add threw here -- before it ever
+    reached renderContents, which is what opens the drawer. The add itself had
+    already gone through, which is why the cart updated but nothing appeared.
+    Carried over from Dawn's own cart.js so that contract still holds.
+  */
+  static fetchCartData() {
+    if (!CartItems.pendingCartDataPromise) {
+      const pendingCartDataPromise = fetch(`${theme.routes.cart_url}.json`)
+        .then((response) => response.json())
+        .catch(() => null)
+        .finally(() => {
+          if (CartItems.pendingCartDataPromise === pendingCartDataPromise) CartItems.pendingCartDataPromise = null;
+        });
+
+      CartItems.pendingCartDataPromise = pendingCartDataPromise;
+    }
+    return CartItems.pendingCartDataPromise;
+  }
+
   constructor() {
     super();
 
