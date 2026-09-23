@@ -1,7 +1,5 @@
 .custom-banner-pin-space {
     position: relative;
-    aspect-ratio: 16 / 12;
-    overflow: hidden;
 }
 
 /* Positioned + cropped for site-animations.js's cinematic open: it overlays an
