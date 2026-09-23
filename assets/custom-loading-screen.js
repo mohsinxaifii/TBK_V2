@@ -74,13 +74,13 @@
     if (finished) return;
     finished = true;
     document.documentElement.classList.remove('custom-loading-screen-lock');
-    if (window.lenis && window.lenis.start) window.lenis.start();
+    if (window.scrollLock) window.scrollLock.unlock('loading-screen');
     bg.remove();
     iconsLayer.remove();
   };
 
   document.documentElement.classList.add('custom-loading-screen-lock');
-  if (window.lenis && window.lenis.stop) window.lenis.stop();
+  if (window.scrollLock) window.scrollLock.lock('loading-screen');
 
   // Last-resort insurance: whatever else goes wrong, the site must never
   // stay covered forever.
