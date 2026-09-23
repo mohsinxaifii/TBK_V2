@@ -16,7 +16,7 @@
 
 // Cart custom elements that advertise sections via getSectionsToRender().
 // If Dawn adds a new cart custom element, add its tag here.
-const DAWN_CART_TAGS = ['cart-drawer', 'cart-items', 'cart-drawer-items', 'cart-notification'];
+const DAWN_CART_TAGS = ['cart-drawer', 'mini-cart', 'cart-items', 'cart-drawer-items', 'cart-notification'];
 
 // Sections that Dawn's own pubsub subscribers refresh (cart.js's
 // CartItems#onCartUpdate fetches and replaces these directly when
@@ -121,7 +121,7 @@ function initStandardActions() {
 
   actions.openCart.configure({
     async handler(defaultHandler) {
-      const drawer = document.querySelector('cart-drawer');
+      const drawer = document.querySelector('cart-drawer, mini-cart');
       if (drawer && typeof drawer.open === 'function') {
         drawer.open();
         return;

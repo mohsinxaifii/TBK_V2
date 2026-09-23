@@ -12,7 +12,7 @@ if (!customElements.get('quick-add-modal')) {
       }
 
       hide(preventFocus = false) {
-        const cartNotification = document.querySelector('cart-notification') || document.querySelector('cart-drawer');
+        const cartNotification = document.querySelector('cart-notification') || document.querySelector('cart-drawer, mini-cart');
         if (cartNotification) cartNotification.setActiveElement(this.openedBy);
         this.modalContent.innerHTML = '';
 

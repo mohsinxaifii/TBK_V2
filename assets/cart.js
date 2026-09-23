@@ -214,7 +214,7 @@ class CartItems extends window.StandardEvents.createViewEventElement(HTMLElement
           }
 
           this.classList.toggle('is-empty', parsedState.item_count === 0);
-          const cartDrawerWrapper = document.querySelector('cart-drawer');
+          const cartDrawerWrapper = document.querySelector('cart-drawer, mini-cart');
           const cartFooter = document.getElementById('main-cart-footer');
 
           if (cartFooter) cartFooter.classList.toggle('is-empty', parsedState.item_count === 0);
@@ -397,7 +397,7 @@ if (!customElements.get('cart-note')) {
         const { CartNoteUpdateEvent } = window.StandardEvents || {};
         if (!CartNoteUpdateEvent) return null;
 
-        const context = this.closest('dialog') || this.closest('cart-drawer') ? 'dialog' : 'cart';
+        const context = this.closest('dialog') || this.closest('cart-drawer, mini-cart') ? 'dialog' : 'cart';
         const deferred = CartNoteUpdateEvent.createPromise();
 
         this.dispatchEvent(
