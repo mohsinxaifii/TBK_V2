@@ -5,10 +5,18 @@
     width: 100%;
 }
 
+/* Every card holds a 3:4 portrait frame, whatever the media inside it is, so
+   the row stays even no matter what has been uploaded. The media is centred and
+   cropped to fill rather than letterboxed -- see the image and video rules. */
 .custom-images-grid_carousal-item {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex: 0 0 auto;
     width: calc(100% / var(--images-per-view, 4));
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background-color: #570f13;
 }
 
 /* Loop copies added by the JS for the mobile strip; the desktop row shows
@@ -20,16 +28,17 @@
 .custom-images-grid_carousal-image {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
-/* Video items take their height from the row (i.e. from the images) instead of
-   from the video: the video is taken out of flow so it adds no height of its
-   own, then the item stretches to the row and the video is cropped to fill it. */
+/* The card now sets its own height from the 3:4 ratio, so a video no longer has
+   to stretch the item to match the images beside it -- it just fills the frame.
+   Absolute positioning stays: it keeps the video from contributing any height
+   of its own and fighting the ratio. */
 .custom-images-grid_carousal-item--video {
     position: relative;
-    align-self: stretch;
-    overflow: hidden;
 }
 
 .custom-images-grid_carousal-video {
@@ -40,17 +49,6 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
-}
-
-/* Nothing to match when the section has no image, so videos keep their own
-   aspect ratio. */
-.custom-images-grid_carousal-container--no-image .custom-images-grid_carousal-item--video {
-    align-self: start;
-}
-
-.custom-images-grid_carousal-container--no-image .custom-images-grid_carousal-video {
-    position: static;
-    height: auto;
 }
 
 @media(max-width: 768px) {
@@ -75,24 +73,15 @@
     }
 }
 
-/* Phones only (Dawn's 749px, so 768px tablets keep the full-height strip).
-   The strip is capped at 600px, and each image sits in the vertical middle
-   of its slot: the tall 720x1480 shots are cropped evenly top and bottom,
-   shorter ones get even room above and below. */
-@media screen and (max-width: 749px) {
-    /* overflow-y has to be stated: with overflow-x: auto the browser computes
-       overflow-y to auto as well, so a fixed height alone would turn the strip
-       into a vertical scroller for every image taller than it. */
-    .custom-images-grid_carousal-container {
-        height: 600px;
-        overflow-y: hidden;
-    }
+/* The strip used to be pinned to 600px with each image centred inside its slot.
+   The 3:4 ratio now gives every card its height, so that fixed height is gone --
+   it would have overridden the ratio and brought the uneven crops back.
 
-    .custom-images-grid_carousal-item {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        overflow: hidden;
-        background-color: #570f13;
+   overflow-y still has to be stated: with overflow-x: auto the browser computes
+   overflow-y to auto as well, which would leave the strip able to scroll
+   vertically by a sub-pixel rounding of the card height. */
+@media screen and (max-width: 749px) {
+    .custom-images-grid_carousal-container {
+        overflow-y: hidden;
     }
 }

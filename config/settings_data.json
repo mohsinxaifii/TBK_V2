@@ -222,10 +222,12 @@
     "show_free_shipping_message": false,
     "gift_tiers_enabled": false,
     "empty_cart_button_secondary": true,
-    "cart_promo_banner_enabled": true,
+    "cart_promo_banner_enabled": false,
     "cart_promo_banner_text": "Get <strong>10% OFF</strong> sitewide",
     "cart_recommendations_heading": "Frequently Bought Together",
-    "cart_recommendations_collection": "the-bhandaar"
+    "cart_recommendations_collection": "the-bhandaar",
+    "cart_recommendations_show_price": true,
+    "cart_recommendations_show_vendor": false
   },
   "presets": {
     "Dawn": {
