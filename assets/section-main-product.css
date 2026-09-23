@@ -1363,7 +1363,6 @@ a.product__text {
 
   .thumbnail-list__item.slider__slide {
     width: calc(100% / 5 - 0.4rem);
-    border-radius: 0.6rem;
     overflow: hidden;
     transition: transform 0.25s ease;
   }
