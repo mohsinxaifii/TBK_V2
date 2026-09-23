@@ -29,10 +29,9 @@
   assign story_label = blog.metafields.custom.story_label.value | default: blog.title | upcase
   assign story_number = article.metafields.custom.story_number.value
 -%}
-{%- capture story_number_padded -%}
-  {%- render 'story-number', article: article -%}
-{%- endcapture -%}
+{%- capture story_number_padded %}{% render 'story-number', article: article %}{% endcapture -%}
 {%- liquid
+  assign story_number_padded = story_number_padded | strip
   if story_number != blank
     assign hero_caption = story_label | append: ' ' | append: story_number_padded
   else
