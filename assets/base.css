@@ -92,7 +92,9 @@ product-component .card--card.card--media>.card__content {
 .page-width {
   max-width: var(--page-width);
   margin: 0 auto;
-  padding: 0 1.5rem;
+  /* Phone gutter. Only ever applies below 750, where the @media rule further
+     down replaces it with 5rem, so this is effectively the mobile value. */
+  padding: 0 2.4rem;
 }
 
 body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
