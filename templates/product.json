@@ -104,36 +104,36 @@
         "bullet_ygJwxf": {
           "type": "bullet",
           "settings": {
-            "bullet_text": "Made in high Oleic sunflower oil",
-            "bullet_content": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+            "bullet_text": "Made in high oleic sunflower oil",
+            "bullet_content": "<p>High oleic sunflower oil is used for its clean flavour and stability, helping retain the distinct taste of bhujia.</p>"
           }
         },
         "bullet_pA86gH": {
           "type": "bullet",
           "settings": {
-            "bullet_text": "No re-use of oil, ensuring purity of taste",
-            "bullet_content": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+            "bullet_text": "No re-use of oil, for purity of taste",
+            "bullet_content": "<p>Fresh oil is used for every batch, keeping the flavour clean and balanced.</p>"
           }
         },
         "bullet_WXYB7z": {
           "type": "bullet",
           "settings": {
-            "bullet_text": "Slow-cooked using Bhatti.",
-            "bullet_content": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+            "bullet_text": "Slow-cooked in traditional Bhatti",
+            "bullet_content": "<p>Each batch is slow-cooked in a traditional bhatti, allowing the heat to be carefully controlled throughout.</p>"
           }
         },
         "bullet_Pch9ha": {
           "type": "bullet",
           "settings": {
             "bullet_text": "Made with low sodium salt",
-            "bullet_content": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+            "bullet_content": "<p>Low sodium salt keeps the seasoning measured, allowing the flavour of the ingredients to remain clear.</p>"
           }
         },
         "bullet_TwH9Cf": {
           "type": "bullet",
           "settings": {
-            "bullet_text": "Prepared by skilled hands in small batches",
-            "bullet_content": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+            "bullet_text": "Prepared by skilled hands in batches",
+            "bullet_content": "<p>Each batch is prepared by experienced hands, carrying forward a craft passed down through generations.</p>"
           }
         }
       },

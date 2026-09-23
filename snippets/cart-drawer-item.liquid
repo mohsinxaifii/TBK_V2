@@ -222,13 +222,13 @@
             <span class="cart-item__locked-qty" aria-label="{{ 'products.product.quantity.label' | t }}">
               {{- 'products.product.quantity.label' | t }}: {{ item.quantity -}}
             </span>
-            {%- render 'loading-spinner' -%}
+            {%- render 'cart-loading-spinner' -%}
           {%- elsif is_gift_tier -%}
             <span class="cart-item__gift-badge">
               {% render 'icon', icon: 'gift' %}
               {{ 'sections.cart.gift_free' | t }}
             </span>
-            {%- render 'loading-spinner' -%}
+            {%- render 'cart-loading-spinner' -%}
           {%- elsif is_gift_wrap -%}
             <gift-quantity class="quantity"
               cart-items-size="{{ cart_items_size }}"
@@ -255,7 +255,7 @@
                 {% render 'icon', icon: 'plus' %}
               </button>
             </gift-quantity>
-            {%- render 'loading-spinner' -%}
+            {%- render 'cart-loading-spinner' -%}
           {%- else -%}
             <quantity-popover>
               <div class="cart-item__quantity-wrapper quantity-popover-wrapper">
@@ -295,7 +295,7 @@
                 {% render 'cart-quantity-rules', item: item, has_qty_rules: has_qty_rules, has_vol_pricing: has_vol_pricing %}
               {%- endif -%}
             </quantity-popover>
-            {%- render 'loading-spinner' -%}
+            {%- render 'cart-loading-spinner' -%}
             <cart-remove-button class="cart-item__remove" id="Remove-{{ line }}" data-index="{{ line }}">
               <a href="{{ item.url_to_remove }}" aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}" data-no-instant>
                 {% render 'icon', icon: 'remove' %}

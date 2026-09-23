@@ -848,6 +848,8 @@ a.mini-cart__promo-banner:hover {
 }
 
 .cart-item__actions .loading-overlay {
+  display: block;
+  color: var(--cart-strong);
   position: absolute;
   inset-inline-end: 0;
   top: 50%;
@@ -864,6 +866,46 @@ a.mini-cart__promo-banner:hover {
 
 .cart-item__actions .loading-overlay:not(.hidden)~* {
   visibility: hidden;
+}
+
+.cart-item__actions .loading-overlay.hidden {
+  display: none;
+}
+
+/* Dawn's spin keyframes are bound to its own .loading__spinner, so the ported
+   overlay's icon would have sat still. */
+.mini-cart .loading-overlay__spinner .icon-spinner,
+.mini-cart .loading-overlay__spinner svg {
+  animation: mini-cart-spin 0.85s linear infinite;
+}
+
+@keyframes mini-cart-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* While a line is updating the whole row reads as busy, not just the controls. */
+.mini-cart .cart-item.is-busy {
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity var(--duration-short) ease;
+}
+
+/* The + on a recommendation card swaps its icon for a spinner rather than just
+   dimming, so a slow connection still shows something happening. */
+.cart-recommendations__add.loading .icon-plus {
+  display: none;
+}
+
+.cart-recommendations__add.loading::after {
+  content: '';
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 0.15rem solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: mini-cart-spin 0.7s linear infinite;
 }
 
 .cart-item__quantity-wrapper {
