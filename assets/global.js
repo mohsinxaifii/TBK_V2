@@ -6,6 +6,52 @@ function getFocusableElements(container) {
   );
 }
 
+/* ---- Page scroll lock --------------------------------------------------- *
+ * One lock shared by every overlay (menu drawer, cart drawer, search, intro
+ * popup, loading screen). Each used to set <html> overflow and stop/start
+ * Lenis on its own, so whichever closed first unlocked the page for all of
+ * them, and any close path that skipped its own unlock left the page stuck:
+ * a stopped Lenis cancels every touch drag outside the overlay, which on a
+ * phone reads as the site freezing. Owners are counted instead -- the page
+ * only unlocks once the last one lets go -- and smooth-scroll.js asks
+ * isLocked() when Lenis is created, since some owners lock before it exists.
+ */
+window.scrollLock =
+  window.scrollLock ||
+  (() => {
+    const owners = new Set();
+
+    const apply = () => {
+      const locked = owners.size > 0;
+      document.documentElement.style.overflow = locked ? 'hidden' : '';
+      if (window.lenis && typeof window.lenis.stop === 'function') {
+        locked ? window.lenis.stop() : window.lenis.start();
+      }
+    };
+
+    return {
+      lock(owner) {
+        owners.add(owner);
+        apply();
+      },
+      unlock(owner) {
+        if (!owners.delete(owner)) return;
+        apply();
+      },
+      isLocked: () => owners.size > 0,
+      // Back/forward cache restores a page exactly as it was left, lock
+      // included, while the overlays reset themselves on pageshow.
+      reset() {
+        owners.clear();
+        apply();
+      },
+    };
+  })();
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) window.scrollLock.reset();
+});
+
 class SectionId {
   static #separator = '__';
 
@@ -463,8 +509,19 @@ class MenuDrawer extends HTMLElement {
     }
 
     if (detailsElement === this.mainDetailsToggle) {
+      // Mid-close the open attribute is still there for another 400ms, so a
+      // second tap used to read as "close" again and do nothing -- the burger
+      // looked dead. Treat it as the reopen it is meant to be: keep the
+      // details open (preventDefault stops the native toggle closing it) and
+      // cancel the pending attribute removal.
+      const isClosing = isOpen && !detailsElement.classList.contains('menu-opening');
       if (isOpen) event.preventDefault();
-      isOpen ? this.closeMenuDrawer(event, summaryElement) : this.openMenuDrawer(summaryElement);
+      if (isClosing) {
+        this.cancelCloseAnimation(detailsElement);
+        this.openMenuDrawer(summaryElement);
+      } else {
+        isOpen ? this.closeMenuDrawer(event, summaryElement) : this.openMenuDrawer(summaryElement);
+      }
 
       if (window.matchMedia('(max-width: 990px)')) {
         document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
@@ -529,8 +586,16 @@ class MenuDrawer extends HTMLElement {
     this.closeAnimation(detailsElement);
   }
 
+  cancelCloseAnimation(detailsElement) {
+    if (detailsElement._closeAnimationFrame) {
+      window.cancelAnimationFrame(detailsElement._closeAnimationFrame);
+      detailsElement._closeAnimationFrame = null;
+    }
+  }
+
   closeAnimation(detailsElement) {
     let animationStart;
+    this.cancelCloseAnimation(detailsElement);
 
     const handleAnimation = (time) => {
       if (animationStart === undefined) {
@@ -540,8 +605,9 @@ class MenuDrawer extends HTMLElement {
       const elapsedTime = time - animationStart;
 
       if (elapsedTime < 400) {
-        window.requestAnimationFrame(handleAnimation);
+        detailsElement._closeAnimationFrame = window.requestAnimationFrame(handleAnimation);
       } else {
+        detailsElement._closeAnimationFrame = null;
         detailsElement.removeAttribute('open');
         if (detailsElement.closest('details[open]')) {
           trapFocus(detailsElement.closest('details[open]'), detailsElement.querySelector('summary'));
@@ -549,7 +615,7 @@ class MenuDrawer extends HTMLElement {
       }
     };
 
-    window.requestAnimationFrame(handleAnimation);
+    detailsElement._closeAnimationFrame = window.requestAnimationFrame(handleAnimation);
   }
 }
 
@@ -558,6 +624,42 @@ customElements.define('menu-drawer', MenuDrawer);
 class HeaderDrawer extends MenuDrawer {
   constructor() {
     super();
+    this.onPageShowListener = this.onPageShow.bind(this);
+  }
+
+  connectedCallback() {
+    window.addEventListener('pageshow', this.onPageShowListener);
+
+    // Safety net: however the drawer ends up closed -- a path that skips
+    // closeMenuDrawer, a section re-render, a script removing the attribute
+    // -- the page lock and the header's menu-open state go with it. Without
+    // this, one missed unlock left the page unscrollable for good.
+    this.openObserver = new MutationObserver(() => {
+      if (!this.mainDetailsToggle.hasAttribute('open')) this.releasePage();
+    });
+    this.openObserver.observe(this.mainDetailsToggle, { attributes: true, attributeFilter: ['open'] });
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener('pageshow', this.onPageShowListener);
+    this.openObserver?.disconnect();
+    this.releasePage();
+  }
+
+  // Tapping a drawer link then hitting Back restores the page from the
+  // bfcache with the drawer still open; close it rather than come back to a
+  // menu covering the page.
+  onPageShow(event) {
+    if (!event.persisted || !this.mainDetailsToggle.hasAttribute('open')) return;
+    this.cancelCloseAnimation(this.mainDetailsToggle);
+    this.mainDetailsToggle.classList.remove('menu-opening');
+    this.mainDetailsToggle.querySelectorAll('details').forEach((details) => {
+      details.removeAttribute('open');
+      details.classList.remove('menu-opening');
+    });
+    this.mainDetailsToggle.removeAttribute('open');
+    this.querySelector('summary')?.setAttribute('aria-expanded', false);
+    removeTrapFocus();
   }
 
   openMenuDrawer(summaryElement) {
@@ -571,7 +673,8 @@ class HeaderDrawer extends MenuDrawer {
     this.header.classList.add('menu-open');
 
     setTimeout(() => {
-      this.mainDetailsToggle.classList.add('menu-opening');
+      // A close that landed within the same tick wins.
+      if (this.header.classList.contains('menu-open')) this.mainDetailsToggle.classList.add('menu-opening');
     });
 
     summaryElement.setAttribute('aria-expanded', true);
@@ -584,7 +687,12 @@ class HeaderDrawer extends MenuDrawer {
   closeMenuDrawer(event, elementToFocus) {
     if (!elementToFocus) return;
     super.closeMenuDrawer(event, elementToFocus);
-    this.header.classList.remove('menu-open');
+    this.releasePage();
+  }
+
+  releasePage() {
+    this.header?.classList.remove('menu-open');
+    document.body.classList.remove(`overflow-hidden-${this.dataset.breakpoint}`);
     window.removeEventListener('resize', this.onResize);
     this.unlockPageScroll();
   }
@@ -592,17 +700,15 @@ class HeaderDrawer extends MenuDrawer {
   // The overflow-hidden-* class above locks <body>, but theme.liquid also
   // sets overflow-x on <html>, and then it's <html>'s overflow that governs
   // the page -- so body's lock does nothing and the page, drawer included
-  // (it lives in the header), scrolls away underneath. Lock <html> itself,
-  // and pause Lenis, which drives wheel scrolling itself and would ignore
-  // overflow; stopped, it also swallows touch drags outside the drawer.
+  // (it lives in the header), scrolls away underneath. The shared lock holds
+  // <html> and pauses Lenis, which drives wheel scrolling itself and would
+  // ignore overflow; stopped, it also swallows touch drags outside the drawer.
   lockPageScroll() {
-    document.documentElement.style.overflow = 'hidden';
-    if (window.lenis) window.lenis.stop();
+    window.scrollLock.lock(this);
   }
 
   unlockPageScroll() {
-    document.documentElement.style.overflow = '';
-    if (window.lenis) window.lenis.start();
+    window.scrollLock.unlock(this);
   }
 
   onResize = () => {
@@ -723,16 +829,14 @@ class CartDrawer extends MenuDrawer {
   lockPageScroll() {
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
-    document.documentElement.style.overflow = 'hidden';
     if (scrollbarWidth > 0) document.documentElement.style.paddingInlineEnd = `${scrollbarWidth}px`;
-    if (window.lenis) window.lenis.stop();
+    window.scrollLock.lock(this);
   }
 
   unlockPageScroll() {
-    document.documentElement.style.overflow = '';
     document.documentElement.style.paddingInlineEnd = '';
     document.documentElement.style.removeProperty('--scrollbar-width');
-    if (window.lenis) window.lenis.start();
+    window.scrollLock.unlock(this);
   }
 
   lockScroll() {

@@ -241,6 +241,12 @@ body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
   overflow: hidden;
 }
 
+/* Same sticky-header trap as .overflow-hidden-* below: on <body> (the search
+   modal sets it there) hidden makes a scroll container, clip doesn't. */
+body.overflow-hidden {
+  overflow: clip;
+}
+
 .skip-to-content-link:focus {
   z-index: 9999;
   position: inherit;
@@ -3035,10 +3041,20 @@ details-disclosure>details {
   }
 }
 
+/* clip, not hidden. <html> carries overflow-x (theme.liquid), so <body>'s
+   overflow no longer passes up to the viewport: `hidden` here turned <body>
+   into its own scroll container, parked at 0. The sticky header then stuck to
+   that instead of the viewport and jumped back to the top of the document --
+   taking the burger menu (which hangs off the header) out of view while the
+   page stayed locked, so the site looked frozen whenever the menu was opened
+   scrolled down. clip hides the same overflow without making a scroll
+   container; actually stopping the page is window.scrollLock's job, on <html>.
+   hidden stays first as the fallback for browsers without clip. */
 .overflow-hidden-mobile,
 .overflow-hidden-tablet,
 .overflow-hidden-desktop {
   overflow: hidden;
+  overflow: clip;
 }
 
 @media screen and (min-width: 750px) {

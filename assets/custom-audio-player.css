@@ -226,7 +226,7 @@
     line-height: 1.7;
     font-weight: var(--font-copy-weight);
     color: #181818;
-    text-align: left;
+    text-align: center;
 }
 
 .custom-audio-player-transcript-text .custom-audio-player-transcript-line p {
@@ -725,7 +725,7 @@
 
     .custom-audio-player-transcript-text {
         font-size: var(--font-body-size-mobile);
-        text-align: left;
+        text-align: center;
     }
 
     .custom-audio-player-transcript-arrow {
@@ -813,11 +813,13 @@
     }
 
     .custom-audio-player-overlay {
-        padding: 85px 65px 155px;
+        padding: 85px 30px 155px;
         position: relative;
         inset: auto;
     }
-
+.custom-audio-player-transcript{
+    width: 80%;
+}
     .custom-audio-player-overlay .page-width {
         position: static;
         top: auto;

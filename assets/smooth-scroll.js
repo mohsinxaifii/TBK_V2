@@ -11,10 +11,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Drawers (the burger menu included), modals and other overlays keep
     // native scroll so their own internal scroll containers aren't hijacked
     // by the page-level smoothing -- or blocked while Lenis is stopped.
-    prevent: (node) => node.closest('[data-lenis-prevent], .drawer, .menu-drawer, [role="dialog"], dialog, .modal'),
+    prevent: (node) =>
+      node.closest('[data-lenis-prevent], .drawer, .menu-drawer, .search-modal, [role="dialog"], dialog, .modal'),
   });
 
   window.lenis = lenis;
+
+  // An overlay (the loading screen, typically) may have taken the shared
+  // lock before Lenis existed to be stopped.
+  if (window.scrollLock && window.scrollLock.isLocked()) lenis.stop();
 
   if (typeof window.gsap !== 'undefined') {
     gsap.ticker.add((time) => lenis.raf(time * 1000));

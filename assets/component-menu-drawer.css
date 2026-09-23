@@ -256,3 +256,23 @@ details[open].menu-opening > .menu-drawer__submenu {
     transition: none !important;
   }
 }
+
+/* Keep a drag inside the drawer inside the drawer. Without this, running past
+   the end of the list chains the scroll out to the page on iOS -- the page is
+   locked, but the sticky header still saw the scroll and hid itself, taking
+   the drawer with it. */
+.menu-drawer,
+.menu-drawer__submenu,
+.menu-drawer__inner-container,
+.menu-drawer__navigation-container {
+  overscroll-behavior: contain;
+}
+
+/* Header controls react on the first tap: no double-tap-to-zoom wait, and no
+   chance a quick second tap on the burger is taken as a zoom gesture. */
+.header__icon,
+.header__icon--summary,
+.menu-drawer__menu-item,
+.menu-drawer__close-button {
+  touch-action: manipulation;
+}
