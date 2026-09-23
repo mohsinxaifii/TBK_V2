@@ -24,6 +24,7 @@
    --font-weight-regular: 400;
    --font-weight-medium: 500;
    --font-weight-semibold: 600;
+   --font-weight-bold: 700;
    --font-weight-extrabold: 800;
 
    /* 1b. Extra families used by a single component each */
@@ -465,24 +466,30 @@
    --font-continue-exploring-title-size: 20px;
 
    /* ---- Intro popup (custom-intro-popup, first-visit overlay) ---- */
-   /* Heading and body are the design's own scale, not the shared section
-     roles: this is a 432px-wide panel, so the 50px section heading would be
-     too big for it. Tracking is 4% of the size at both breakpoints, matching
-     the Figma text styles. The buttons map exactly onto the shared "small"
-     role (3d), which is also what the contact form's submit reads. */
-   --font-intro-popup-heading-size: 40px;
-   --font-intro-popup-heading-line-height: 58px;
-   --font-intro-popup-heading-letter-spacing: 1.6px;
+   /* The design's own scale (3231:5335 desktop, 3231:5308 mobile), not the
+     shared section roles: the copy sits in a 336px column beside the photo, so
+     the 50px section heading would be far too big for it. Tracking is 2% of
+     the size on the desktop heading and body and 4% on mobile, matching the
+     Figma text styles. The button keeps one size across both breakpoints. */
+   --font-intro-popup-heading-size: 32px;
+   --font-intro-popup-heading-line-height: 42px;
+   --font-intro-popup-heading-letter-spacing: 0.64px;
    --font-intro-popup-heading-weight: var(--font-weight-regular);
-   --font-intro-popup-heading-size-mobile: 32px;
-   --font-intro-popup-heading-line-height-mobile: 36px;
-   --font-intro-popup-heading-letter-spacing-mobile: 1.28px;
-   --font-intro-popup-body-size: 24px;
-   --font-intro-popup-body-line-height: 32px;
+   --font-intro-popup-heading-size-mobile: 22px;
+   --font-intro-popup-heading-line-height-mobile: 32px;
+   --font-intro-popup-heading-letter-spacing-mobile: 0px;
+   --font-intro-popup-body-size: 16px;
+   --font-intro-popup-body-line-height: 24px;
+   --font-intro-popup-body-letter-spacing: 0.32px;
+   --font-intro-popup-body-weight: var(--font-weight-light);
    --font-intro-popup-body-size-mobile: 14px;
    --font-intro-popup-body-line-height-mobile: 20px;
    --font-intro-popup-body-letter-spacing-mobile: 0.56px;
-   --font-intro-popup-cta-size: var(--font-small-size);
-   --font-intro-popup-cta-line-height: var(--font-small-line-height);
-   --font-intro-popup-cta-letter-spacing: var(--font-small-letter-spacing);
+   /* The "Welcome to The Bikaneri Kitchen" line: same size as the body but
+     bold, and italic as well on mobile. */
+   --font-intro-popup-welcome-weight: var(--font-weight-bold);
+   --font-intro-popup-cta-size: 16px;
+   --font-intro-popup-cta-line-height: 28px;
+   --font-intro-popup-cta-letter-spacing: 0.64px;
+   --font-intro-popup-cta-weight: var(--font-weight-medium);
 }
