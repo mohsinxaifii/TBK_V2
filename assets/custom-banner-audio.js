@@ -26,8 +26,16 @@ const initBannerPlayback = (root) => {
     // The section's inline starter usually got it playing before this ran, so
     // catch the already-playing case too rather than wait for an event that
     // has been and gone.
+<<<<<<< HEAD
+    if (video.readyState >= 2) video.classList.add('is-ready');
+    else {
+      video.addEventListener('loadeddata', () => video.classList.add('is-ready'), { once: true });
+      video.addEventListener('playing', () => video.classList.add('is-ready'), { once: true });
+    }
+=======
     if (!video.paused && video.readyState >= 3) video.classList.add('is-ready');
     else video.addEventListener('playing', () => video.classList.add('is-ready'), { once: true });
+>>>>>>> 305af45ef67ef69f7bf547d02a98c865bf0a10b1
   });
 
   // Data Saver users get the poster until they touch the page.
