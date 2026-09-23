@@ -19,7 +19,25 @@
   # Still image hero, for stories with no hero video (the Rituals layout). Kept
   # separate from article.image so the hero and the listing-card cover can differ.
   assign hero_image = article.metafields.custom.hero_image.value
-  assign hero_caption = article.metafields.custom.hero_caption.value
+  # The caption used to be typed out per post as "RITUAL 001" / "ARCHIVE 001",
+  # which put the same number in two places and let them drift. It is composed
+  # now: the word comes from the blog (custom.story_label, falling back to the
+  # blog title), the number from the article's own custom.story_number, so it
+  # always agrees with the listing grid and the continue-exploring rail.
+  # custom.hero_caption still wins where it is set on a post with no number —
+  # an unpublished draft, or anything wanting a one-off caption.
+  assign story_label = blog.metafields.custom.story_label.value | default: blog.title | upcase
+  assign story_number = article.metafields.custom.story_number.value
+-%}
+{%- capture story_number_padded -%}
+  {%- render 'story-number', article: article -%}
+{%- endcapture -%}
+{%- liquid
+  if story_number != blank
+    assign hero_caption = story_label | append: ' ' | append: story_number_padded
+  else
+    assign hero_caption = article.metafields.custom.hero_caption.value
+  endif
   assign hero_alt = hero_caption | default: article.title | escape
 
   assign intro_heading = article.metafields.custom.intro_heading.value

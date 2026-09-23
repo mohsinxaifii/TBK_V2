@@ -45,7 +45,6 @@
 
           {%- liquid
             assign display_count = display_count | plus: 1
-            assign index_padded = '00' | append: display_count | slice: -3, 3
 
             # Same source cascade as blog-listing-grid: custom.card_image is a 2x
             # export of the Figma card frame, already at these cards' 382:654, so
@@ -54,6 +53,16 @@
             assign tile_image = blog_article.metafields.custom.card_image.value | default: blog_article.metafields.custom.hero_image.value | default: blog_article.image
             assign tile_alt = tile_image.alt | default: blog_article.title | strip_html | default: shop.name | escape
           -%}
+
+          {%- comment -%}
+            The tile's number is the article's own, not its position in this
+            rail — this list skips the post being read, so position here would
+            not match the number the same post shows in the listing grid or on
+            its own hero. See snippets/story-number.liquid.
+          {%- endcomment -%}
+          {%- capture index_padded -%}
+            {%- render 'story-number', article: blog_article, fallback: display_count -%}
+          {%- endcapture -%}
 
           <a href="{{ blog_article.url }}" class="continue-exploring__item{% unless section.settings.grayscale_images %} continue-exploring__item--color{% endunless %}">
             <span class="continue-exploring__media">
