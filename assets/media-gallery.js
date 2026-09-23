@@ -18,8 +18,8 @@ if (!customElements.get('media-gallery')) {
         // snapped page changes, so the thumbnail can follow the swipe live.
         this.elements.viewer.addEventListener('slideChanged', this.onSlideChanged.bind(this));
         this.prepareMobileStrip();
-        // In the one-image-at-a-time layouts (desktop thumbnails, mobile "show")
-        // the viewer shows only the active item, so there is nothing for
+        // In the one-image-at-a-time layout (desktop thumbnails) the viewer
+        // shows only the active item, so there is nothing for
         // slider-component to scroll. Catch the arrow clicks on the way down
         // (capture) and step through the media instead.
         this.elements.viewer.addEventListener('click', this.onArrowClick.bind(this), true);
