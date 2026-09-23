@@ -42,9 +42,10 @@
    transparent, so that sliver sampled straight through to <body>, which is
    white -- which is why it showed on some devices and not others.
 
-   Two defences, neither of which moves anything: the boxes around the media
-   carry its colour, so a seam can only ever blend dark into dark; and the media
-   paints one pixel beyond its own edge. */
+   The media paints one pixel beyond its own edge, which covers that sliver
+   without changing any colour: .custom-blogs-carousel-content has no background
+   of its own, so tinting the slide or the viewport to hide the seam would have
+   repainted the whole copy panel too. */
 .custom-blogs-carousel-media {
     position: relative;
     width: 100%;
@@ -53,11 +54,6 @@
     overflow: hidden;
     background: #2b0c0f;
     box-shadow: 0 0 0 1px #2b0c0f;
-}
-
-.custom-blogs-carousel-viewport,
-.custom-blogs-carousel-slide {
-    background-color: #2b0c0f;
 }
 
 @media screen and (min-width: 750px) {
