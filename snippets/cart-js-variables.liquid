@@ -1,0 +1,55 @@
+{%- comment -%}
+  Globals the ported cart drawer reads at runtime.
+
+  cart.js fetches `theme.routes.cart_change_url` directly, so without this the
+  quantity steppers, the remove buttons and the discount field were all calling
+  fetch("undefined"): no request ever reached /cart/change, the response failed
+  to parse, and the catch block swallowed it — every control looked wired and
+  did nothing. The strings below are the user-facing messages those same paths
+  print on failure.
+
+  Only the keys the cart actually uses are defined here, rather than the whole
+  of the source theme's js-variables snippet, which also carries its product,
+  search and date strings plus a custom-elements polyfill this theme does not
+  need.
+
+  theme.config lives in global.js, beside the drawer that reads it.
+{%- endcomment -%}
+<script>
+  window.theme = window.theme || {};
+
+  theme.routes = {
+    root_url: '{{ routes.root_url }}',
+    cart_url: '{{ routes.cart_url }}',
+    cart_add_url: '{{ routes.cart_add_url }}',
+    cart_change_url: '{{ routes.cart_change_url }}',
+    cart_update_url: '{{ routes.cart_update_url }}'
+  };
+
+  theme.cartStrings = {
+    error: `{{ 'sections.cart.cart_error' | t }}`,
+    quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`
+  };
+
+  theme.discountStrings = {
+    applying: `{{ 'general.cart.discount.applying' | t }}`,
+    applied: `{{ 'general.cart.discount.applied' | t: code: '[code]' }}`,
+    removing: `{{ 'general.cart.discount.removing' | t }}`,
+    invalid: `{{ 'general.cart.discount.invalid' | t: code: '[code]' }}`,
+    error: `{{ 'general.cart.discount.error' | t }}`
+  };
+
+  theme.shopSettings = {
+    {%- comment -%}
+      <add-to-cart> (the + on each recommendation card) checks this before it
+      does anything: when it is falsy it falls back to Shopify.postLink, a real
+      form POST that lands the shopper on /cart. Leaving it undefined is what
+      made those buttons navigate away instead of adding in place.
+    {%- endcomment -%}
+    cartDrawer: {% if settings.cart_type == 'drawer' %}true{% else %}false{% endif %},
+    moneyFormat: {{ shop.money_format | json }},
+    isoCode: {{ cart.currency.iso_code | json }},
+    currencyCode: {{ settings.currency_code_enabled | json }},
+    giftwrapRate: '{{ settings.giftwrap_rate_type }}'
+  };
+</script>
