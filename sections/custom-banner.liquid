@@ -1,16 +1,13 @@
 {{ 'custom-banner.css' | asset_url | stylesheet_tag }}
 {{ 'custom-banner-audio.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
-<script src="{{ 'custom-banner.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'custom-banner-audio.js' | asset_url }}" defer="defer"></script>
 
-<div
-  class="custom-banner-pin-space"
-  data-custom-banner-pin
-  {% if request.page_type == 'index' %}
-    data-custom-banner-no-parallax
-  {% endif %}
->
+{%- comment -%}
+  data-custom-banner-pin is custom-banner-audio.js's root hook; the scroll pin
+  it was originally named for is gone.
+{%- endcomment -%}
+<div class="custom-banner-pin-space" data-custom-banner-pin>
   {%- assign show_video_audio_controls = false -%}
   {%- if section.settings.media_type == 'video' -%}
     {%- if section.settings.banner_video != blank or section.settings.mobile_banner_video != blank -%}
@@ -18,7 +15,7 @@
     {%- endif -%}
   {%- endif -%}
 
-  <div class="custom-banner-sticky" data-custom-banner-sticky>
+  <div class="custom-banner-sticky">
     <div class="custom-banner-container">
       {%- if section.settings.media_type == 'video' and section.settings.banner_video != blank -%}
         {{
