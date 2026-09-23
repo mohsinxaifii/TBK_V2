@@ -226,9 +226,9 @@ details[open].menu-opening>.cart-drawer {
      came out transparent with a cream icon on a cream card, i.e. invisible.
      Brand maroon here, to sit with the rest of the theme. */
   --cart-accent: #570f13;
-  --cart-radius: 0.4rem;
+  --cart-radius: 0.6rem;
   --cart-radius-sm: 0.2rem;
-  --cart-gutter: 1.2rem;
+  --cart-gutter: 1.6rem;
 
   /* The source priced its lines in a --font-price-family only its own theme
      defined; unmapped it would resolve to nothing here and those numbers would
@@ -285,7 +285,7 @@ details[open].menu-opening>.cart-drawer {
 .mini-cart__title {
   margin: 0;
   font-family: var(--font-family-display);
-  font-size: 1.6rem;
+  font-size: 1.9rem;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0;
@@ -294,7 +294,7 @@ details[open].menu-opening>.cart-drawer {
 
 .mini-cart__count {
   /* font-family: var(--font-body-family);
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 400;
   letter-spacing: 0;
   color: var(--cart-muted); */
@@ -331,7 +331,7 @@ details[open].menu-opening>.cart-drawer {
   margin: 0;
   padding: 1.3rem 2rem;
   text-align: center;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 400;
   line-height: 1.3;
   color: #fffdee;
@@ -392,7 +392,7 @@ a.mini-cart__promo-banner:hover {
    bottom rules stay, which is what still separates one card from the next. */
 .cart-card {
   display: block;
-  padding: 1.2rem;
+  padding: 1.6rem;
   background-color: var(--cart-surface);
   border: 0.1rem solid var(--cart-line);
   border-inline: 0;
@@ -432,7 +432,7 @@ a.mini-cart__promo-banner:hover {
 .cart-card__title {
   margin: 0 0 1.2rem;
   font-family: var(--font-family-display);
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0;
@@ -451,7 +451,7 @@ a.mini-cart__promo-banner:hover {
 .gift-tier-progress__heading {
   margin: 0 0 2rem;
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   line-height: 1.35;
   letter-spacing: 0;
   color: var(--cart-strong);
@@ -475,7 +475,7 @@ a.mini-cart__promo-banner:hover {
 }
 
 .gift-tier-progress__range {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   line-height: 1.2;
   letter-spacing: 0;
   color: var(--cart-muted);
@@ -553,7 +553,7 @@ a.mini-cart__promo-banner:hover {
 
 .gift-tier-progress__label {
   padding: 0 0.4rem;
-  font-size: 1.15rem;
+  font-size: 1.35rem;
   line-height: 1.25;
   letter-spacing: 0;
   color: var(--cart-muted);
@@ -645,7 +645,7 @@ a.mini-cart__promo-banner:hover {
 
 .cart-item__media {
   flex: 0 0 auto;
-  width: 7rem;
+  width: 8.4rem;
   overflow: hidden;
   border-radius: var(--cart-radius-sm);
   background-color: rgb(var(--color-placeholder));
@@ -677,7 +677,7 @@ a.mini-cart__promo-banner:hover {
 
 .cart-item__title {
   font-family: var(--font-family-display);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 400;
   line-height: 1.3;
   letter-spacing: 0;
@@ -704,7 +704,7 @@ a.mini-cart__promo-banner:hover {
 }
 
 .cart-item__price bdi {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
 }
 
 .cart-item__price-final {
@@ -715,7 +715,7 @@ a.mini-cart__promo-banner:hover {
 .cart-item__price-compare {
   /* The strike is drawn from this element's own font metrics, so it has to carry the
      same font-size as the text inside it or the line lands below the digits. */
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: var(--cart-muted);
   text-decoration-line: line-through;
   text-decoration-thickness: 0.1rem;
@@ -730,7 +730,7 @@ a.mini-cart__promo-banner:hover {
   display: flex;
   flex-direction: column;
   row-gap: 0.3rem;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   line-height: 1.3;
   color: var(--cart-muted);
 }
@@ -767,7 +767,7 @@ a.mini-cart__promo-banner:hover {
   padding: 0 1.1rem;
   border-radius: 0 0 10px 10px;
   font-family: var(--font-family-display);
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0.02em;
@@ -834,7 +834,7 @@ a.mini-cart__promo-banner:hover {
   padding: 0.5rem 0.8rem;
   border-radius: var(--cart-radius-sm);
   background-color: var(--cart-chip);
-  font-size: 1.15rem;
+  font-size: 1.35rem;
   line-height: 1.2;
   letter-spacing: 0;
   color: var(--cart-muted);
@@ -971,8 +971,8 @@ a.mini-cart__promo-banner:hover {
    steppers on the product and cart pages are untouched. */
 .mini-cart .quantity {
   width: auto;
-  height: 2.8rem;
-  min-height: 2.8rem;
+  height: 3.4rem;
+  min-height: 3.4rem;
   border: 0.1rem solid var(--cart-line-strong);
   border-radius: var(--cart-radius-sm);
   overflow: hidden;
@@ -984,10 +984,10 @@ a.mini-cart__promo-banner:hover {
 }
 
 .mini-cart .quantity__button {
-  flex: 0 0 2.4rem;
-  width: 2.4rem;
-  height: 2.6rem;
-  min-height: 2.6rem;
+  flex: 0 0 3rem;
+  width: 3rem;
+  height: 3.2rem;
+  min-height: 3.2rem;
   padding: 0;
   border-radius: 0;
   background-color: transparent;
@@ -998,9 +998,9 @@ a.mini-cart__promo-banner:hover {
 }
 
 .mini-cart .quantity__button .icon {
-  flex: 0 0 0.8rem;
-  width: 0.8rem;
-  height: 0.8rem;
+  flex: 0 0 1rem;
+  width: 1rem;
+  height: 1rem;
   color: var(--cart-strong);
 }
 
@@ -1009,12 +1009,12 @@ a.mini-cart__promo-banner:hover {
 }
 
 .mini-cart .quantity__input {
-  width: 2.6rem;
-  min-width: 2.6rem;
-  height: 2.6rem;
-  min-height: 2.6rem;
+  width: 3.2rem;
+  min-width: 3.2rem;
+  height: 3.2rem;
+  min-height: 3.2rem;
   padding: 0;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 500;
   opacity: 1;
   color: var(--cart-strong);
@@ -1025,8 +1025,8 @@ a.mini-cart__promo-banner:hover {
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 2.8rem;
-  height: 2.8rem;
+  width: 3.4rem;
+  height: 3.4rem;
   cursor: pointer;
   color: var(--cart-muted);
   transition: color var(--duration-default) ease;
@@ -1056,7 +1056,7 @@ a.mini-cart__promo-banner:hover {
   column-gap: 0.5rem;
   padding: 0.5rem 0.9rem;
   border-radius: var(--cart-radius-sm);
-  font-size: 1.15rem;
+  font-size: 1.35rem;
   font-weight: 600;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -1072,7 +1072,7 @@ a.mini-cart__promo-banner:hover {
 .cart-item__error {
   display: flex;
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
 
 .cart-item__error-text:empty {
@@ -1118,7 +1118,7 @@ a.mini-cart__promo-banner:hover {
   border-radius: inherit;
   background: none;
   font-family: inherit;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   letter-spacing: 0;
   color: var(--cart-strong);
 }
@@ -1142,7 +1142,7 @@ a.mini-cart__promo-banner:hover {
   border: 0;
   background: none;
   font-family: inherit;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: 600;
   letter-spacing: 0.05rem;
   text-transform: uppercase;
@@ -1165,7 +1165,7 @@ a.mini-cart__promo-banner:hover {
 
 .cart-discount__message {
   margin: 0.8rem 0 0;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   line-height: 1.3;
   color: var(--cart-muted);
 }
@@ -1201,7 +1201,7 @@ a.mini-cart__promo-banner:hover {
 }
 
 .cart-discount__available {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   letter-spacing: 0;
   color: var(--cart-muted);
 }
@@ -1210,7 +1210,7 @@ a.mini-cart__promo-banner:hover {
   display: inline-flex;
   align-items: center;
   column-gap: 0.4rem;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 500;
   letter-spacing: 0;
   color: var(--cart-strong);
@@ -1257,7 +1257,7 @@ a.mini-cart__promo-banner:hover {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: 0.05rem;
   text-transform: uppercase;
@@ -1387,7 +1387,7 @@ a.mini-cart__promo-banner:hover {
 }
 
 .cart-recommendations__vendor {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   letter-spacing: 0.05rem;
   text-transform: uppercase;
   color: var(--cart-muted);
@@ -1395,7 +1395,7 @@ a.mini-cart__promo-banner:hover {
 
 .cart-recommendations__title {
   font-family: var(--font-family-display);
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   line-height: 1.3;
   letter-spacing: 0;
   color: var(--cart-strong);
@@ -1417,7 +1417,7 @@ a.mini-cart__promo-banner:hover {
 
 .cart-recommendations__price {
   font-family: var(--font-price-family);
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 600;
   color: var(--cart-strong);
 }
@@ -1433,9 +1433,9 @@ a.mini-cart__promo-banner:hover {
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 2.4rem;
-  height: 2.4rem;
-  margin-inline-start: 0.6rem;
+  width: 3rem;
+  height: 3rem;
+  margin-inline-start: 0.8rem;
   border-radius: 50%;
   cursor: pointer;
   color: #fffdee;
@@ -1484,7 +1484,7 @@ a.mini-cart__promo-banner:hover {
   align-items: center;
   justify-content: center;
   column-gap: 0.8rem;
-  font-size: 1.15rem;
+  font-size: 1.35rem;
   text-transform: uppercase;
   letter-spacing: 0.15rem;
   color: var(--cart-strong);
@@ -1576,7 +1576,7 @@ a.mini-cart__promo-banner:hover {
 .mini-cart__tooltip {
   display: flex;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: 400;
   line-height: 1;
   position: absolute;
@@ -1666,7 +1666,7 @@ a.mini-cart__promo-banner:hover {
   padding: 0 1.1rem;
   border-radius: 0 0 10px 10px;
   font-family: var(--font-family-display);
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0.02em;
@@ -1712,7 +1712,7 @@ a.mini-cart__promo-banner:hover {
   display: inline-flex;
   align-items: center;
   column-gap: 0.7rem;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 600;
   letter-spacing: 0;
   color: var(--cart-strong);
@@ -1733,26 +1733,26 @@ a.mini-cart__promo-banner:hover {
 }
 
 .cart-summary__compare-at {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 400;
   color: var(--cart-muted);
 }
 
 .cart-summary__total {
-  font-size: 1.7rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--cart-strong);
 }
 
 .cart-summary .discounts {
   margin: 0.4rem 0 0;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
 
 .cart-summary__tax-note {
   display: block;
   margin-top: 0.4rem;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   line-height: 1.4;
   letter-spacing: 0;
   color: var(--cart-muted);
@@ -1771,7 +1771,7 @@ a.mini-cart__promo-banner:hover {
   display: flex;
   align-items: flex-start;
   column-gap: 0.8rem;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   line-height: 1.4;
   letter-spacing: 0;
   color: var(--cart-strong);
@@ -1805,7 +1805,7 @@ a.mini-cart__promo-banner:hover {
   min-width: auto;
   min-height: 5rem;
   border-radius: var(--cart-radius-sm);
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   letter-spacing: 0.02rem;
   text-transform: none;
   white-space: nowrap;
@@ -1858,7 +1858,7 @@ a.mini-cart__promo-banner:hover {
   justify-content: center;
   column-gap: 0.6rem;
   margin: 1.2rem 0 0;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   letter-spacing: 0.02rem;
   color: var(--cart-muted);
 }
@@ -1891,13 +1891,13 @@ a.mini-cart__promo-banner:hover {
 }
 
 .cart-drawer .free-shipping__text {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   letter-spacing: 0;
   color: var(--cart-muted);
 }
 
 .cart-drawer .free-shipping__text .price bdi {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: var(--cart-strong);
 }
 
