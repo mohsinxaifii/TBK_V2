@@ -8,6 +8,11 @@
 .custom-banner-sticky {
     position: relative;
     overflow: hidden;
+    /* A hairline of page background shows between the header and the banner
+       (sub-pixel rounding of the header's height -- its margin-bottom is 0).
+       Tucking the banner 2px up under the header closes it; the header sits
+       above at z-index 50, so nothing of the banner shows over it. */
+    margin-top: -2px;
 }
 
 .custom-banner-container {
