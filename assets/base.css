@@ -3754,3 +3754,49 @@ details-disclosure>details {
     transform: translateX(100%) scaleX(0);
   }
 }
+/* ---- No focus rings, anywhere ------------------------------------------- *
+   Requested site-wide: no outline or ring on any focused element -- the
+   browser's own default, and the theme's rings drawn on top of it. It showed
+   most on the intro popup's close button, which receives focus when the
+   popup opens and so got a full keyboard-style border around it. !important
+   because component stylesheets that load after this one (the intro popup's
+   among them) set their own :focus-visible outlines.
+   Trade-off, knowingly taken: keyboard users get no focus indicator. */
+:root {
+  --focused-base-outline: none;
+  --focused-base-box-shadow: none;
+}
+
+*:focus,
+*:focus-visible,
+.focused {
+  outline: none !important;
+}
+
+.focused,
+.focus-inset:focus-visible,
+.focus-offset:focus-visible,
+.button:focus,
+.button:focus-visible,
+.shopify-payment-button__button--unbranded:focus,
+.shopify-payment-button__button--unbranded:focus-visible,
+.field__input:focus,
+.field__input:focus-visible,
+.select__select:focus,
+.select__select:focus-visible,
+.customer .field input:focus,
+.customer .field input:focus-visible,
+.customer select:focus,
+.customer select:focus-visible,
+.announcement-bar .slider-button--next:focus-visible,
+.announcement-bar .slider-button--prev:focus-visible,
+.utility-bar .list-social__link:focus-visible {
+  box-shadow: none !important;
+}
+
+/* Firefox's inner dotted border on focused buttons. */
+button::-moz-focus-inner,
+[type='button']::-moz-focus-inner,
+[type='submit']::-moz-focus-inner {
+  border: 0;
+}
