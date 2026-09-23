@@ -29,15 +29,61 @@
       first frame at ~1.1s held, ~2.8s with them competing.
     {%- endcomment -%}
     {%- if request.page_type == 'index' -%}
+      {%- comment -%}
+        Held from the third home section down only: the section under the
+        hero is on the first screen on a phone, and holding its images left
+        it blank (the featured product without its background) for a beat.
+        Fresh visits only -- a reload or back/forward usually has the film
+        cached, and the page may be restored scrolled down to what would be
+        held.
+      {%- endcomment -%}
       <style>
-        html.hero-pending img[loading='lazy'] {
+        html.hero-pending main#MainContent > .shopify-section:nth-child(n + 3) img[loading='lazy'],
+        html.hero-pending .shopify-section-group-footer-group img[loading='lazy'] {
           display: none !important;
         }
       </style>
       <script>
-        document.documentElement.classList.add('hero-pending');
+        (function () {
+          var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+          if (!nav || nav.type === 'navigate') document.documentElement.classList.add('hero-pending');
+        })();
       </script>
     {%- endif -%}
+
+    {%- comment -%}
+      Pre-paint cloak for site-animations.js. That script is deferred, so on
+      any load the loading screen doesn't cover (every reload -- it plays once
+      per session) the browser painted the sections in their final state
+      first; the script then snapped them to their hidden start states and
+      animated them back in, and the hero picked up its dark veil a beat after
+      it had shown. <main> stays transparent until site-animations.js has
+      prepped and built everything, then fades in; the header is unaffected.
+      Skipped where that script stands down (reduced motion, theme editor),
+      and never held longer than 3s whatever happens.
+    {%- endcomment -%}
+    {%- unless request.design_mode -%}
+      <style>
+        main#MainContent {
+          transition: opacity 0.35s ease;
+        }
+
+        html.ha-pending main#MainContent {
+          opacity: 0;
+        }
+      </style>
+      <script>
+        (function () {
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          var root = document.documentElement;
+          root.classList.add('ha-pending');
+          window.releaseAnimationCloak = function () {
+            root.classList.remove('ha-pending');
+          };
+          setTimeout(window.releaseAnimationCloak, 3000);
+        })();
+      </script>
+    {%- endunless -%}
     <script>
       window.heroMedia = {
         ready: false,

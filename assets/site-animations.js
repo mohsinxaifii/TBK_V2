@@ -17,14 +17,26 @@
  *   - Legacy initScrollReveal scripts check data-ha-claimed and stand down.
  */
 (() => {
+  // theme.liquid keeps <main> transparent until this has prepped and built
+  // every section (see its ha-pending cloak); lift it on every way out.
+  const releaseCloak = () => {
+    if (window.releaseAnimationCloak) window.releaseAnimationCloak();
+  };
+
   const main = document.querySelector('main#MainContent');
-  if (!main) return;
+  if (!main) {
+    releaseCloak();
+    return;
+  }
 
   const hasGsap = typeof window.gsap !== 'undefined';
   const hasST = typeof window.ScrollTrigger !== 'undefined';
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const designMode = window.Shopify && window.Shopify.designMode;
-  if (!hasGsap || !hasST || reduceMotion || designMode) return;
+  if (!hasGsap || !hasST || reduceMotion || designMode) {
+    releaseCloak();
+    return;
+  }
 
   gsap.registerPlugin(ScrollTrigger);
 
@@ -1340,9 +1352,20 @@
     );
   };
 
+  // Every animator has applied its start state and built its timeline (the
+  // hero's veil included) before <main> is shown, so the first frame seen is
+  // the first frame of the choreography.
+  const buildAndReveal = () => {
+    try {
+      build();
+    } finally {
+      releaseCloak();
+    }
+  };
+
   if (document.readyState === 'complete') {
-    setTimeout(build, 0);
+    setTimeout(buildAndReveal, 0);
   } else {
-    document.addEventListener('DOMContentLoaded', () => setTimeout(build, 0), { once: true });
+    document.addEventListener('DOMContentLoaded', () => setTimeout(buildAndReveal, 0), { once: true });
   }
 })();
