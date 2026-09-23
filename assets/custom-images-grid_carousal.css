@@ -1,7 +1,7 @@
 .custom-images-grid_carousal-container {
     display: flex;
     justify-content: start;
-    align-items: start;
+    align-items: stretch;
     width: 100%;
 }
 
@@ -17,10 +17,16 @@
     display: none;
 }
 
+/* Every item stretches to the row, whose height comes from the tallest image.
+   The shorter images then fill that height (height: 100% resolves against the
+   stretched item) and are cropped with cover, so the row has an even bottom
+   edge. */
 .custom-images-grid_carousal-image {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 /* Video items take their height from the row (i.e. from the images) instead of
@@ -116,5 +122,11 @@
         align-items: center;
         overflow: hidden;
         background-color: #570f13;
+    }
+
+    /* The strip is on a fixed 600px here with each image centred at its own
+       ratio, so the fill-and-crop from above doesn't apply. */
+    .custom-images-grid_carousal-container:not(.custom-images-grid_carousal-container--no-image) .custom-images-grid_carousal-image {
+        height: auto;
     }
 }
