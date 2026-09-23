@@ -131,6 +131,7 @@
   overflow: hidden;
   overscroll-behavior: contain;
   background-color: var(--cart-canvas);
+  will-change: transform;
   --max-height: var(--cart-viewport-height, 100vh);
 }
 
@@ -146,7 +147,8 @@
   opacity: 0;
   cursor: zoom-out;
   pointer-events: none;
-  transition: opacity var(--duration-long) ease;
+  transition: opacity var(--cart-duration-overlay, 220ms) ease;
+  will-change: opacity;
   /* Matches the intro popup's backdrop, so the two overlays on the site read
      as the same material. */
   background-color: rgba(0, 0, 0, 0.5);
@@ -156,8 +158,10 @@
 
 details[open]>.cart-drawer {
   transition-property: transform, visibility;
-  transition-duration: var(--duration-long);
-  transition-timing-function: ease;
+  /* Dawn's --duration-long is 500ms, which is a long time to wait on a cart.
+     These two are local so the rest of the theme's timings are untouched. */
+  transition-duration: var(--cart-duration, 320ms);
+  transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 details[open].menu-opening>.cart-drawer {
