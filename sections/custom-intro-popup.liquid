@@ -29,10 +29,18 @@
       <div class="custom-intro-popup__media">
         {%- if section.settings.image != blank -%}
           {%- comment -%}
+<<<<<<< HEAD
+            The photograph is a 3:4 portrait placed over the left of the card
+            rather than a full-bleed background — the right side is the card's
+            own maroon. Supply it plain: the falloff where the two meet is the
+            __scrim layer below, a real blurred rectangle as in the design
+            (3322:3709 / 3330:3765), not baked into the export.
+=======
             The photograph is the card's background and is supplied plain: the
             maroon falloff behind the copy is the __scrim layer below, a real
             blurred rectangle as in the design (3231:5339 / 3231:5311), not
             baked into the export as it used to be.
+>>>>>>> 1c1065b0c860a54f32584e2018e8c11d52755d9e
 
             Eager, despite being off-screen: the overlay starts at display:none,
             and browsers don't fetch lazy images inside a hidden box — the photo
@@ -44,22 +52,22 @@
               <source
                 media="(max-width: 749px)"
                 srcset="
-                  {{ section.settings.image_mobile | image_url: width: 354 }} 354w,
-                  {{ section.settings.image_mobile | image_url: width: 708 }} 708w
+                  {{ section.settings.image_mobile | image_url: width: 601 }} 601w,
+                  {{ section.settings.image_mobile | image_url: width: 1202 }} 1202w
                 "
-                sizes="354px"
+                sizes="601px"
                 width="{{ section.settings.image_mobile.width }}"
                 height="{{ section.settings.image_mobile.height }}"
               >
             {%- endif -%}
             <img
               class="custom-intro-popup__image"
-              src="{{ section.settings.image | image_url: width: 864 }}"
+              src="{{ section.settings.image | image_url: width: 609 }}"
               srcset="
-                {{ section.settings.image | image_url: width: 864 }} 864w,
-                {{ section.settings.image | image_url: width: 1728 }} 1728w
+                {{ section.settings.image | image_url: width: 609 }} 609w,
+                {{ section.settings.image | image_url: width: 1218 }} 1218w
               "
-              sizes="864px"
+              sizes="609px"
               width="{{ section.settings.image.width }}"
               height="{{ section.settings.image.height }}"
               alt="{{ section.settings.image.alt | escape }}"
@@ -68,11 +76,14 @@
             >
           </picture>
         {%- endif -%}
+<<<<<<< HEAD
+=======
         {%- comment -%}
           Mobile only in the design: an even wash over the whole photo, on top
           of which the blurred scrim darkens the lower half where the copy sits.
         {%- endcomment -%}
         <span class="custom-intro-popup__tint"></span>
+>>>>>>> 1c1065b0c860a54f32584e2018e8c11d52755d9e
         <span class="custom-intro-popup__scrim"></span>
       </div>
 
