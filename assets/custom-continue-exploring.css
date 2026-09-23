@@ -79,11 +79,10 @@
 .continue-exploring__number {
   display: block;
   margin: 0 0 0.4em;
-  font-family: var(--font-body-family);
-  font-size: var(--font-label-size);
-  line-height: var(--font-label-line-height);
-  font-weight: var(--font-eyebrow-weight);
-  letter-spacing: var(--font-label-letter-spacing);
+  font-family: 'Proxima Nova A';
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: 4px;
   text-transform: uppercase;
   color: currentColor;
 }
@@ -91,12 +90,11 @@
 .continue-exploring__title {
   display: block;
   margin: 0;
-  max-width: 32rem;
   font-family: var(--font-heading-family);
   font-style: var(--font-heading-style);
   font-weight: var(--font-heading-weight);
-  font-size: var(--font-continue-exploring-title-size);
-  line-height: 1.25;
+  font-size: 2.4rem;
+  line-height: 38px;
   color: currentColor;
 }
 
@@ -195,20 +193,7 @@
     display: block;
   }
 
-  .continue-exploring__text,
   .continue-exploring__icons {
     padding: 1.4rem 1.4rem;
-  }
-
-  .continue-exploring__title {
-    font-size: var(--font-subheading-size-mobile);
-    line-height: var(--font-subheading-line-height-mobile);
-  }
-
-  .continue-exploring__number {
-    font-size: var(--font-label-size-mobile);
-    line-height: var(--font-label-line-height-mobile);
-    font-weight: var(--font-label-weight-mobile);
-    letter-spacing: var(--font-label-letter-spacing-mobile);
   }
 }
