@@ -51,21 +51,6 @@
     object-position: center;
 }
 
-/* A section with no images at all is the footer's social strip: three videos
-   shot in their own format. Those keep their natural ratio rather than being
-   cropped into the 3:4 frame -- the ratio above is for the image carousels on
-   the home and rituals pages. Remove this block to put every instance on 3:4. */
-.custom-images-grid_carousal-container--no-image .custom-images-grid_carousal-item {
-    aspect-ratio: auto;
-    align-self: start;
-    background-color: transparent;
-}
-
-.custom-images-grid_carousal-container--no-image .custom-images-grid_carousal-video {
-    position: static;
-    height: auto;
-}
-
 @media(max-width: 768px) {
     .custom-images-grid_carousal-container {
         overflow-x: auto;
