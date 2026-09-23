@@ -17,32 +17,32 @@
         "video_UAzAJn": {
           "type": "video",
           "settings": {
-            "desktop_video": "shopify://files/videos/Video-96625.mp4",
-            "link": "https://www.instagram.com/p/DcdNfI4z4Ju/",
+            "desktop_video": "shopify://files/videos/Some things are made.Some things are inherited.Passed through hands, homes and generations,until (1).mp4",
+            "link": "https://www.instagram.com/p/DdjVIg1zu-s/",
             "open_in_new_tab": true
           }
         },
         "video_46y797": {
           "type": "video",
           "settings": {
-            "desktop_video": "shopify://files/videos/Video-61169.mp4",
-            "link": "https://www.instagram.com/p/Db9854CpLDx/",
+            "desktop_video": "shopify://files/videos/The love has found its way to us.Soon, we find our way to you.The Bikaneri KitchenComing soon..mp4",
+            "link": "https://www.instagram.com/p/DdeN-fZztwK/",
             "open_in_new_tab": true
           }
         },
-        "image_c99Ppc": {
-          "type": "image",
+        "video_iaakBg": {
+          "type": "video",
           "settings": {
-            "desktop_image": "shopify://shop_images/1_2.png",
-            "link": "https://www.instagram.com/p/DbqR0BEEx4A/?img_index=1",
-            "open_in_new_tab": true
+            "desktop_video": "shopify://files/videos/We often imagine the desert as a place the world passed by.History tells us otherwise.People cam.mp4",
+            "link": "https://www.instagram.com/p/DdTGNSdTfs8/",
+            "open_in_new_tab": false
           }
         }
       },
       "block_order": [
         "video_UAzAJn",
         "video_46y797",
-        "image_c99Ppc"
+        "video_iaakBg"
       ],
       "settings": {
         "images_per_view": 3
@@ -85,7 +85,7 @@
         "icon_three": "shopify://shop_images/Vector_9.png",
         "heading_image": "shopify://shop_images/The_BIKANERI_KITCHEN_1.png",
         "heading": "The Bikaneri Kitchen",
-        "note": "<p>We have carried the taste of Bikaner with us all our lives. In our homes, our memories and around our tables. The Bikaneri Kitchen is our way of sharing what has always been ours with you.<\/p>",
+        "note": "<p>We have carried the taste of Bikaner with us all our lives. In our homes, our memories and around our tables. The Bikaneri Kitchen is our way of sharing what has always been ours with you.</p>",
         "copyright_text": "All Rights Reserved",
         "color_scheme": "",
         "accent_color": "#ff6344",
