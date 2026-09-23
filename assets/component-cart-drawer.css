@@ -142,12 +142,16 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: var(--cart-viewport-height);
+  height: var(--cart-viewport-height, 100vh);
   opacity: 0;
-  cursor: url(cross.svg), url(cross.png), zoom-out;
+  cursor: zoom-out;
   pointer-events: none;
   transition: opacity var(--duration-long) ease;
-  background-color: rgba(var(--color-overlay), 0.5);
+  /* Matches the intro popup's backdrop, so the two overlays on the site read
+     as the same material. */
+  background-color: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
 details[open]>.cart-drawer {
@@ -226,6 +230,25 @@ details[open].menu-opening>.cart-drawer {
      in the theme still on Assistant. */
   font-family: var(--font-family-body);
   color: var(--cart-strong);
+
+  /* The drawer is mounted inside the header, and the header's colour scheme is
+     maroon with white text -- which Dawn's .h3, .button and .typeset inherit,
+     so every one of them painted white onto this cream panel and vanished.
+     Restating the scheme here makes the drawer self-contained: it reads the
+     same wherever it is mounted, and none of the shared Dawn classes have to
+     be overridden one by one. */
+  --color-foreground: 24, 24, 24;
+  --color-background: 255, 253, 238;
+  --color-background-contrast: 246, 241, 223;
+  --color-button: 87, 15, 19;
+  --color-button-text: 255, 253, 238;
+  --color-secondary-button: 255, 253, 238;
+  --color-secondary-button-text: 87, 15, 19;
+  --color-link: 87, 15, 19;
+  --color-shadow: 87, 15, 19;
+  --color-badge-background: 255, 253, 238;
+  --color-badge-border: 87, 15, 19;
+  --color-badge-foreground: 87, 15, 19;
 }
 
 .mini-cart__inner {
