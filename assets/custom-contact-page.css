@@ -1,0 +1,294 @@
+.contact-page__row {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.contact-page__row+.contact-page__row {
+  margin-top: var(--contact-page-row-gap, 4px);
+}
+
+.contact-page__col {
+  width: 100%;
+}
+
+@media screen and (min-width: 750px) {
+  .contact-page__col {
+    width: 50%;
+  }
+}
+
+.contact-page__intro,
+.contact-page__form {
+  padding: 40px 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- Top row, per Figma 771:1330 -----------------------------------------
+   A 1440 frame split into two 720 x 647 halves, with a 560 content column in
+   the intro half. The design pads that half 80 all round, but its content is
+   taller than the padded box and centres out into the padding, landing ~40
+   from the top and bottom -- so 40 is the real vertical inset. With 80 here
+   the half grows to fit and the row ends up taller than the 647 design. */
+@media screen and (min-width: 750px) {
+  .contact-page__intro {
+    padding: 40px 80px;
+  }
+
+  .contact-page__title {
+    font-size: var(--font-contact-heading-size);
+    line-height: var(--font-contact-heading-line-height);
+    letter-spacing: var(--font-contact-heading-letter-spacing);
+    font-weight: var(--font-contact-heading-weight);
+  }
+}
+
+.contact-page__form {
+  aspect-ratio: 1/1;
+}
+
+.contact-page__title {
+  /* The 64px below the heading is owned by .contact-page__info. */
+  margin: 0;
+  text-align: left;
+  width: 100%;
+  max-width: 560px;
+}
+
+/* Company-information block: a 560 column whose rows -- header, rule, then
+   each label/value pair -- sit 12 apart, 48 below the heading. (The design's
+   heading group carries a 16px gap, but with a single child it never
+   applies, so it is 48, not 64.) */
+.contact-page__info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 560px;
+  margin-top: 40px;
+}
+
+@media screen and (min-width: 750px) {
+  .contact-page__info {
+    margin-top: 48px;
+  }
+}
+
+.contact-page__info-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-size: var(--font-contact-body-size);
+  line-height: var(--font-contact-body-line-height);
+  letter-spacing: var(--font-contact-body-letter-spacing);
+  font-weight: var(--font-contact-label-weight);
+  color: #202020;
+}
+
+.contact-page__info-head-value {
+  letter-spacing: var(--font-contact-value-letter-spacing);
+}
+
+.contact-page__info-divider {
+  height: 0;
+  margin: 0;
+  border: none;
+  border-top: 1px solid #202020;
+}
+
+/* The design's 16/28 "HB2 Web" (regular values, bold labels) rather than the
+   site's 20px body role -- this block is set per its own frame. */
+.contact-page__rich-text {
+  font-family: var(--font-family-body);
+  font-size: var(--font-contact-body-size);
+  line-height: var(--font-contact-body-line-height);
+  font-weight: var(--font-copy-weight);
+  letter-spacing: var(--font-contact-body-letter-spacing);
+  color: #202020;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Column flex rather than a <br> after the label: the design puts an 8px gap
+   between a bold label and its value, which a line break can't produce. Each
+   run inside the paragraph becomes its own flex item, so <strong>ADDRESS</strong>
+   and the address text land on separate lines with that gap. */
+.contact-page__rich-text>p {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 8px;
+  margin: 0;
+}
+
+.contact-page__rich-text p strong {
+  font-weight: var(--font-contact-label-weight);
+}
+
+/* Dawn's .rte::after clearfix turns into an invisible extra flex item in this
+   column, and the 12px gap before it pushed the block 12px off-centre. */
+.contact-page__rich-text::after {
+  content: none;
+}
+
+.contact-page__rich-text a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.contact-page__image {
+  min-height: 320px;
+  aspect-ratio: 720 / 647;
+}
+
+.contact-page__image-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.contact-page__map {
+  min-height: 320px;
+}
+
+.contact-page__map iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  border: 0;
+}
+
+.contact-page__form-heading {
+  margin: 0 0 28px;
+  max-width: 600px;
+  text-align: left;
+  width: 100%;
+}
+
+.contact-page__form-el {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.contact-page__field-input {
+  width: 100%;
+  padding: 16px 18px;
+  border: 1px solid rgba(18, 18, 18, 0.3);
+  border-radius: 2px;
+  background: transparent;
+  font-family: var(--font-family-body);
+  font-size: var(--font-contact-input-size);
+  line-height: var(--font-contact-input-line-height);
+  letter-spacing: var(--font-contact-input-letter-spacing);
+  font-weight: var(--font-copy-weight);
+  color: inherit;
+}
+
+textarea.contact-page__field-input {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.contact-page__field-input::placeholder {
+  color: rgba(18, 18, 18, 0.55);
+}
+
+.contact-page__submit {
+  margin-top: 8px;
+  padding: 16px 24px;
+  border: none;
+  background: #181818;
+  color: #fffdee;
+  text-transform: uppercase;
+  font-family: var(--font-family-body);
+  font-size: var(--font-contact-submit-size);
+  letter-spacing: var(--font-contact-submit-letter-spacing);
+  font-weight: var(--font-copy-weight);
+  cursor: pointer;
+  position: relative;
+}
+
+.contact-page__submit:hover {
+  opacity: 0.9;
+}
+
+/* Hide the label (keeping the button's size) and show the spinner while the
+   form posts. */
+.contact-page__submit.loading {
+  color: transparent;
+  cursor: progress;
+}
+
+@media screen and (forced-colors: active) {
+  .contact-page__submit.loading {
+    color: #fffdee;
+  }
+}
+
+.contact-page__submit.loading .loading__spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+}
+
+.contact-page__submit.loading .loading__spinner .spinner {
+  width: fit-content;
+}
+
+.contact-page__submit.loading .loading__spinner .path {
+  stroke: #fffdee;
+}
+
+.contact-page__form-status:empty {
+  display: none;
+}
+
+.contact-page__form-message {
+  margin: 0 0 16px;
+  font-family: var(--font-family-body);
+  font-size: var(--font-contact-body-size);
+  line-height: var(--font-contact-body-line-height);
+  letter-spacing: var(--font-contact-body-letter-spacing);
+  font-weight: var(--font-copy-weight);
+}
+
+@media(max-width:768px) {
+
+  .contact-page__intro,
+  .contact-page__form {
+    padding: 35px 20px;
+  }
+  .contact-page__row--bottom{
+    flex-direction: column-reverse;
+  }
+
+  /* Body role. The info heads are labels, so they keep their bold label
+     weight; form fields, the submit button and status messages keep their own. */
+  .contact-page__info-head,
+  .contact-page__rich-text {
+    font-size: var(--font-body-size-mobile);
+    line-height: var(--font-body-line-height-mobile);
+    letter-spacing: var(--font-body-letter-spacing-mobile);
+  }
+
+  .contact-page__rich-text {
+    font-weight: var(--font-body-weight-mobile);
+  }
+}

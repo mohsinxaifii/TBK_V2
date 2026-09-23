@@ -1,0 +1,76 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "page_top_banner_8XrMf7": {
+      "type": "page-top_banner",
+      "name": "Page Top Banner",
+      "settings": {
+        "media_type": "image"
+      }
+    },
+    "blog_listing_header_cdQy3z": {
+      "type": "blog-listing-header",
+      "name": "Blog Listing Header",
+      "settings": {
+        "heading": "The Desert Never Wasted Anything",
+        "title": "",
+        "description": "<p>The people who have lived here for centuries learnt to look for what remained. Long before the language of sustainability entered our vocabulary, life in western Rajasthan had already been shaped by a simple understanding: nothing that survives the desert should ever be taken for granted.</p>",
+        "read_more_label": "Read More",
+        "background_color": "#c0a959",
+        "text_color": "#fffdee",
+        "padding_top": 60,
+        "padding_bottom": 48
+      }
+    },
+    "blog_listing_grid_RCFHHB": {
+      "type": "blog-listing-grid",
+      "name": "Blog Listing Grid",
+      "settings": {
+        "subtitle": "",
+        "title": "The land shaped the recipe long before the recipe shaped the culture.",
+        "description": "<p>From deserts and coastlines to forests and river plains, every region developed its own relationship with ingredients, preservation and taste.</p>",
+        "blog": "archive",
+        "posts_to_show": 5,
+        "grid_layout": "three_up",
+        "star_icon": "shopify://shop_images/Vector_12.png",
+        "arrow_icon": "shopify://shop_images/Vector_22_3.png",
+        "background_color": "#fffdee",
+        "text_color": "#fffdee",
+        "padding_top": 60,
+        "padding_bottom": 48
+      }
+    },
+    "custom_bg_heading_pQRJpx": {
+      "type": "custom-bg-heading",
+      "name": "Custom BG Heading",
+      "settings": {
+        "heading": "Follow Us",
+        "heading_color": "#ff6344",
+        "background_color": "#570f13"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "page_top_banner_8XrMf7",
+    "blog_listing_header_cdQy3z",
+    "blog_listing_grid_RCFHHB",
+    "custom_bg_heading_pQRJpx"
+  ]
+}

@@ -1,0 +1,488 @@
+/*
+ * Font variables — single source of truth for all custom (non-Dawn) typography.
+ * Extracted from the home page sections, which were tuned first. Every custom
+ * section's font-family/size/weight/line-height/letter-spacing should reference
+ * these tokens instead of hardcoding values, so a change here propagates to
+ * every page. Breakpoints match Dawn's own convention: 989px and 749px.
+ *
+ * Layout: 1) families  2) weights  3) shared roles (reused across sections/pages)
+ * 4) section-specific roles (unique to one home section, tokenized for
+ * consistency/future reuse but not merged into a shared role).
+ */
+
+:root {
+   /* 1. Families */
+   --font-family-display: 'Baskervville', serif;
+   --font-family-accent: 'Piazzolla', serif;
+   --font-family-label: 'Proxima Nova A', sans-serif;
+   --font-family-body: 'Helvetica Neue', sans-serif;
+
+   /* 2. Weights */
+   --font-weight-thin: 100;
+   --font-weight-extralight: 200;
+   --font-weight-light: 300;
+   --font-weight-regular: 400;
+   --font-weight-medium: 500;
+   --font-weight-semibold: 600;
+   --font-weight-extrabold: 800;
+
+   /* 1b. Extra families used by a single component each */
+   --font-family-wordmark: 'Aurum';
+   --font-family-devanagari: 'Ouma Devanagari', serif;
+   --font-family-script: 'Beaurencourt FY', cursive;
+   --font-family-handwritten: 'Caveat', cursive;
+   /* IBM Plex Serif, the featured-product size/price face on home. All that
+     is left of the home-page Figma pass (2887:3776) after its type was
+     reverted -- the Cormorant Garamond body face and the American Scribe
+     footer note went with it. */
+   --font-family-product-meta: 'IBM Plex Serif', serif;
+
+   /* 3a. Shared — Section heading (.section-heading / .clp-section-heading,
+     custom-bg-heading; big Baskervville display heading reused sitewide) */
+   --font-section-heading-size: 50px;
+   --font-section-heading-line-height: 52px;
+   --font-section-heading-letter-spacing: 3px;
+   --font-section-heading-weight: var(--font-weight-medium);
+   --font-section-heading-size-mobile: 30px;
+   --font-section-heading-line-height-mobile: 42px;
+   --font-section-heading-letter-spacing-mobile: 1.5px;
+
+   /* 3b. Shared — Body copy (long-form paragraph text: descriptions,
+     transcripts, story/practices copy). Helvetica Neue, light. */
+   --font-body-size: 20px;
+   --font-body-line-height: 1.4;
+   --font-body-letter-spacing: 1px;
+   --font-copy-weight: var(--font-weight-regular);
+   /* Body ROLE weight at both breakpoints -- what every home-page body copy
+     renders at. --font-copy-weight above is the older regular value.
+     NOT named --font-body-weight: that is Dawn's global body weight, set
+     inline in theme.liquid before this file loads, so reusing the name here
+     would silently re-weight every element that inherits from <body>. */
+   --font-body-copy-weight: var(--font-weight-light);
+   --font-body-size-mobile: 16px;
+   --font-body-line-height-mobile: 24px;
+   --font-body-letter-spacing-mobile: 1px;
+   --font-body-weight-mobile: var(--font-body-copy-weight);
+
+   /* 3c. Shared — Eyebrow / label (small uppercase caption, wide tracking).
+     Proxima Nova A. */
+   --font-label-size: 16px;
+   --font-label-line-height: 1.2;
+   --font-label-letter-spacing: 3px;
+   --font-label-weight: var(--font-weight-medium);
+   /* Eyebrow ROLE weight at both breakpoints: the reference "OUR FIRST", and
+     the weight set by hand on .collection__subtitle. --font-label-weight above
+     is the older medium value two home eyebrows (testimonials, image-content)
+     still read. */
+   --font-eyebrow-weight: var(--font-weight-regular);
+   --font-label-size-mobile: 14px;
+   --font-label-line-height-mobile: 1.2;
+   --font-label-letter-spacing-mobile: 3px;
+   --font-label-weight-mobile: var(--font-eyebrow-weight);
+
+   /* 3d. Shared — MOBILE type scale. One role per kind of text, taken from
+     the two polished reference sections: .section-heading for headings, and
+     custom-featured-product for everything else (its product name, price,
+     BUY NOW, photo rail caption and tax note). Headings, eyebrows and body
+     live in 3a-3c above; these are the remaining roles. Every custom
+     section's mobile type maps onto one of them, so tuning a role here moves
+     it everywhere on mobile. Families are deliberately NOT part of a role:
+     each element keeps its own. */
+   /* Desktop column, taken from the home page. There is no desktop
+     sub-heading: the home page's one card title is the featured product name,
+     a 40px hero title, which would be wrong on grid cards and in-content
+     subheads -- so those keep their own desktop sizes. */
+   --font-price-size: 28px;
+   --font-price-line-height: 40px;
+   --font-price-weight: var(--font-weight-medium);
+   --font-cta-size: 24px;
+   --font-caption-size: 20px;
+   --font-caption-line-height: 19px;
+   --font-caption-letter-spacing: 1px;
+   --font-small-size: 16px;
+   --font-small-line-height: 28px;
+   --font-small-letter-spacing: 0.64px;
+
+   /* Mobile column */
+   --font-subheading-size-mobile: 24px;
+   --font-subheading-line-height-mobile: 27px;
+   --font-price-size-mobile: 20px;
+   --font-price-line-height-mobile: 28px;
+   --font-cta-size-mobile: 20px;
+   --font-caption-size-mobile: 14px;
+   --font-caption-line-height-mobile: 19px;
+   --font-caption-letter-spacing-mobile: 2px;
+   --font-small-size-mobile: 12px;
+   --font-small-line-height-mobile: 20px;
+   --font-small-letter-spacing-mobile: 0.64px;
+
+   /* 3e. HOME PAGE — what survives of the Figma type pass (2887:3776 /
+     3061:3615). That pass re-typeset the whole page and was reverted; the
+     only roles still applied are the featured product's purchase block —
+     size, price and tax note — kept on purpose. Everything else on home is
+     back on the shared roles above and its sections' own CSS. Applied by
+     home-figma.css, scoped to the index template.
+
+     Size + price: IBM Plex Serif Medium 28/40 (2887:4217, 2887:4218). The
+     panel is half the viewport, so the step scales with vw between 990px and
+     the 1440 board instead of holding the board's px and overflowing smaller
+     laptops; 1.944vw is 28px at 1440, and the line height goes unitless at
+     the Figma ratio (40/28) so it scales with the size. */
+   --font-home-product-meta-weight: var(--font-weight-medium);
+   --font-home-product-meta-size-fluid: clamp(20px, 1.944vw, 28px);
+   --font-home-product-meta-line-height-fluid: 1.429;
+
+   /* Tax note: Helvetica Neue Regular 16/28 on desktop (2887:4219), 12/16 on
+     the mobile board. */
+   --font-home-small-size: 16px;
+   --font-home-small-line-height: 28px;
+   --font-home-small-letter-spacing: 0.64px;
+   --font-home-small-weight: var(--font-weight-regular);
+   --font-home-m-small-size: 12px;
+   --font-home-m-small-line-height: 16px;
+   --font-home-m-small-letter-spacing: 0.48px;
+
+   /* 4. Section-specific — kept distinct because their weight/line-height
+     make them a deliberately different style, not incidental drift. */
+
+   /* custom-banner-text: full-bleed hero quote over an image */
+   --font-banner-text-heading-size: 50px;
+   --font-banner-text-heading-line-height: 71px;
+   --font-banner-text-heading-weight: var(--font-weight-thin);
+   --font-banner-text-heading-size-tablet: 40px;
+   --font-banner-text-heading-line-height-tablet: 52px;
+   --font-banner-text-heading-size-mobile: 30px;
+   --font-banner-text-heading-line-height-mobile: 38px;
+
+   /* custom-bg-heading: full-width statement heading between sections */
+   --font-bg-heading-size: 50px;
+   --font-bg-heading-line-height: 50px;
+   --font-bg-heading-size-tablet: 40px;
+   --font-bg-heading-line-height-tablet: 40px;
+   --font-bg-heading-size-mobile: 30px;
+   --font-bg-heading-line-height-mobile: 34px;
+   --font-bg-heading-size-xs: 24px;
+   --font-bg-heading-line-height-xs: 28px;
+
+   /* custom-featured-product: left panel heading (line 2 of the intro) */
+   --font-featured-product-heading-size: 40px;
+   --font-featured-product-heading-line-height: 34px;
+   --font-featured-product-heading-letter-spacing: 3px;
+   --font-featured-product-heading-weight: var(--font-weight-medium);
+   --font-featured-product-heading-size-mobile: var(--font-subheading-size-mobile);
+   --font-featured-product-heading-line-height-mobile: var(--font-subheading-line-height-mobile);
+   --font-featured-product-heading-weight-mobile: var(--font-weight-semibold);
+   /* Was referenced by the mobile rule but never defined, so the heading
+     silently inherited body's tracking. Pinned to that same value so the
+     rendering doesn't move. */
+   --font-featured-product-heading-letter-spacing-mobile: 0.06rem;
+   --font-featured-product-heading-size-xs: var(--font-subheading-size-mobile);
+   --font-featured-product-heading-line-height-xs: var(--font-subheading-line-height-mobile);
+
+   /* custom-featured-product: price/lower line + CTA button (Piazzolla) */
+   --font-featured-product-price-size: var(--font-price-size);
+   --font-featured-product-price-line-height: var(--font-price-line-height);
+   --font-featured-product-price-weight: var(--font-price-weight);
+   --font-featured-product-cta-size: var(--font-cta-size);
+   --font-featured-product-cta-weight: var(--font-weight-semibold);
+   --font-featured-product-cta-size-mobile: var(--font-cta-size-mobile);
+   --font-featured-product-price-size-mobile: var(--font-price-size-mobile);
+   --font-featured-product-price-line-height-mobile: var(--font-price-line-height-mobile);
+
+   /* custom-featured-product: tax note beside the price, and the quantity
+     stepper that sits opposite it (Helvetica Neue). Sizes taken straight
+     from the design's purchase row. */
+   --font-featured-product-tax-note-size: var(--font-small-size);
+   --font-featured-product-tax-note-line-height: var(--font-small-line-height);
+   --font-featured-product-tax-note-letter-spacing: var(--font-small-letter-spacing);
+   --font-featured-product-tax-note-size-mobile: var(--font-small-size-mobile);
+   --font-featured-product-tax-note-line-height-mobile: var(--font-small-line-height-mobile);
+   --font-featured-product-qty-value-size: 20px;
+   --font-featured-product-qty-value-line-height: 28px;
+   --font-featured-product-qty-value-weight: var(--font-weight-medium);
+   --font-featured-product-qty-minus-size: 28px;
+   --font-featured-product-qty-plus-size: 22px;
+   --font-featured-product-qty-sign-line-height: 40px;
+   --font-featured-product-qty-value-size-mobile: 16px;
+   --font-featured-product-qty-minus-size-mobile: 20px;
+   --font-featured-product-qty-plus-size-mobile: 16px;
+   --font-featured-product-qty-sign-line-height-mobile: 30px;
+
+   /* custom-featured-product: right panel vertical caption (Piazzolla) */
+   --font-featured-product-caption-size: var(--font-caption-size);
+   --font-featured-product-caption-line-height: var(--font-caption-line-height);
+   --font-featured-product-caption-letter-spacing: var(--font-caption-letter-spacing);
+   --font-featured-product-caption-weight: var(--font-weight-thin);
+   --font-featured-product-caption-size-mobile: var(--font-caption-size-mobile);
+   --font-featured-product-caption-letter-spacing-mobile: var(--font-caption-letter-spacing-mobile);
+
+   /* custom-featured-collection: product card title + price (Piazzolla) */
+   --font-card-title-size: 16px;
+   --font-card-title-line-height: 16px;
+   --font-card-title-weight: var(--font-weight-regular);
+   --font-card-title-size-mobile: 20px;
+   --font-card-price-size: 16px;
+   --font-card-price-line-height: 16px;
+   --font-card-price-weight: var(--font-weight-regular);
+   --font-card-price-size-mobile: 16px;
+
+   /* custom-featured-collection: card "Add to cart" quick-add button */
+   --font-card-quick-add-size: 16px;
+   --font-card-quick-add-weight: var(--font-weight-medium);
+
+   /* custom-home-values: item title under each icon (Helvetica Neue) */
+   --font-value-title-size: 20px;
+   --font-value-title-line-height: 20px;
+   --font-value-title-weight: var(--font-weight-medium);
+   --font-value-title-size-mobile: 14px;
+   --font-value-title-line-height-mobile: 17px;
+
+   /* custom-blogs-carousel: caption/counter row (Proxima Nova A) */
+   --font-blogs-caption-size: 20px;
+   --font-blogs-caption-weight: var(--font-weight-medium);
+   --font-blogs-caption-letter-spacing: 3px;
+
+   /* custom-blogs-carousel: photo overlay tag (Proxima Nova A, no resize) */
+   --font-blogs-tag-size: 12px;
+   --font-blogs-tag-weight: var(--font-weight-regular);
+   --font-blogs-tag-letter-spacing: 3px;
+
+   /* custom-blogs-carousel: slide heading (Baskervville) */
+   --font-blogs-heading-size: 24px;
+   --font-blogs-heading-line-height: 1.15;
+   --font-blogs-heading-weight: var(--font-weight-regular);
+   --font-blogs-heading-size-tablet: 50px;
+
+   /* custom-blogs-carousel: "Read more" CTA (Baskervville) */
+   --font-blogs-cta-size: 24px;
+   --font-blogs-cta-letter-spacing: 1px;
+
+   /* custom-home-testimonials: eyebrow reuses shared label tokens exactly */
+   /* custom-home-testimonials: quote reuses the shared body tokens, same as
+     custom-featured-product's description */
+
+   /* custom-home-testimonials: person name + location (IBM Plex Serif),
+     Figma card 3231:5163 -- SemiBold 16/24 */
+   --font-testimonial-name-size: 16px;
+   --font-testimonial-name-line-height: 24px;
+   --font-testimonial-name-weight: var(--font-weight-semibold);
+   --font-testimonial-location-size: 16px;
+   --font-testimonial-location-weight: var(--font-weight-regular);
+
+   /* custom-home-testimonials: Hindi quote (Ouma Devanagari), outside the
+     Latin body role -- Figma's 16/24 Regular */
+   --font-testimonial-hindi-size: 16px;
+   --font-testimonial-hindi-line-height: 24px;
+   --font-testimonial-hindi-weight: var(--font-weight-regular);
+
+   /* custom-audio-player: cursor-follow tag pill (Proxima Nova A) */
+   --font-audio-tag-size: 12px;
+   --font-audio-tag-weight: var(--font-weight-medium);
+   --font-audio-tag-letter-spacing: 1.5px;
+
+   /* custom-audio-player: EN/HI language switch buttons (Proxima Nova A) */
+   --font-audio-language-size: 20px;
+   --font-audio-language-weight: var(--font-weight-semibold);
+   --font-audio-language-letter-spacing: 2px;
+   --font-audio-language-size-mobile: 12px;
+   --font-audio-language-letter-spacing-mobile: 2.5px;
+
+   /* custom-audio-player: heading line-height override on top of the
+     shared section-heading size */
+   --font-audio-heading-line-height-mobile: 37px;
+
+   /* custom-practices: definition-list row. Size and leading follow the body
+     role (3b); only the label/description weights are kept, as a deliberate
+     semibold/light pair. */
+   --font-practices-row-label-weight: var(--font-weight-semibold);
+   --font-practices-row-description-weight: var(--font-weight-light);
+
+   /* custom-image-content: heading (Baskervville); shares the section-heading
+     size scale exactly, kept as its own token since weight/line-height are
+     intentionally left at browser defaults here (thinner, tighter than
+     .section-heading) */
+   --font-image-content-heading-size: var(--font-section-heading-size);
+   --font-image-content-heading-size-mobile: var(--font-section-heading-size-mobile);
+
+   /* ---- Product page ---- */
+
+   /* section-main-product: price note under the price */
+   --font-pdp-price-note-size: 16px;
+
+   /* section-main-product: variant cards (variant picker "cards"), taken
+     straight from the design's variant + price strip. Mobile drops the
+     price onto the mobile price role (3d). */
+   --font-variant-card-detail-size: 20px;
+   --font-variant-card-detail-line-height: 28px;
+   --font-variant-card-detail-letter-spacing: 0.8px;
+   --font-variant-card-price-size: 28px;
+   --font-variant-card-price-line-height: 36px;
+   --font-variant-card-tax-size: 12px;
+   --font-variant-card-tax-line-height: 16px;
+   --font-variant-card-tax-letter-spacing: 0.48px;
+
+   /* section-main-product: product title (h1) */
+   --font-product-title-weight-mobile: var(--font-weight-medium);
+
+   /* section-main-product: quantity stepper */
+   --font-quantity-label-size: 16px;
+   --font-quantity-label-weight: var(--font-weight-extralight);
+   --font-quantity-value-size: 24px;
+   --font-quantity-value-weight: var(--font-weight-regular);
+   --font-quantity-button-size: 24px;
+
+   /* section-main-product: "Add to cart" submit button */
+   --font-add-to-cart-size: 16px;
+
+   /* section-main-product: discount code callout */
+   --font-discount-callout-size: 16px;
+
+   /* section-main-product: reviews block */
+   --font-reviews-meta-size: 12px;
+   --font-reviews-meta-weight: var(--font-weight-medium);
+   --font-reviews-meta-size-mobile: 16px;
+   --font-reviews-author-size: 16px;
+   --font-reviews-author-weight: var(--font-weight-medium);
+   --font-reviews-trust-size: 12px;
+   --font-reviews-trust-weight: var(--font-weight-regular);
+   --font-reviews-trust-size-mobile: 12px;
+   --font-reviews-trust-weight-mobile: var(--font-weight-medium);
+
+   /* pdp_fold_2: second-fold heading + bullet list */
+   --font-pdp-fold2-heading-weight-mobile: var(--font-weight-medium);
+   --font-pdp-fold2-bullet-size: 20px;
+   --font-pdp-fold2-answer-size: 20px;
+
+   /* custom_pdp_faqs: FAQ accordion */
+   --font-pdp-faqs-summary-weight-mobile: var(--font-weight-light);
+
+   /* bullets-scroller: PDP marquee strip */
+   --font-bullets-scroller-size: 16px;
+   --font-bullets-scroller-size-mobile: 16px;
+
+   /* ---- Product + collection cards (shop-card, shared component) ---- */
+   --font-shop-card-badge-size: 16px;
+   --font-shop-card-title-size: 16px;
+   --font-shop-card-title-link-size: 22px;
+   --font-shop-card-title-size-mobile: 16px;
+   --font-shop-card-price-size: 20px;
+   --font-shop-card-size-size: 20px;
+   --font-shop-card-add-size: 20px;
+
+   /* component-product-variant-picker: pill swatches */
+   --font-variant-pill-size: 16px;
+
+   /* ---- Collection page (facets-minimal) ---- */
+   --font-facets-trigger-size: 20px;
+   --font-facets-trigger-size-mobile: 14px;
+   --font-facets-panel-title-size: 16px;
+   --font-facets-group-label-size: 12px;
+   --font-facets-radio-size: 16px;
+   --font-facets-clear-size: 16px;
+
+   /* ---- Archive page (main-article-archive) ---- */
+   --font-archive-hero-caption-size: 12px;
+   --font-archive-hero-caption-letter-spacing: 3px;
+   --font-archive-quote-mark-size: 35px;
+   --font-archive-quote-em-size: 16px;
+   --font-archive-duo-caption-size: 16px;
+
+   /* ---- Blog listing (archive/rituals) header + grid ---- */
+   --font-blog-header-title-size: 16px;
+
+   --font-blog-grid-title-letter-spacing: 1px;
+
+   /* ---- Contact page ---- */
+   /* Desktop heading, from the design's top row (Figma 771:1330): H2 Web,
+     Baskerville Regular 64/72 at 4% tracking. Phones keep the heading role. */
+   --font-contact-heading-size: 64px;
+   --font-contact-heading-line-height: 72px;
+   --font-contact-heading-letter-spacing: 2.56px;
+   --font-contact-heading-weight: var(--font-weight-regular);
+   --font-contact-body-size: 16px;
+   --font-contact-body-line-height: 28px;
+   --font-contact-body-letter-spacing: 0.64px;
+   --font-contact-input-size: 16px;
+   --font-contact-input-line-height: 28px;
+   --font-contact-input-letter-spacing: 0.64px;
+   --font-contact-submit-size: 16px;
+   --font-contact-submit-letter-spacing: 0.64px;
+   /* Labels for the info header and each label above its value. The design
+     calls for Bold (HB2 Web Bold), but 700 read too heavy on the page, so
+     they stay at medium. */
+   --font-contact-label-weight: var(--font-weight-medium);
+   --font-contact-value-letter-spacing: 0.32px;
+
+   /* ---- Policy pages (custom-policy-page, shared by all 3) ---- */
+   --font-policy-title-letter-spacing: 1px;
+   --font-policy-nav-link-size: 16px;
+   --font-policy-nav-mobile-summary-size: 16px;
+   --font-policy-nav-mobile-link-size: 16px;
+   --font-policy-subheading-size: 24px;
+
+   /* ---- Press page ---- */
+   --font-press-publication-size: 22px;
+
+   /* ---- Burger menu (menu-drawer) + desktop header nav ---- */
+   --font-menu-drawer-item-size: 22px;
+   --font-menu-drawer-item-weight: var(--font-weight-extralight);
+   --font-header-menu-item-size: 12px;
+   --font-header-menu-item-letter-spacing: 2px;
+
+   /* ---- Footer ---- */
+   --font-footer-link-size: 20px;
+   --font-footer-link-weight: var(--font-weight-extralight);
+   --font-footer-link-line-height: 32px;
+   --font-footer-link-letter-spacing: 0.96px;
+   --font-footer-copyright-size: 16px;
+   --font-footer-copyright-weight: var(--font-weight-thin);
+   --font-footer-copyright-line-height: 20px;
+   --font-footer-copyright-letter-spacing: 0.48px;
+   --font-footer-note-size: 20px;
+   --font-footer-note-line-height: 32px;
+   --font-footer-note-letter-spacing: 0.4px;
+   --font-footer-note-size-mobile: 18px;
+   --font-footer-note-line-height-mobile: 28px;
+
+   /* ---- 404 page ---- */
+   --font-404-button-size: 16px;
+
+   /* ---- Wishlist page ---- */
+   --font-wishlist-empty-heading-size: 22px;
+
+   /* ---- Fullscreen search modal ---- */
+   --font-search-input-size: 16px;
+   --font-search-popular-label-size: 16px;
+   --font-search-popular-link-size: 16px;
+   --font-search-result-heading-size: 11px;
+   --font-search-result-item-size: 15px;
+   --font-search-result-term-size: 15px;
+
+   /* ---- Story tags strip (article footer) ---- */
+   --font-story-tags-tag-size: 16px;
+
+   /* ---- Continue exploring (related articles/products grid) ---- */
+   --font-continue-exploring-title-size: 20px;
+
+   /* ---- Intro popup (custom-intro-popup, first-visit overlay) ---- */
+   /* Heading and body are the design's own scale, not the shared section
+     roles: this is a 432px-wide panel, so the 50px section heading would be
+     too big for it. Tracking is 4% of the size at both breakpoints, matching
+     the Figma text styles. The buttons map exactly onto the shared "small"
+     role (3d), which is also what the contact form's submit reads. */
+   --font-intro-popup-heading-size: 40px;
+   --font-intro-popup-heading-line-height: 58px;
+   --font-intro-popup-heading-letter-spacing: 1.6px;
+   --font-intro-popup-heading-weight: var(--font-weight-regular);
+   --font-intro-popup-heading-size-mobile: 32px;
+   --font-intro-popup-heading-line-height-mobile: 36px;
+   --font-intro-popup-heading-letter-spacing-mobile: 1.28px;
+   --font-intro-popup-body-size: 24px;
+   --font-intro-popup-body-line-height: 32px;
+   --font-intro-popup-body-size-mobile: 14px;
+   --font-intro-popup-body-line-height-mobile: 20px;
+   --font-intro-popup-body-letter-spacing-mobile: 0.56px;
+   --font-intro-popup-cta-size: var(--font-small-size);
+   --font-intro-popup-cta-line-height: var(--font-small-line-height);
+   --font-intro-popup-cta-letter-spacing: var(--font-small-letter-spacing);
+}

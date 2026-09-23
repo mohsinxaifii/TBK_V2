@@ -1,0 +1,83 @@
+{{ 'custom-home_values.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'custom-home-values.js' | asset_url }}" defer="defer"></script>
+
+<div
+  class="custom-home_values-container"
+>
+  <div class="page-width custom-home_values-inner">
+    <h2 class="section-heading custom-home_values-heading">{{ section.settings.section_heading }}</h2>
+    <div class="custom-home_values-item-container">
+      {% for block in section.blocks %}
+        {% if block.settings.icon and block.settings.title %}
+          {% if forloop.last %}
+            <div class="custom-home_values-item custom-home_values-item--extra">
+              <img
+                src="https://cdn.shopify.com/s/files/1/0764/0953/6706/files/Vector_13.png?v=1784200077"
+                alt=""
+                class="custom-home_values-icon custom-home_values-icon--extra"
+              >
+            </div>
+          {% endif %}
+          <div class="custom-home_values-item">
+            <img
+              src="{{ block.settings.icon | image_url }}"
+              alt="{{ block.settings.title }}"
+              class="custom-home_values-icon"
+            >
+            <p class="custom-home_values-title">{{ block.settings.title }}</p>
+            {%- if block.settings.floater != blank -%}
+              <div class="custom-home_values-cursor-tag" aria-hidden="true">
+                <span class="custom-home_values-cursor-tag-flip">
+                  <span class="custom-home_values-cursor-tag-text-mask">
+                    <span class="custom-home_values-cursor-tag-text">{{ block.settings.floater }}</span>
+                  </span>
+                </span>
+              </div>
+            {%- endif -%}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Home Values",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Section Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "value",
+      "name": "Value",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "floater",
+          "label": "Floater"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Home Values"
+    }
+  ]
+}
+{% endschema %}

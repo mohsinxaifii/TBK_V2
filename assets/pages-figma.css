@@ -1,0 +1,16 @@
+/*
+ * About / Contact / Archives / Rituals.
+ *
+ * These four pages were briefly given the home page's font language
+ * (Cormorant Garamond prose, Baskervville Regular headings, Proxima Nova A
+ * eyebrows, IBM Plex Serif CTAs). That pass has been REVERTED — every page
+ * runs on its own type again. The one spacing rule that outlived it (the
+ * old People Behind The Craft heading) went when that section was rebuilt,
+ * so the file is currently empty; it stays as the scoped hook for these pages.
+ *
+ * Scope: body.figma-type-page, set in theme.liquid for exactly these four
+ * page suffixes, and this file is loaded only there. That matters because
+ * three sections in play also render on pages that must not change —
+ * custom-bg-heading (on 7 other templates), custom-inset-image (wishlist) and
+ * custom-audio-player (product). Never widen a selector here to a bare class.
+ */

@@ -1,0 +1,446 @@
+.archive-article {
+  position: relative;
+  background-color: #fffdee;
+  /* Single source of truth for the hero's pinned height, shared with the content
+     sheet's negative margin below so the two always match exactly. */
+  --hero-pin-height: clamp(320px, 46vw, 680px);
+}
+
+/* Hero: pinned in place via position: sticky while .archive-article__content
+   (given a negative margin-top equal to the hero's own height, plus a higher
+   z-index) scrolls up and over it, like a sheet being drawn over the image. */
+.archive-article__hero {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  width: 100%;
+  height: var(--hero-pin-height);
+  overflow: hidden;
+  background-color: #181818;
+}
+
+.archive-article__hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 35%);
+  pointer-events: none;
+}
+
+.archive-article__hero-media {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+  transform-origin: center center;
+}
+
+/* <picture> is an inline box and would otherwise sit in the flow between the
+   hero and its caption. It carries no styling of its own — the absolutely
+   positioned <img> inside keeps every rule above, including the parallax
+   transform archive-hero-parallax.js applies to .archive-article__hero-media. */
+.archive-article__hero-picture {
+  display: contents;
+}
+
+/* Darkens as the content sheet rises to cover the hero; opacity is driven by
+   scroll progress in archive-hero-parallax.js. */
+.archive-article__hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-color: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.archive-article__hero-caption {
+  position: absolute;
+  z-index: 2;
+  font-family: var(--font-family-label);
+  font-size: var(--font-archive-hero-caption-size);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--font-archive-hero-caption-letter-spacing);
+  text-transform: uppercase;
+  color: #fffdee;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+  bottom: 40%;
+  width: 100%;
+  left: 50%;
+  /* Horizontal centering is applied via GSAP (xPercent: -50) in archive-hero-parallax.js
+     so the scroll/entrance transforms it also drives don't get clobbered by a competing
+     !important transform here. */
+  transform: translateX(-50%);
+}
+
+@media screen and (min-width: 750px) {
+  .archive-article__hero-caption {
+    font-size: var(--font-label-size);
+    line-height: var(--font-label-line-height);
+    font-weight: var(--font-eyebrow-weight);
+    letter-spacing: var(--font-label-letter-spacing);
+  }
+}
+
+/* Content sheet: sits in normal flow immediately after the hero (no negative
+   margin - that would shrink .archive-article's own height and leave the
+   sticky hero with no room to actually stick). As the page scrolls the height
+   of one hero, this sheet's own top edge naturally rises from the hero's
+   bottom edge up to the viewport top, covering the pinned hero as it goes. */
+.archive-article__content {
+  position: relative;
+  z-index: 1;
+  background-color: #fffdee;
+  padding-top: 64px;
+  border-radius: 28px 28px 0 0;
+  overflow: hidden;
+}
+
+.archive-article__content>*+* {
+  margin-top: 64px;
+}
+
+@media screen and (max-width: 749px) {
+  .archive-article__content {
+    padding-top: 36px;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .archive-article__content>*+* {
+    margin-top: 36px;
+  }
+}
+
+/* Intro: heading + share / body */
+.archive-article__intro {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  gap: 40px;
+  align-items: start;
+}
+
+.archive-article__intro-col--heading {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.archive-article__intro-col {
+  width: 50%;
+}
+
+/* When only a heading or only a body copy is present, let it take the full
+   row instead of sitting in a 50%-wide column with an empty gap beside it. */
+.archive-article__intro--single .archive-article__intro-col,
+.archive-article__intro--single .archive-article__intro-col--heading {
+  width: 100%;
+}
+
+.archive-article__intro-heading {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-section-heading-size);
+  line-height: var(--font-section-heading-line-height);
+  width: 70%;
+  color: #181818;
+}
+
+.archive-article__share .share-button__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Share: its own full-width row (left-aligned) rather than living inside the
+   intro heading column, so it no longer throws that column's height off. */
+.archive-article__share {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: -45px;
+}
+
+.archive-article__intro-body p {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-body-copy-weight);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  letter-spacing: var(--font-body-letter-spacing);
+  color: #181818;
+}
+
+.archive-article__intro-body p+p {
+  margin-top: 1em;
+}
+
+/* Several archive stories open with a Marwari/Sanskrit saying in the intro
+   column: strong carries the Devanagari line, em its English gloss. Same
+   treatment as the quote column below so a saying reads identically wherever
+   the story places it. */
+.archive-article__intro-body p strong {
+  font-family: var(--font-family-devanagari);
+  font-size: var(--font-archive-quote-mark-size);
+  font-weight: var(--font-weight-medium);
+}
+
+.archive-article__intro-body em,
+.archive-article__intro-body i {
+  display: block;
+  font-family: var(--font-family-display);
+  font-size: var(--font-archive-quote-em-size);
+  font-style: italic;
+}
+
+@media screen and (max-width: 749px) {
+  .archive-article__intro {
+    gap: 24px;
+  }
+
+  .archive-article__intro-heading {
+    font-size: var(--font-section-heading-size-mobile);
+    line-height: var(--font-section-heading-line-height-mobile);
+    width: unset;
+  }
+}
+
+/* Single full width image */
+.archive-article__image-picture {
+  display: contents;
+}
+
+.archive-article__image-media {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Stacked richtext blocks. Each block is only rendered in markup when its own
+   metafield has content, and stacking (instead of a side-by-side grid) means
+   a short block never leaves a blank column beside a taller one. */
+.archive-article__split {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+@media screen and (min-width: 750px) {
+
+  /* Compound selector (rather than relying on cascade order against the
+     .page-width class also on this element) so this max-width reliably wins,
+     and it's sized off --page-width itself (the reading column) rather than
+     the full-bleed .archive-article__content sheet it sits inside. */
+  .archive-article__split.page-width {
+    margin: 0 auto;
+    align-items: end;
+    justify-content: end;
+    width: 100%;
+  }
+}
+
+.under_reflection_copy p {
+  color: #181818;
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  letter-spacing: var(--font-body-letter-spacing);
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-body-copy-weight);
+}
+
+.under_reflection_copy strong {
+  font-size: var(--font-archive-quote-mark-size);
+  font-family: var(--font-family-devanagari);
+  color: #181818;
+  margin-bottom: -25px;
+  font-weight: var(--font-weight-medium);
+}
+
+.under_reflection_copy em {
+  font-size: var(--font-archive-quote-em-size);
+  font-family: var(--font-family-display);
+  color: #181818;
+}
+
+.archive-article__split-col {
+  width: calc(50% - 12px);
+}
+
+.archive-article__split-col p {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-body-copy-weight);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  letter-spacing: var(--font-body-letter-spacing);
+  color: #181818;
+}
+
+.archive-article__split-col p+p {
+  margin-top: 1em;
+}
+
+.archive-article__split-col--quote p {
+  font-family: var(--font-family-body);
+  font-size: var(--font-body-size);
+  font-weight: var(--font-body-copy-weight);
+  line-height: var(--font-body-line-height);
+  letter-spacing: var(--font-body-letter-spacing);
+  color: #181818;
+}
+
+/* Not scoped to --quote: stories such as Aangan, Taap and Kathputli place their
+   saying in a reflection block after the duo images rather than in the quote
+   column, and it has to read the same in both positions. */
+.archive-article__split-col p strong {
+  font-size: var(--font-archive-quote-mark-size);
+  font-family: var(--font-family-devanagari);
+  font-weight: var(--font-weight-medium);
+}
+
+.archive-article__split-col em,
+.archive-article__split-col i {
+  display: block;
+  font-family: var(--font-family-display);
+  font-size: var(--font-archive-quote-em-size);
+  margin: 0;
+  font-style: italic;
+  color: #181818;
+}
+
+@media screen and (max-width: 749px) {
+  .archive-article__split {
+    gap: 24px;
+  }
+
+  .archive-article__share {
+    margin-bottom: 0;
+  }
+
+  .archive-article__split-col {
+    width: 100%;
+  }
+
+  .archive-article__duo {
+    margin-bottom: 0 !important;
+  }
+.continue-exploring{
+  padding-top: 36px !important;
+}
+  .under_reflection_copy strong {
+    line-height: 45px;
+  }
+}
+
+/* Two captioned images */
+.archive-article__duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 64px;
+}
+
+.archive-article__duo-media {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.archive-article__duo-caption {
+  margin-top: 14px;
+}
+
+.archive-article__duo-caption p {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-size: var(--font-archive-duo-caption-size);
+  line-height: 15px;
+  font-weight: var(--font-copy-weight);
+  color: #181818;
+}
+
+@media screen and (max-width: 749px) {
+  .archive-article__duo {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* Archive note */
+.archive-article__note {
+  padding: 56px 0;
+}
+
+.archive-article__note-label {
+  margin: 0 0 16px;
+  font-family: var(--font-family-label);
+  font-size: var(--font-label-size);
+  line-height: var(--font-label-line-height);
+  letter-spacing: var(--font-label-letter-spacing);
+  text-transform: uppercase;
+  font-weight: var(--font-eyebrow-weight);
+}
+
+.archive-article__note-body p {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-body-copy-weight);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  letter-spacing: var(--font-body-letter-spacing);
+}
+
+@media screen and (max-width: 749px) {
+  .archive-article__note {
+    padding: 40px 0;
+  }
+
+  .archive-article__intro {
+    flex-direction: column;
+  }
+
+  .archive-article__intro-col {
+    width: 100%;
+  }
+}
+
+/* ---- Mobile type scale (font-variables 3b-3d) ----
+   The article's running copy all takes the body role and its two labels the
+   eyebrow role. Decorative runs (the Devanagari quote marks, inline <em>) and
+   the photo-duo caption keep their own styling. */
+@media screen and (max-width: 749px) {
+  .archive-article__hero-caption,
+  .archive-article__note-label {
+    font-size: var(--font-label-size-mobile);
+    line-height: var(--font-label-line-height-mobile);
+    font-weight: var(--font-label-weight-mobile);
+    letter-spacing: var(--font-label-letter-spacing-mobile);
+  }
+
+  .archive-article__intro-body p,
+  .under_reflection_copy p,
+  .archive-article__split-col p,
+  .archive-article__split-col--quote p,
+  .archive-article__note-body p {
+    font-size: var(--font-body-size-mobile);
+    line-height: var(--font-body-line-height-mobile);
+    font-weight: var(--font-body-weight-mobile);
+    letter-spacing: var(--font-body-letter-spacing-mobile);
+  }
+}

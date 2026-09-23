@@ -1,0 +1,120 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "custom_images_grid_carousal_social": {
+      "type": "custom-images-grid_carousal",
+      "blocks": {
+        "video_UAzAJn": {
+          "type": "video",
+          "settings": {
+            "desktop_video": "shopify://files/videos/Video-96625.mp4",
+            "link": "https://www.instagram.com/p/DcdNfI4z4Ju/",
+            "open_in_new_tab": true
+          }
+        },
+        "video_46y797": {
+          "type": "video",
+          "settings": {
+            "desktop_video": "shopify://files/videos/Video-61169.mp4",
+            "link": "https://www.instagram.com/p/Db9854CpLDx/",
+            "open_in_new_tab": true
+          }
+        },
+        "image_c99Ppc": {
+          "type": "image",
+          "settings": {
+            "desktop_image": "shopify://shop_images/1_2.png",
+            "link": "https://www.instagram.com/p/DbqR0BEEx4A/?img_index=1",
+            "open_in_new_tab": true
+          }
+        }
+      },
+      "block_order": [
+        "video_UAzAJn",
+        "video_46y797",
+        "image_c99Ppc"
+      ],
+      "settings": {
+        "images_per_view": 3
+      }
+    },
+    "custom_footer_FmDXpQ": {
+      "type": "custom-footer",
+      "blocks": {
+        "menu_hqG3qX": {
+          "type": "menu",
+          "settings": {
+            "heading": "",
+            "menu": "footer-left"
+          }
+        },
+        "menu_AzdKt8": {
+          "type": "menu",
+          "settings": {
+            "heading": "",
+            "menu": "footer-middle"
+          }
+        },
+        "menu_HqJyAi": {
+          "type": "menu",
+          "settings": {
+            "heading": "",
+            "menu": "footer-right"
+          }
+        }
+      },
+      "block_order": [
+        "menu_hqG3qX",
+        "menu_AzdKt8",
+        "menu_HqJyAi"
+      ],
+      "name": "Custom Footer",
+      "settings": {
+        "icon_one": "shopify://shop_images/Vector_7.png",
+        "icon_two": "shopify://shop_images/Vector_8.png",
+        "icon_three": "shopify://shop_images/Vector_9.png",
+        "heading_image": "shopify://shop_images/The_BIKANERI_KITCHEN_1.png",
+        "heading": "The Bikaneri Kitchen",
+        "note": "<p>We have carried the taste of Bikaner with us all our lives. In our homes, our memories and around our tables. The Bikaneri Kitchen is our way of sharing what has always been ours with you.<\/p>",
+        "copyright_text": "All Rights Reserved",
+        "color_scheme": "",
+        "accent_color": "#ff6344",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "disabled": true,
+      "settings": {
+        "color_scheme": "scheme-1",
+        "newsletter_enable": true,
+        "newsletter_heading": "Subscribe to our emails",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "payment_enable": true,
+        "show_policy": true,
+        "margin_top": 0,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "custom_images_grid_carousal_social",
+    "custom_footer_FmDXpQ",
+    "footer"
+  ]
+}

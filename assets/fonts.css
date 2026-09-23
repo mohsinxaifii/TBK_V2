@@ -1,0 +1,205 @@
+/* Helvetica Neue Font Family */
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('{{ "HelveticaNeue - 100.otf" | asset_url }}') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('{{ "HelveticaNeue - 200.otf" | asset_url }}') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('{{ "HelveticaNeue - 300.otf" | asset_url }}') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('{{ "HelveticaNeue - 400.otf" | asset_url }}') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('{{ "HelveticaNeue - 500.otf" | asset_url }}') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('{{ "HelveticaNeue - 600.otf" | asset_url }}') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('{{ "HelveticaNeue - 700.otf" | asset_url }}') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('{{ "HelveticaNeue - 800.otf" | asset_url }}') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Proxima Nova A Font Family */
+@font-face {
+  font-family: 'Proxima Nova A';
+  src: url('{{ "ProximaNovaA-100.ttf" | asset_url }}') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Proxima Nova A';
+  src: url('{{ "ProximaNovaA-200.ttf" | asset_url }}') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Proxima Nova A';
+  src: url('{{ "ProximaNovaA-300.ttf" | asset_url }}') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Proxima Nova A';
+  src: url('{{ "ProximaNovaA-400.ttf" | asset_url }}') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Proxima Nova A';
+  src: url('{{ "ProximaNovaA-500.ttf" | asset_url }}') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Proxima Nova A';
+  src: url('{{ "ProximaNovaA-600.ttf" | asset_url }}') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Proxima Nova A';
+  src: url('{{ "ProximaNovaA-700.ttf" | asset_url }}') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Aurum Font Family */
+@font-face {
+  font-family: 'Aurum';
+  src: url('{{ "aurum.regular.otf" | asset_url }}') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Caveat -- handwritten accent (variable, wght 400-700), about page note */
+@font-face {
+  font-family: 'Caveat';
+  src: url('{{ "Caveat-VariableFont_wght.ttf" | asset_url }}') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Beaurencourt FY -- script accent, footer note */
+@font-face {
+  font-family: 'Beaurencourt FY';
+  src: url('{{ "BeaurencourtFY-Regular.otf" | asset_url }}') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Ouma Devanagari Font Family */
+@font-face {
+  font-family: 'Ouma Devanagari';
+  src: url('{{ "Ouma_Devanagari_100.otf" | asset_url }}') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ouma Devanagari';
+  src: url('{{ "Ouma_Devanagari_200.otf" | asset_url }}') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ouma Devanagari';
+  src: url('{{ "Ouma_Devanagari_300.otf" | asset_url }}') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ouma Devanagari';
+  src: url('{{ "Ouma_Devanagari_400.otf" | asset_url }}') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ouma Devanagari';
+  src: url('{{ "Ouma_Devanagari_500.otf" | asset_url }}') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ouma Devanagari';
+  src: url('{{ "Ouma_Devanagari_600.otf" | asset_url }}') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ouma Devanagari';
+  src: url('{{ "Ouma_Devanagari_700.otf" | asset_url }}') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

@@ -1,0 +1,42 @@
+{% comment %}
+  Renders a clickable discount callout that copies the discount code to the clipboard.
+  Accepts:
+  - block: {Object} block object with settings: image, text (richtext), discount_code
+
+  Usage:
+  {% render 'discount-callout', block: block %}
+{% endcomment %}
+{%- if block.settings.discount_code != blank -%}
+  {%- assign code_html = '<span class="discount-callout__code">'
+    | append: block.settings.discount_code
+    | append: '</span>'
+  -%}
+  {%- assign callout_text = block.settings.text | replace: '[[code]]', code_html -%}
+
+  <discount-callout-copy
+    class="discount-callout"
+    data-code="{{ block.settings.discount_code | escape }}"
+    {{ block.shopify_attributes }}
+  >
+    <button type="button" class="discount-callout__button">
+      <span class="discount-callout__default">
+        {%- if block.settings.image != blank -%}
+          <span class="discount-callout__icon">
+            {{
+              block.settings.image
+              | image_url: width: 60
+              | image_tag: loading: 'lazy', widths: '30, 60', alt: ''
+            }}
+          </span>
+        {%- endif -%}
+        <span class="discount-callout__text rte">{{ callout_text }}</span>
+      </span>
+      <span class="discount-callout__copied" aria-hidden="true">
+        {{- 'products.product.discount_callout.copied' | t -}}
+      </span>
+    </button>
+  </discount-callout-copy>
+
+  <script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'discount-callout.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}

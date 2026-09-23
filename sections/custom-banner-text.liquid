@@ -1,0 +1,47 @@
+{{ 'custom-banner-text.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="custom-banner-text-container"
+  data-section-id="{{ section.id }}"
+  data-default-language="{{ section.settings.default_language }}"
+>
+  <img
+    src="{{ section.settings.banner_image | image_url }}"
+    alt="{{ section.settings.banner_image.alt | escape }}"
+    class="custom-banner-text_desktop-image"
+  >
+  <img
+    src="{{ section.settings.mobile_banner_image | image_url  }}"
+    alt="{{ section.settings.mobile_banner_image.alt | escape }}"
+    class="custom-banner-text_mobile-image"
+  >
+  {{ section.settings.heading }}
+</div>
+
+{% schema %}
+{
+  "name": "Custom Banner Text",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Desktop BG Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_banner_image",
+      "label": "Mobile BG Image"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Banner Text"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,79 @@
+{{ 'custom-story-text.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'custom-story-text.js' | asset_url }}" defer="defer"></script>
+
+<div class="custom-story-text custom-story-text--{{ section.settings.layout }}">
+  <div class="page-width custom-story-text-inner">
+    <div class="custom-story-text-col custom-story-text-col--heading">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="section-heading custom-story-text-heading">
+          {{- section.settings.heading | newline_to_br -}}
+        </h2>
+      {%- endif -%}
+    </div>
+    <div class="custom-story-text-col custom-story-text-col--body">
+      {%- if section.settings.body != blank -%}
+        <div class="custom-story-text-body rte">
+          {{ section.settings.body }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Story Text",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "split",
+          "label": "Split - heading left, text right"
+        },
+        {
+          "value": "stacked",
+          "label": "Stacked - heading above text"
+        }
+      ],
+      "default": "split"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Press Enter/Return to force a line break.",
+      "default": "Preserving India's culinary inheritance."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text",
+      "default": "<p>Not every tradition survives because it is written. Some survive because someone refuses to change them.</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Story Text - Split",
+      "settings": {
+        "layout": "split"
+      }
+    },
+    {
+      "name": "Custom Story Text - Stacked",
+      "settings": {
+        "layout": "stacked",
+        "heading": "There was a time when\nrecipes belonged to places.",
+        "body": "<p>Lorem ipsum dolor sit amet consectetur. Et etiam praesent lorem interdum egestas integer. Enim mi vitae mauris aliquam aliquam velit commodo leo. Placerat dictum habitasse aliquam pharetra in arcu pellentesque ultricies. Sed et odio nibh tristique sit nibh duis fusce sed. Pharetra augue velit tristique sed eleifend. Neque mi sit nibh convallis commodo dignissim ut.</p>"
+      }
+    }
+  ]
+}
+{% endschema %}

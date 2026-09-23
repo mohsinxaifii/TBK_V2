@@ -1,0 +1,97 @@
+{{ 'page-top_banner.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'page-top_banner.js' | asset_url }}" defer="defer"></script>
+
+{%- comment -%}
+  All three media sources are page metafields rather than section settings, so
+  each page carries its own banner and this section stays reusable as-is:
+  custom.top_video, custom.desktop_banner, custom.mobile_banner.
+{%- endcomment -%}
+{%- liquid
+  assign top_video = page.metafields.custom.top_video.value
+  assign top_video_source = top_video.sources | sort: 'width' | last
+
+  assign desktop_banner = page.metafields.custom.desktop_banner.value
+  assign mobile_banner = page.metafields.custom.mobile_banner.value
+
+  # Either one alone still renders; the <img> takes whichever exists so a page
+  # that only set the mobile banner doesn't come out empty.
+  assign banner_image = desktop_banner | default: mobile_banner
+-%}
+
+<div class="page-top-banner-container">
+  {%- if section.settings.media_type == 'video' -%}
+    {%- if top_video_source -%}
+      <video autoplay muted loop playsinline preload="auto">
+        <source src="{{ top_video_source.url }}" type="{{ top_video_source.mime_type }}">
+      </video>
+    {%- endif -%}
+  {%- elsif banner_image != blank -%}
+    <picture class="page-top-banner-picture">
+      {%- if mobile_banner != blank -%}
+        <source
+          media="(max-width: 749px)"
+          srcset="
+            {{ mobile_banner | image_url: width: 450 }} 450w,
+            {{ mobile_banner | image_url: width: 750 }} 750w,
+            {{ mobile_banner | image_url: width: 1100 }} 1100w
+          "
+          sizes="100vw"
+        >
+      {%- endif -%}
+      <img
+        src="{{ banner_image | image_url: width: 1780 }}"
+        srcset="
+          {{ banner_image | image_url: width: 750 }} 750w,
+          {{ banner_image | image_url: width: 1100 }} 1100w,
+          {{ banner_image | image_url: width: 1500 }} 1500w,
+          {{ banner_image | image_url: width: 1780 }} 1780w,
+          {{ banner_image | image_url: width: 2400 }} 2400w
+        "
+        sizes="100vw"
+        width="{{ banner_image.width }}"
+        height="{{ banner_image.height }}"
+        alt="{{ banner_image.alt | escape }}"
+        loading="eager"
+        fetchpriority="high"
+      >
+    </picture>
+  {%- endif -%}
+  <div class="page-top-banner-container-inner">
+    <p>{{ page.title }}</p>
+    <hr>
+    <p>{{ shop.name }}</p>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Page Top Banner",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Media comes from this page's metafields, not from here: Desktop Banner and Mobile Banner for the image, Top Video for the video. Set them on the page in Admin."
+    },
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "Media type",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page Top Banner"
+    }
+  ]
+}
+{% endschema %}

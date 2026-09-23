@@ -1,0 +1,456 @@
+#product-grid.grid {
+  gap: 20px;
+}
+
+#product-grid li {
+  width: calc(50% - 20px);
+}
+
+/* Equal-height cards.
+   .grid is display:flex, so it already stretches every <li> in a row to the
+   tallest one. The chain broke one level below that: <product-component> sits
+   between the grid item and the card, and base.css gives it display:block with
+   auto height -- so .shop-card's height:100% had no definite height to resolve
+   against and fell back to its own content height. A card whose title wrapped
+   to two lines came out taller than its neighbour, and the price / pack size /
+   Add To Cart rows stopped lining up across the row.
+   Giving the wrapper height:100% reconnects it: the <li> is a stretched flex
+   item, so its height is definite and the percentage resolves. */
+.shop-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.shop-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  position: relative;
+}
+
+/* Sized by the image itself, so a product shot is never cropped -- the old
+   fixed 628:402 landscape box showed only the middle half of the 4:5 product
+   photos. overflow stays hidden for the hover zoom below. */
+.shop-card__media {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(24, 24, 24, 0.05);
+}
+
+.shop-card__media-wrap {
+  position: relative;
+}
+
+/* Only in slider mode. A single-image card keeps sizing itself from its own
+   photo (the behaviour above); a track of several needs one fixed box or the
+   card height would jump as you move between slides. Every product photo on
+   this store is 4:5, which is the same ratio the placeholder below uses. */
+.shop-card__media--slider {
+  aspect-ratio: 4 / 5;
+}
+
+.shop-card__track {
+  display: flex;
+  height: 100%;
+  /* Driven by a custom property rather than an inline transform so the JS only
+     ever writes a number, and the easing below stays owned by the stylesheet. */
+  transform: translate3d(calc(var(--shop-card-index, 0) * -100%), 0, 0);
+  transition: transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.shop-card__media--slider .shop-card__image {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+}
+
+.shop-card__image,
+.shop-card__media .placeholder-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.4s ease;
+  object-position: center;
+}
+
+/* No image to take a shape from: match the 4:5 product photos so an
+   imageless card still lines up with the rest of the grid. */
+.shop-card__media .placeholder-svg {
+  aspect-ratio: 4 / 5;
+}
+
+.shop-card:hover .shop-card__image {
+  transform: scale(1.03);
+}
+
+/* Arrows sit on .shop-card__media-wrap, which has no overflow clipping of its
+   own, so they are never cut off by the media box. z-index 2 keeps them over
+   the photo and over the badge/wishlist layer (z-index 1) — though neither
+   actually overlaps, since those pin to the top corners and these centre. */
+.shop-card__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 253, 238, 0.88);
+  color: #570f13;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: opacity 0.25s ease, background-color 0.25s ease;
+}
+
+.shop-card__nav--prev {
+  left: 12px;
+}
+
+.shop-card__nav--next {
+  right: 12px;
+}
+
+.shop-card__nav:hover {
+  background: #fffdee;
+}
+
+.shop-card__nav-icon {
+  display: flex;
+  width: 10px;
+  height: 6px;
+}
+
+.shop-card__nav-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* icon-caret is a down chevron; turn it a quarter each way. */
+.shop-card__nav--prev .shop-card__nav-icon {
+  transform: rotate(90deg);
+}
+
+.shop-card__nav--next .shop-card__nav-icon {
+  transform: rotate(-90deg);
+}
+
+/* Where there is a real pointer the arrows stay out of the way until the card
+   is hovered (or an arrow is keyboard-focused). Touch devices get no hover, so
+   the media query below leaves them permanently visible there. */
+@media (hover: hover) {
+  .shop-card__nav {
+    opacity: 0;
+  }
+
+  .shop-card:hover .shop-card__nav,
+  .shop-card__nav:focus-visible {
+    opacity: 1;
+  }
+}
+
+.shop-card__nav:focus-visible {
+  outline: 2px solid #570f13;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-card__track {
+    transition: none;
+  }
+}
+
+.shop-card__badge {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 1;
+  background-color: #E5D0A5;
+  color: #570F13;
+  font-family: var(--font-family-body);
+  font-size: var(--font-shop-card-badge-size);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 10px 9px;
+  line-height: 11px;
+}
+
+.shop-card__wishlist {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 1;
+  /* Wishlist is switched off for now, on every card (including the ones
+     wishlist.js builds on the wishlist page). Set back to flex to restore. */
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
+}
+
+.shop-card__wishlist svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.icon-heart__outline {
+  fill: none;
+  stroke: #fffdee;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.icon-heart__fill {
+  fill: #fffdee;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.shop-card__wishlist.is-wishlisted .icon-heart__fill {
+  opacity: 1;
+}
+
+@keyframes wishlist-pop {
+  0% {
+    transform: scale(1);
+  }
+
+  40% {
+    transform: scale(1.22);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.shop-card__wishlist.is-wishlisted {
+  animation: wishlist-pop 0.35s ease;
+}
+
+.shop-card__footer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #570f13;
+  color: #FFFDEE;
+  padding: 20px 18px 18px;
+}
+
+.shop-card__title {
+  margin: 0 0 5px;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-shop-card-title-size);
+  line-height: 1.3;
+}
+
+.shop-card__title-link {
+  color: inherit;
+  color: #FFFDEE;
+  font-family: var(--font-family-accent);
+  text-decoration: none;
+  font-size: var(--font-shop-card-title-link-size);
+  letter-spacing: 1px;
+}
+
+/* Pin the price / pack size / divider / Add To Cart block to the bottom of the
+   footer, so it lands in the same place on every card no matter how many lines
+   the title takes.
+   The margin-top:auto below on .shop-card__form was inert on its own: the flex
+   item of .shop-card__footer is <product-form>, not the <form> inside it, and
+   that wrapper hugs its content -- so the footer's leftover space collected
+   underneath the whole block instead of above it. The wrapper is what has to be
+   pushed down. */
+.shop-card__footer > product-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  width: 100%;
+}
+
+.shop-card__form {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.shop-card__meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+  margin-bottom: 14px;
+  font-family: var(--font-family-body);
+  /* A native <select> (multi-variant card) and a plain <span> (single-variant
+     card) don't have the same intrinsic height, which would leave the price row
+     a couple of pixels off between cards even with the block bottom-pinned. */
+  line-height: 1.4;
+}
+
+.shop-card__price {
+  font-size: var(--font-shop-card-price-size);
+  font-weight: 300;
+}
+
+.shop-card__size {
+  font-size: var(--font-shop-card-size-size);
+  font-weight: 300;
+  color: #FFFDEE;
+}
+
+.shop-card__size-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' fill='none'%3E%3Cpath fill='%23FFFDEE' fill-opacity='.75' d='M9.354.646a.5.5 0 0 0-.708 0L5 4.293 1.354.646a.5.5 0 0 0-.708.708l4 4a.5.5 0 0 0 .708 0l4-4a.5.5 0 0 0 0-.708'/%3E%3C/svg%3E") no-repeat right center/10px 6px;
+  border: none;
+  margin: 0;
+  padding: 0 16px 0 0;
+  color: #FFFDEE;
+  font-family: var(--font-family-body);
+  font-size: var(--font-shop-card-size-size);
+  font-weight: var(--font-copy-weight);
+  line-height: inherit;
+  cursor: pointer;
+  color-scheme: dark;
+}
+
+.shop-card__size-select:hover {
+  color: #FFFDEE;
+  opacity: 0.85;
+}
+
+.shop-card__size-select:focus,
+.shop-card__size-select:focus-visible,
+.shop-card__size-select:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.shop-card__size-select option {
+  background-color: #570f13;
+  color: #FFFDEE;
+  font-weight: 400;
+}
+
+.shop-card__size-select option:checked,
+.shop-card__size-select option:hover,
+.shop-card__size-select option:focus,
+.shop-card__size-select option:active {
+  background-color: #7a171c;
+  color: #FFFDEE;
+}
+
+.shop-card__size-select option:disabled {
+  color: rgba(255, 253, 238, 0.4);
+}
+
+.shop-card__divider {
+  border: none;
+  height: 1px;
+  margin: 0 0 14px;
+  background-color: rgba(255, 253, 238, 0.3);
+}
+
+.shop-card__add {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 6px 0 2px;
+  border: none;
+  background: none;
+  color: #FFFDEE;
+  font-family: var(--font-family-body);
+  font-size: var(--font-shop-card-add-size);
+  letter-spacing: 1px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 300;
+}
+
+.shop-card__add:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.shop-card__add .sold-out-message {
+  display: block;
+}
+
+.shop-card__add.loading {
+  color: transparent;
+}
+
+@media screen and (forced-colors: active) {
+  .shop-card__add.loading {
+    color: #FFFDEE;
+  }
+}
+
+.shop-card__add.loading .loading__spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+}
+
+.shop-card__add.loading .loading__spinner .spinner {
+  width: fit-content;
+}
+
+.shop-card__add.loading .loading__spinner .path {
+  stroke: #FFFDEE;
+}
+
+@media(max-width:768px) {
+  .shop-card__footer {
+    padding: 16px 14px 14px;
+  }
+
+  .shop-card__title {
+    font-size: var(--font-shop-card-title-size-mobile);
+    margin-bottom: 5px;
+  }
+
+  .shop-card__size-select {
+    font-size: var(--font-shop-card-size-size);
+  }
+
+  .shop-card__meta {
+    margin-bottom: 8px;
+  }
+
+  .shop-card__add {
+    font-size: var(--font-shop-card-add-size);
+  }
+
+  #product-grid li {
+    width: 100%;
+    max-width: unset;
+  }
+
+}

@@ -1,0 +1,336 @@
+{{ 'custom-home-testimonials.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'custom-home-testimonials.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign bg_image = section.settings.background_image
+  assign bg_image_mobile = section.settings.background_image_mobile
+-%}
+
+{%- style -%}
+  /* No aspect-ratio on the container at any width: its height comes from
+     its content instead (see custom-home-testimonials.css), so a long
+     heading or wrapped quote can't get clipped by a ratio sized for the
+     background image rather than what's actually inside it. */
+
+  .custom-home-testimonials-section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .custom-home-testimonials-section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="custom-home-testimonials-section-{{ section.id }}-padding">
+  <div
+    class="custom-home-testimonials-container"
+    id="CustomHomeTestimonials-{{ section.id }}"
+    data-section-id="{{ section.id }}"
+    data-animations-enabled="{{ settings.animations_reveal_on_scroll }}"
+    data-autoplay="{{ section.settings.autoplay }}"
+    data-autoplay-speed="{{ section.settings.autoplay_speed }}"
+  >
+    <div class="custom-home-testimonials-bg">
+      {%- if bg_image != blank -%}
+        <picture>
+          {%- if bg_image_mobile != blank -%}
+            <source media="(max-width: 749px)" srcset="{{ bg_image_mobile | image_url }}">
+          {%- endif -%}
+          <img
+            src="{{ bg_image | image_url }}"
+            alt=""
+            width="{{ bg_image.width }}"
+            height="{{ bg_image.height }}"
+            loading="lazy"
+            class="custom-home-testimonials-bg-image"
+          >
+        </picture>
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'custom-home-testimonials-bg-image placeholder-svg' }}
+      {%- endif -%}
+    </div>
+
+    <div class="page-width custom-home-testimonials-content">
+      {%- if section.settings.caption != blank or section.settings.heading != blank -%}
+        <div class="custom-home-testimonials-header">
+          {%- if section.settings.caption != blank -%}
+            <p class="custom-home-testimonials-caption">{{ section.settings.caption }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="section-heading custom-home-testimonials-heading">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="custom-home-testimonials-carousel">
+        <div class="custom-home-testimonials-viewport">
+          <div class="custom-home-testimonials-track">
+            {%- for block in section.blocks -%}
+              <div class="custom-home-testimonials-card" {{ block.shopify_attributes }}>
+                <div class="custom-home-testimonials-card-face">
+                  {%- if block.settings.content != blank -%}
+                    <div
+                      class="custom-home-testimonials-quote rte{% if block.settings.hindi %} custom-home-testimonials-quote--hindi{% endif %}"
+                      {% if block.settings.hindi %}
+                        lang="hi"
+                      {% endif %}
+                    >
+                      {{ block.settings.content }}
+                    </div>
+                  {%- endif -%}
+                  <div class="custom-home-testimonials-person">
+                    {%- if block.settings.image != blank -%}
+                      <img
+                        src="{{ block.settings.image | image_url }}"
+                        alt=""
+                        width="{{ block.settings.image.width }}"
+                        height="{{ block.settings.image.height }}"
+                        loading="lazy"
+                        class="custom-home-testimonials-avatar"
+                      >
+                    {%- endif -%}
+                    {%- if block.settings.name != blank -%}
+                      <p class="custom-home-testimonials-name">{{ block.settings.name }}</p>
+                    {%- endif -%}
+                    {%- if block.settings.location != blank -%}
+                      <p class="custom-home-testimonials-location">{{ block.settings.location }}</p>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            {%- else -%}
+              {%- if request.design_mode -%}
+                <div class="custom-home-testimonials-card">
+                  <div class="custom-home-testimonials-card-face">
+                    <div class="custom-home-testimonials-quote">
+                      <p>Add a testimonial block to get started.</p>
+                    </div>
+                  </div>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+
+      {%- if section.settings.corner_image != blank or section.settings.arrow_image != blank -%}
+        <div class="custom-home-testimonials-footer">
+          {%- if section.settings.corner_image != blank -%}
+            <img
+              src="{{ section.settings.corner_image | image_url }}"
+              alt=""
+              width="{{ section.settings.corner_image.width }}"
+              height="{{ section.settings.corner_image.height }}"
+              loading="lazy"
+              class="custom-home-testimonials-corner"
+            >
+          {%- endif -%}
+
+          {%- if section.settings.arrow_image != blank -%}
+            <div class="custom-home-testimonials-arrow-container">
+              <button
+                type="button"
+                class="custom-home-testimonials-nav custom-home-testimonials-nav-prev"
+                aria-label="{{ 'general.slider.previous_slide' | t }}"
+              >
+                <img
+                  src="{{ section.settings.arrow_image | image_url }}"
+                  alt=""
+                  width="{{ section.settings.arrow_image.width }}"
+                  style="transform: rotate(180deg);"
+                  height="{{ section.settings.arrow_image.height }}"
+                  loading="lazy"
+                  class="custom-home-testimonials-arrow"
+                >
+              </button>
+              <button
+                type="button"
+                class="custom-home-testimonials-nav custom-home-testimonials-nav-next"
+                aria-label="{{ 'general.slider.next_slide' | t }}"
+              >
+                <img
+                  src="{{ section.settings.arrow_image | image_url }}"
+                  alt=""
+                  width="{{ section.settings.arrow_image.width }}"
+                  height="{{ section.settings.arrow_image.height }}"
+                  loading="lazy"
+                  class="custom-home-testimonials-arrow"
+                >
+              </button>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Home Testimonials",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image (mobile)",
+      "info": "Optional. Falls back to the image above when not set."
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_image",
+      "label": "Decorative image — top left"
+    },
+    {
+      "type": "image_picker",
+      "id": "arrow_image",
+      "label": "Carousel prev/next arrow icon"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption",
+      "default": "Testimonials"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "From the table!"
+    },
+    {
+      "type": "header",
+      "content": "Carousel"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-advance testimonials",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "unit": "s",
+      "label": "Change slide every",
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        },
+        {
+          "type": "checkbox",
+          "id": "hindi",
+          "label": "Hindi text",
+          "info": "Sets the text in the Devanagari font and keeps its line breaks.",
+          "default": false
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Location"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Home Testimonials",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "content": "<p>The first thing you notice is the texture. Fine, even, and unmistakably light. It doesn’t feel like what you’re used to.</p>",
+            "name": "Sunaina Kapoor",
+            "location": "New Delhi"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "content": "<p>It’s not aggressive in flavour. It’s balanced. You keep going back to it without realising.</p>",
+            "name": "Sam Mathew",
+            "location": "Goa"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "content": "<p>There’s a certain care in it. You can tell it hasn’t been rushed or overworked.</p>",
+            "name": "Latika Grover",
+            "location": "Mumbai"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

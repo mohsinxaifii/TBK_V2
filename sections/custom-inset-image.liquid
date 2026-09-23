@@ -1,0 +1,118 @@
+{{ 'custom-inset-image.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'custom-inset-image.js' | asset_url }}" defer="defer"></script>
+
+{%- comment -%}
+  Video is optional and per-instance: this section also renders on the wishlist
+  page and twice on About, and only the first About one takes a video. Leave
+  the setting empty and the section behaves exactly as it always did.
+
+  The still images size the box by their own intrinsic ratio (width:100% +
+  height:auto), which a video cannot do -- so when a video is set the ratio is
+  read off whichever image that instance already has and handed to the CSS.
+  That keeps the video in the same footprint as the image it replaces, at both
+  breakpoints, instead of hardcoding this instance's 2560x860 / 708x440 into a
+  section that other pages share.
+{%- endcomment -%}
+{%- liquid
+  assign has_video = false
+  if section.settings.video != blank
+    assign has_video = true
+  endif
+
+  assign ratio_desktop = section.settings.image.aspect_ratio
+  assign ratio_mobile = section.settings.image_mobile.aspect_ratio
+  if ratio_mobile == blank
+    assign ratio_mobile = ratio_desktop
+  endif
+
+  comment
+    A video does not have to sit in the still's exact footprint. When
+    video_ratio_desktop is set it wins on desktop, so a video can be given
+    its own height without touching the images or the mobile crop.
+  endcomment
+  if section.settings.video_ratio_desktop != blank
+    assign ratio_desktop = section.settings.video_ratio_desktop
+  endif
+-%}
+
+<div class="custom-inset-image-section">
+  <div class="page-width">
+    <div
+      class="custom-inset-image-wrap{% if has_video %} custom-inset-image-wrap--video{% endif %}"
+      {%- if has_video and ratio_desktop != blank %}
+        style="--inset-ratio: {{ ratio_desktop }}; --inset-ratio-mobile: {{ ratio_mobile }};"
+      {%- endif -%}
+    >
+      {%- if has_video -%}
+        {{
+          section.settings.video
+          | video_tag:
+            class: 'custom-inset-image-video',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            controls: false,
+            playsinline: true,
+            preload: 'metadata'
+        }}
+      {%- elsif section.settings.image != blank -%}
+        <picture>
+          {%- if section.settings.image_mobile != blank -%}
+            <source media="(max-width: 768px)" srcset="{{ section.settings.image_mobile | image_url }}">
+          {%- endif -%}
+          <img
+            src="{{ section.settings.image | image_url }}"
+            alt="{{ section.settings.image.alt | escape }}"
+            width="{{ section.settings.image.width }}"
+            height="{{ section.settings.image.height }}"
+            loading="lazy"
+            class="custom-inset-image-img"
+          >
+        </picture>
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'custom-inset-image-img placeholder-svg' }}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Inset Image",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "info": "Optional. Replaces the image and is cover-filled into the same box, sized from the image's aspect ratio — so keep the images set even when using a video."
+    },
+    {
+      "type": "text",
+      "id": "video_ratio_desktop",
+      "label": "Video aspect ratio (desktop)",
+      "info": "Optional. Width divided by height, e.g. 2.5 for a shorter band. Leave blank to match the desktop image. Mobile always follows the mobile image."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image (mobile)",
+      "info": "Optional. Falls back to the image above when not set."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Inset Image"
+    }
+  ]
+}
+{% endschema %}

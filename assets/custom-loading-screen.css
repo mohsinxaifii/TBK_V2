@@ -1,0 +1,63 @@
+/* Full-page preload cover — two independent top-level fixed layers, not a
+   parent/child pair. The red layer is a plain, unnested div with nothing
+   but background-color, so nothing about the icon layer's flex layout or
+   transforms can affect whether it paints. */
+.custom-loading-screen__bg {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background-color: #570f13;
+  display: flex !important;
+}
+
+.custom-loading-screen__icons {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  /* Decorative only — the red layer above handles blocking interaction
+     until the reveal begins. */
+  pointer-events: none;
+}
+
+.custom-loading-screen__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  will-change: transform, opacity;
+}
+
+.custom-loading-screen__icon svg {
+  display: block;
+  height: auto;
+}
+
+.custom-loading-screen__icon--one svg {
+  width: clamp(2.2rem, 4vw, 3.4rem);
+}
+
+.custom-loading-screen__icon--two svg {
+  width: clamp(3.4rem, 5.8vw, 5.2rem);
+}
+
+.custom-loading-screen__icon--three svg {
+  width: clamp(2.2rem, 4vw, 3.4rem);
+}
+
+/* Set by the <head> script when the preloader has already played this
+   session. Hiding via a class on <html> means the cover never paints, rather
+   than painting and being torn down once the deferred script runs. */
+html.custom-loading-screen-skip .custom-loading-screen__bg,
+html.custom-loading-screen-skip .custom-loading-screen__icons {
+  display: none !important;
+}
+
+html.custom-loading-screen-lock,
+html.custom-loading-screen-lock body {
+  overflow: hidden;
+  height: 100%;
+}

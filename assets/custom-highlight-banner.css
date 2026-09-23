@@ -1,0 +1,66 @@
+.custom-highlight-banner-container {
+  width: 100%;
+}
+
+.custom-highlight-banner-inner {
+  padding-top: 140px;
+  padding-bottom: 140px;
+  text-align: left;
+}
+
+.custom-highlight-banner-eyebrow {
+  margin: 0 0 16px;
+  font-family: var(--font-family-label);
+  font-size: var(--font-label-size);
+  line-height: var(--font-label-line-height);
+  font-weight: var(--font-eyebrow-weight);
+  letter-spacing: var(--font-label-letter-spacing);
+  text-transform: uppercase;
+}
+
+.custom-highlight-banner-heading {
+  text-align: left;
+  max-width: unset;
+  margin: 0 0 24px;
+}
+
+.custom-highlight-banner-body p {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  font-weight: var(--font-body-copy-weight);
+  letter-spacing: var(--font-body-letter-spacing);
+  opacity: 0.85;
+}
+
+@media screen and (max-width: 768px) {
+  .custom-highlight-banner-inner {
+    padding-top: 44px;
+    padding-bottom: 44px;
+  }
+
+  .custom-highlight-banner-eyebrow {
+    font-size: var(--font-label-size-mobile);
+    line-height: var(--font-label-line-height-mobile);
+    font-weight: var(--font-label-weight-mobile);
+    letter-spacing: var(--font-label-letter-spacing-mobile);
+  }
+
+  .custom-highlight-banner-body p {
+    font-size: var(--font-body-size-mobile);
+    line-height: var(--font-body-line-height-mobile);
+    font-weight: var(--font-body-weight-mobile);
+    letter-spacing: var(--font-body-letter-spacing-mobile);
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .custom-highlight-banner-eyebrow {
+    margin-bottom: 12px;
+  }
+
+  .custom-highlight-banner-heading {
+    margin-bottom: 18px;
+  }
+}

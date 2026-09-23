@@ -1,0 +1,148 @@
+{{ 'component-list-social.css' | asset_url | stylesheet_tag }}
+<style>
+  .custom-bg-heading-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .custom-bg-heading {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    font-size: var(--font-bg-heading-size);
+    font-family: var(--font-family-display);
+    text-align: left;
+    line-height: var(--font-bg-heading-line-height);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .custom-bg-heading__social.list-social {
+    flex-shrink: 0;
+    justify-content: flex-end;
+    gap: 1.4rem;
+    margin: 0;
+  }
+
+  .custom-bg-heading__social .list-social__item .icon {
+    height: 3rem;
+    width: 3rem;
+  }
+
+  .custom-bg-heading__social .list-social__link {
+    padding: 0;
+    width: 4.8rem;
+    height: auto;
+    justify-content: center;
+    color: inherit;
+  }
+
+  @media screen and (max-width: 768px) {
+    .custom-bg-heading {
+      padding-top: 32px;
+      padding-bottom: 28px;
+      font-size: var(--font-bg-heading-size-mobile);
+      line-height: var(--font-bg-heading-line-height-mobile);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .custom-bg-heading__social .list-social__item .icon {
+      height: 2.4rem;
+      width: 2.4rem;
+    }
+
+    .custom-bg-heading__social .list-social__link {
+      width: 3.9rem;
+    }
+  }
+
+  @media screen and (min-width: 769px) and (max-width: 989px) {
+    .custom-bg-heading {
+      padding-top: 40px;
+      padding-bottom: 40px;
+      font-size: var(--font-bg-heading-size-tablet);
+      line-height: var(--font-bg-heading-line-height-tablet);
+    }
+
+    .custom-bg-heading__social .list-social__item .icon {
+      height: 2.7rem;
+      width: 2.7rem;
+    }
+
+    .custom-bg-heading__social .list-social__link {
+      width: 4.3rem;
+    }
+  }
+
+  @media screen and (max-width: 400px) {
+    .custom-bg-heading {
+      padding-top: 24px;
+      padding-bottom: 20px;
+      font-size: var(--font-bg-heading-size-xs);
+      line-height: var(--font-bg-heading-line-height-xs);
+    }
+
+    .custom-bg-heading-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .custom-bg-heading__social.list-social {
+      align-self: flex-end;
+    }
+  }
+</style>
+<script src="{{ 'custom-bg-heading.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign has_social = false
+  if settings.social_facebook_link != blank or settings.social_instagram_link != blank or settings.social_youtube_link != blank or settings.social_tiktok_link != blank or settings.social_twitter_link != blank or settings.social_pinterest_link != blank or settings.social_snapchat_link != blank or settings.social_tumblr_link != blank or settings.social_vimeo_link != blank
+    assign has_social = true
+  endif
+-%}
+
+<div
+  style="color: {{ section.settings.heading_color }}; background-color: {{ section.settings.background_color }}"
+  class="custom-bg-heading-container"
+>
+  <div class="page-width custom-bg-heading-inner">
+    <p class="custom-bg-heading">
+      {{ section.settings.heading }}
+    </p>
+
+    {%- if has_social -%}
+      {%- render 'social-icons', class: 'custom-bg-heading__social' -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom BG Heading",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom BG Heading"
+    }
+  ]
+}
+{% endschema %}

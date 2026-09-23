@@ -1,0 +1,233 @@
+{{ 'custom-policy-page.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'custom-policy-page.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .policy-page-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .policy-page-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  #shopify-section-{{ section.id }} .policy-page__nav-list {
+    background-color: #E5D0A5;
+    color: #181818;
+  }
+
+  #shopify-section-{{ section.id }} .policy-page__nav-link--active {
+    color: {{ section.settings.nav_active_color }};
+  }
+
+  #shopify-section-{{ section.id }} .policy-page__nav-mobile-summary {
+    background-color: #E5D0A5;
+    color: #181818;
+  }
+
+  #shopify-section-{{ section.id }} .policy-page__nav-mobile-link--active {
+    color: {{ section.settings.nav_active_color }};
+  }
+{%- endstyle -%}
+
+<div
+  class="policy-page policy-page-{{ section.id }}-padding"
+  style="background-color: {{ section.settings.background_color }}; color: {{ section.settings.text_color }};"
+>
+  <div class="page-width policy-page__inner">
+    <div class="policy-page__layout">
+      <h1 class="section-heading policy-page__title">
+        {{ page.title | escape }}
+      </h1>
+
+      {%- if section.blocks.size > 0 -%}
+        <aside class="policy-page__nav">
+          <ul class="policy-page__nav-list" role="list">
+            {%- for block in section.blocks -%}
+              {%- liquid
+                assign is_active = false
+                if block.settings.link != blank and block.settings.link == request.path
+                  assign is_active = true
+                endif
+              -%}
+              <li class="policy-page__nav-item" {{ block.shopify_attributes }}>
+                <a
+                  href="{{ block.settings.link | default: '#' }}"
+                  class="policy-page__nav-link{% if is_active %} policy-page__nav-link--active{% endif %}"
+                  {% if is_active %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  <span class="policy-page__nav-dot" aria-hidden="true"></span>
+                  <span class="policy-page__nav-label">{{ block.settings.label | escape }}</span>
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </aside>
+      {%- endif -%}
+
+      <div class="policy-page__content rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+        {{ page.content }}
+      </div>
+
+      {%- if section.blocks.size > 0 -%}
+        {%- liquid
+          assign active_nav_label = page.title
+          for block in section.blocks
+            if block.settings.link != blank and block.settings.link == request.path
+              assign active_nav_label = block.settings.label
+            endif
+          endfor
+        -%}
+        <details class="policy-page__nav-mobile">
+          <summary class="policy-page__nav-mobile-summary">
+            <span class="policy-page__nav-mobile-label">{{ active_nav_label | escape }}</span>
+            <span class="policy-page__nav-mobile-icon" aria-hidden="true">
+              {{- 'icon-caret.svg' | inline_asset_content -}}
+            </span>
+          </summary>
+          <ul class="policy-page__nav-mobile-list" role="list">
+            {%- for block in section.blocks -%}
+              {%- liquid
+                assign is_active = false
+                if block.settings.link != blank and block.settings.link == request.path
+                  assign is_active = true
+                endif
+              -%}
+              <li class="policy-page__nav-mobile-item" {{ block.shopify_attributes }}>
+                <a
+                  href="{{ block.settings.link | default: '#' }}"
+                  class="policy-page__nav-mobile-link{% if is_active %} policy-page__nav-mobile-link--active{% endif %}"
+                  {% if is_active %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{ block.settings.label | escape }}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </details>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Policy Page",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fffdee"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Navigator"
+    },
+    {
+      "type": "color",
+      "id": "nav_background_color",
+      "label": "Navigator background color",
+      "default": "#e4cea0"
+    },
+    {
+      "type": "color",
+      "id": "nav_text_color",
+      "label": "Navigator text color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "nav_active_color",
+      "label": "Navigator active item color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Privacy Policy"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Policy Page",
+      "blocks": [
+        {
+          "type": "link",
+          "settings": {
+            "label": "Privacy Policy"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Terms and Conditions"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "label": "Return & Refund"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

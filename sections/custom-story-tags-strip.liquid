@@ -1,0 +1,136 @@
+{{ 'custom-story-tags-strip.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'story-tags-strip-marquee.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .story-tags-strip-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .story-tags-strip-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  class="story-tags-strip story-tags-strip-{{ section.id }}-padding"
+  style="background-color: #181818; color: {{ section.settings.text_color }};"
+>
+  <div class="page-width story-tags-strip__inner">
+    {%- if section.settings.label != blank -%}
+      <p class="story-tags-strip__label">{{ section.settings.label | escape }}</p>
+    {%- endif -%}
+
+    {%- liquid
+      assign selected_blog = section.settings.blog
+      assign tag_limit = section.settings.tag_limit
+      assign display_count = 0
+    -%}
+
+    {%- if selected_blog != blank and selected_blog.articles.size > 0 -%}
+      <div class="story-tags-strip__marquee" data-story-tags-marquee>
+        <ul class="story-tags-strip__list" role="list" data-story-tags-track>
+          {%- for blog_article in selected_blog.articles -%}
+            {%- if blog_article.id == article.id -%}
+              {%- continue -%}
+            {%- endif -%}
+            {%- if display_count >= tag_limit -%}
+              {%- break -%}
+            {%- endif -%}
+            {%- assign display_count = display_count | plus: 1 -%}
+
+            <li class="story-tags-strip__item">
+              <a href="{{ blog_article.url }}" class="story-tags-strip__tag">
+                <span class="story-tags-strip__tag-text">{{ blog_article.title }}</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- elsif request.design_mode -%}
+      <p class="story-tags-strip__empty">Select a blog in the section settings to link out to its articles.</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Story Tags Strip",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Read more stories about"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFDEE"
+    },
+    {
+      "type": "header",
+      "content": "Blog"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog",
+      "info": "Pills are populated automatically from this blog's article titles."
+    },
+    {
+      "type": "range",
+      "id": "tag_limit",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "label": "Number of pills to show",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "Story Tags Strip"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,212 @@
+{% comment %}
+  Renders a product card for the minimal "shop" collection grid style: edge-to-edge
+  image, dark footer with title/price, a pack-size picker, and Add to Cart.
+
+  Accepts:
+  - card_product: {Object} Product Liquid object
+  - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
+  - section_id: {String} The ID of the section that contains this card.
+
+  Usage:
+  {% render 'card-product-shop', card_product: product, section_id: section.id %}
+{% endcomment %}
+
+{%- liquid
+  assign current_variant = card_product.selected_or_first_available_variant
+  assign form_id = 'shop-card-' | append: section_id | append: '-' | append: card_product.id
+  assign is_bestseller = false
+  if card_product.tags contains 'bestseller'
+    assign is_bestseller = true
+  endif
+
+  # Every image on the product, so the card can slide through them. Videos and
+  # 3D models are filtered out: this is a flat image track, not a media player.
+  assign card_media = card_product.media | where: 'media_type', 'image'
+  assign media_count = card_media.size
+-%}
+
+{%- comment -%}
+  Full card data, used by wishlist.js to rebuild this exact card structure
+  client-side on the wishlist page (which has no server-side product data to
+  render from — see MEMORY on the localStorage-only wishlist approach).
+{%- endcomment -%}
+{%- capture card_json -%}
+{
+  "id": {{ card_product.id | json }},
+  "title": {{ card_product.title | json }},
+  "url": {{ card_product.url | json }},
+  "bestseller": {{ is_bestseller | json }},
+  "imageAlt": {{ card_product.featured_media.alt | json }},
+  "image360": {{ card_product.featured_media | image_url: width: 360 | json }},
+  "image533": {{ card_product.featured_media | image_url: width: 533 | json }},
+  "image720": {{ card_product.featured_media | image_url: width: 720 | json }},
+  "imageFull": {{ card_product.featured_media | image_url | json }},
+  "imageWidth": {{ card_product.featured_media.width | json }},
+  "imageHeight": {{ card_product.featured_media.height | json }},
+  "currentVariantId": {{ current_variant.id | json }},
+  "variantsCount": {{ card_product.variants_count | json }},
+  "variants": [
+    {%- for variant in card_product.variants -%}
+      {
+        "id": {{ variant.id | json }},
+        "title": {{ variant.title | json }},
+        "price": {{ variant.price | money_without_trailing_zeros | json }},
+        "available": {{ variant.available | json }}
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
+{%- endcapture -%}
+
+<product-component class="shop-card-wrapper" view-event-payload="{{ card_product | standard_event_data: 'view', context: 'collection' | escape }}">
+  <div class="shop-card">
+    {%- comment -%}
+      The link keeps the .shop-card__media class and stays the slide container,
+      because wishlist.js rebuilds cards client-side and looks that class up by
+      name to set the href. The arrows sit OUTSIDE it — partly so a click on one
+      doesn't navigate to the product, partly because the link is aria-hidden
+      and the arrows must stay reachable.
+    {%- endcomment -%}
+    <div class="shop-card__media-wrap">
+      <a
+        href="{{ card_product.url }}"
+        class="shop-card__media{% if media_count > 1 %} shop-card__media--slider{% endif %}"
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        {%- if media_count > 0 -%}
+          <div class="shop-card__track" data-shop-card-track style="--shop-card-index: 0;">
+            {%- for media in card_media -%}
+              <img
+                srcset="
+                  {%- if media.preview_image.width >= 360 -%}{{ media.preview_image | image_url: width: 360 }} 360w,{%- endif -%}
+                  {%- if media.preview_image.width >= 533 -%}{{ media.preview_image | image_url: width: 533 }} 533w,{%- endif -%}
+                  {%- if media.preview_image.width >= 720 -%}{{ media.preview_image | image_url: width: 720 }} 720w,{%- endif -%}
+                  {{ media.preview_image | image_url }} {{ media.preview_image.width }}w
+                "
+                src="{{ media.preview_image | image_url: width: 533 }}"
+                sizes="(min-width: 750px) 40vw, 90vw"
+                alt="{{ media.alt | escape }}"
+                class="shop-card__image"
+                {% if forloop.first %}
+                  {% unless lazy_load == false %}loading="lazy"{% endunless %}
+                {% else %}
+                  loading="lazy"
+                {% endif %}
+                decoding="async"
+                width="{{ media.preview_image.width }}"
+                height="{{ media.preview_image.height }}"
+              >
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'shop-card__image placeholder-svg' }}
+        {%- endif -%}
+      </a>
+
+      {%- if media_count > 1 -%}
+        <button
+          type="button"
+          class="shop-card__nav shop-card__nav--prev"
+          data-shop-card-nav="-1"
+          aria-label="{{ 'general.slider.previous_slide' | t }}"
+        >
+          <span class="shop-card__nav-icon">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+        </button>
+        <button
+          type="button"
+          class="shop-card__nav shop-card__nav--next"
+          data-shop-card-nav="1"
+          aria-label="{{ 'general.slider.next_slide' | t }}"
+        >
+          <span class="shop-card__nav-icon">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+        </button>
+      {%- endif -%}
+    </div>
+
+    {%- if card_product.tags contains 'bestseller' -%}
+      <span class="shop-card__badge">Bestseller</span>
+    {%- endif -%}
+
+    {%- comment -%}
+      Wishlist state lives in the browser's localStorage (see wishlist.js), not
+      here — this button always renders "not wishlisted" server-side, and JS
+      syncs the real state (using the data-card snapshot above) on page load.
+    {%- endcomment -%}
+    <button
+      type="button"
+      class="shop-card__wishlist"
+      aria-label="{{ 'products.product.wishlist_add' | t }}"
+      aria-pressed="false"
+      data-card="{{ card_json | escape }}"
+    >
+      {{ 'icon-heart.svg' | inline_asset_content }}
+    </button>
+
+    <div class="shop-card__footer">
+      <h3 class="shop-card__title">
+        <a href="{{ card_product.url }}" class="shop-card__title-link">{{ card_product.title | escape }}</a>
+      </h3>
+
+      <product-form data-section-id="{{ section_id }}">
+        {%- form 'product', card_product, id: form_id, class: 'shop-card__form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+          <input
+            type="hidden"
+            name="id"
+            value="{{ current_variant.id }}"
+            class="shop-card__variant-id"
+            {% if current_variant.available == false %}
+              disabled
+            {% endif %}
+          >
+
+          <div class="shop-card__meta">
+            <span class="shop-card__price">{{ current_variant.price | money_without_trailing_zeros }}</span>
+            {%- if card_product.variants_count > 1 -%}
+              <select class="shop-card__size-select" aria-label="{{ 'products.product.product_variants' | t }}">
+                {%- for variant in card_product.variants -%}
+                  <option
+                    value="{{ variant.id }}"
+                    data-price="{{ variant.price | money_without_trailing_zeros }}"
+                    {% if variant.id == current_variant.id %}
+                      selected
+                    {% endif %}
+                    {% if variant.available == false %}
+                      disabled
+                    {% endif %}
+                  >
+                    {{ variant.title }}
+                  </option>
+                {%- endfor -%}
+              </select>
+            {%- else -%}
+              <span class="shop-card__size">{{ current_variant.title }}</span>
+            {%- endif -%}
+          </div>
+
+          <hr class="shop-card__divider">
+
+          <button
+            type="submit"
+            name="add"
+            class="shop-card__add"
+            data-sold-out-message="true"
+            {% if current_variant.available == false %}
+              disabled
+            {% endif %}
+          >
+            <span>
+              {%- if current_variant.available -%}
+                Add To Cart
+              {%- else -%}
+                {{ 'products.product.sold_out' | t }}
+              {%- endif -%}
+            </span>
+            <span class="sold-out-message hidden">{{ 'products.product.sold_out' | t }}</span>
+            {%- render 'loading-spinner' -%}
+          </button>
+        {%- endform -%}
+      </product-form>
+    </div>
+  </div>
+</product-component>

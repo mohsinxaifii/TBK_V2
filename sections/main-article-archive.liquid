@@ -1,0 +1,343 @@
+{{ 'main-article-archive.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'archive-hero-parallax.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign hero_video = article.metafields.custom.hero_video.value
+  assign hero_video_source = hero_video.sources | sort: 'width' | last
+  # Which hero the layout uses. The video used to win automatically wherever a
+  # hero_video metafield existed, which meant a story could not be switched to
+  # its still without clearing the metafield and losing the video reference.
+  # This setting decides instead; the metafields stay untouched either way.
+  # The branch below is gated on this rather than blanking hero_video_source:
+  # in Liquid only false and nil are falsy, so an emptied variable would still
+  # test as true and the video would keep winning.
+  assign hero_media = section.settings.hero_media | default: 'image'
+  assign use_hero_video = false
+  if hero_media == 'video' and hero_video_source
+    assign use_hero_video = true
+  endif
+  # Still image hero, for stories with no hero video (the Rituals layout). Kept
+  # separate from article.image so the hero and the listing-card cover can differ.
+  assign hero_image = article.metafields.custom.hero_image.value
+  assign hero_caption = article.metafields.custom.hero_caption.value
+  assign hero_alt = hero_caption | default: article.title | escape
+
+  assign intro_heading = article.metafields.custom.intro_heading.value
+  assign intro_text = article.metafields.custom.intro_text
+
+  assign image_1 = article.metafields.custom.image_1.value
+  assign image_1_alt = image_1.alt | default: article.title | escape
+
+  # Optional portrait crops for phones. Both are supplied already cropped to
+  # their frame, so nothing re-crops them here — the <picture> just swaps which
+  # file loads. Left blank (as on every archive story) the desktop image is
+  # used at all widths, exactly as before.
+  assign hero_image_mobile = article.metafields.custom.hero_image_mobile.value
+  assign image_1_mobile = article.metafields.custom.image_1_mobile.value
+
+  assign quote_intro = article.metafields.custom.quote_intro
+  assign quote_text = article.metafields.custom.quote_text
+
+  assign image_2 = article.metafields.custom.image_2.value
+  assign image_2_alt = image_2.alt | default: article.title | escape
+  assign image_2_caption = article.metafields.custom.image_2_caption
+
+  assign image_3 = article.metafields.custom.image_3.value
+  assign image_3_alt = image_3.alt | default: article.title | escape
+  assign image_3_caption = article.metafields.custom.image_3_caption
+
+  assign reflection_left = article.metafields.custom.reflection_left
+  assign reflection_right = article.metafields.custom.reflection_right
+  assign under_reflection = article.metafields.custom.under_reflection
+
+  assign note_text = article.metafields.custom.archive_note_text
+
+  assign share_url = request.origin | append: article.url
+-%}
+
+<article class="archive-article">
+  {%- if use_hero_video or hero_image or article.image or request.design_mode -%}
+    <div class="archive-article__hero">
+      {%- if use_hero_video -%}
+        <video class="archive-article__hero-media" autoplay muted loop playsinline preload="auto">
+          <source src="{{ hero_video_source.url }}" type="{{ hero_video_source.mime_type }}">
+        </video>
+      {%- elsif hero_image -%}
+        <picture class="archive-article__hero-picture">
+          {%- if hero_image_mobile != blank -%}
+            <source
+              media="(max-width: 749px)"
+              srcset="
+                {{ hero_image_mobile | image_url: width: 402 }} 402w,
+                {{ hero_image_mobile | image_url: width: 804 }} 804w,
+                {{ hero_image_mobile | image_url: width: 1206 }} 1206w
+              "
+              sizes="100vw"
+            >
+          {%- endif -%}
+          <img
+            class="archive-article__hero-media"
+            src="{{ hero_image | image_url: width: 2600 }}"
+            srcset="
+              {{ hero_image | image_url: width: 750 }} 750w,
+              {{ hero_image | image_url: width: 1100 }} 1100w,
+              {{ hero_image | image_url: width: 1500 }} 1500w,
+              {{ hero_image | image_url: width: 2000 }} 2000w,
+              {{ hero_image | image_url: width: 2600 }} 2600w
+            "
+            sizes="100vw"
+            alt="{{ hero_alt }}"
+            loading="eager"
+            fetchpriority="high"
+          >
+        </picture>
+      {%- elsif article.image -%}
+        {{
+          article.image
+          | image_url: width: 2600
+          | image_tag:
+            class: 'archive-article__hero-media',
+            alt: hero_alt,
+            loading: 'eager',
+            fetchpriority: 'high',
+            sizes: '100vw',
+            widths: '750, 1100, 1500, 2000, 2600'
+        }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'archive-article__hero-media placeholder-svg' }}
+      {%- endif -%}
+      {%- if hero_caption != blank -%}
+        <p
+          class="page-width archive-article__hero-caption"
+        >
+          {{- hero_caption | escape -}}
+        </p>
+      {%- endif -%}
+      <span class="archive-article__hero-veil" aria-hidden="true"></span>
+    </div>
+  {%- endif -%}
+
+  <div class="archive-article__content">
+    {%- if intro_heading != blank or intro_text.value != blank -%}
+      <div
+        class="archive-article__intro page-width{% if intro_heading == blank or intro_text.value == blank %} archive-article__intro--single{% endif %}"
+      >
+        {%- if intro_heading != blank -%}
+          <div class="archive-article__intro-col archive-article__intro-col--heading">
+            <h1 class="archive-article__intro-heading">{{ intro_heading | newline_to_br }}</h1>
+          </div>
+        {%- endif -%}
+        {%- if intro_text.value != blank -%}
+          <div class="archive-article__intro-col archive-article__intro-col--body">
+            <div class="archive-article__intro-body rte">{{ intro_text | metafield_tag }}</div>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if image_1 != blank -%}
+      <div class="archive-article__image page-width">
+        <picture class="archive-article__image-picture">
+          {%- if image_1_mobile != blank -%}
+            <source
+              media="(max-width: 749px)"
+              srcset="
+                {{ image_1_mobile | image_url: width: 354 }} 354w,
+                {{ image_1_mobile | image_url: width: 708 }} 708w,
+                {{ image_1_mobile | image_url: width: 1062 }} 1062w
+              "
+              sizes="100vw"
+            >
+          {%- endif -%}
+          <img
+            class="archive-article__image-media"
+            src="{{ image_1 | image_url: width: 2000 }}"
+            srcset="
+              {{ image_1 | image_url: width: 750 }} 750w,
+              {{ image_1 | image_url: width: 1100 }} 1100w,
+              {{ image_1 | image_url: width: 1500 }} 1500w,
+              {{ image_1 | image_url: width: 2000 }} 2000w
+            "
+            sizes="(min-width: 750px) calc(100vw - 10rem), 100vw"
+            alt="{{ image_1_alt }}"
+            loading="lazy"
+          >
+        </picture>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.show_share_button -%}
+      <div class="archive-article__share page-width">
+        {% render 'share-button', share_link: share_url, share_label: section.settings.share_label, id: 'main' %}
+      </div>
+    {%- endif -%}
+
+    {%- if quote_intro.value != blank or quote_text.value != blank -%}
+      <div class="archive-article__split page-width">
+        {%- if quote_intro.value != blank -%}
+          <div class="archive-article__split-col rte">{{ quote_intro | metafield_tag }}</div>
+        {%- endif -%}
+        {%- if quote_text.value != blank -%}
+          <div class="archive-article__split-col archive-article__split-col--quote rte">
+            {{- quote_text | metafield_tag -}}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if image_2 != blank or image_3 != blank -%}
+      <div class="archive-article__duo page-width">
+        <div class="archive-article__duo-item">
+          {%- if image_2 != blank -%}
+            {{
+              image_2
+              | image_url: width: 1200
+              | image_tag:
+                class: 'archive-article__duo-media',
+                alt: image_2_alt,
+                loading: 'lazy',
+                sizes: '(min-width: 750px) 50vw, 100vw',
+                widths: '375, 550, 750, 1000, 1200'
+            }}
+          {%- endif -%}
+          {%- if image_2_caption.value != blank -%}
+            <div class="archive-article__duo-caption rte">{{ image_2_caption | metafield_tag }}</div>
+          {%- endif -%}
+        </div>
+        <div class="archive-article__duo-item">
+          {%- if image_3 != blank -%}
+            {{
+              image_3
+              | image_url: width: 1200
+              | image_tag:
+                class: 'archive-article__duo-media',
+                alt: image_3_alt,
+                loading: 'lazy',
+                sizes: '(min-width: 750px) 50vw, 100vw',
+                widths: '375, 550, 750, 1000, 1200'
+            }}
+          {%- endif -%}
+          {%- if image_3_caption.value != blank -%}
+            <div class="archive-article__duo-caption rte">{{ image_3_caption | metafield_tag }}</div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if reflection_left.value != blank or reflection_right.value != blank -%}
+      <div class="archive-article__split archive-article__split--body page-width">
+        {%- if reflection_left.value != blank -%}
+          <div class="archive-article__split-col rte">{{ reflection_left | metafield_tag }}</div>
+        {%- endif -%}
+        {%- if reflection_right.value != blank -%}
+          <div class="archive-article__split-col rte">{{ reflection_right | metafield_tag }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if note_text.value != blank -%}
+      <div
+        class="archive-article__note"
+        style="background-color: {{ section.settings.note_bg_color }}; color: {{ section.settings.note_text_color }};"
+      >
+        <div class="page-width archive-article__note-inner">
+          {%- if section.settings.note_label != blank -%}
+            <p class="archive-article__note-label">{{ section.settings.note_label | escape }}</p>
+          {%- endif -%}
+          <div class="archive-article__note-body rte">{{ note_text | metafield_tag }}</div>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</article>
+
+<script type="application/ld+json">
+  {{ article | structured_data }}
+</script>
+
+{% schema %}
+{
+  "name": "Main article (Archive)",
+  "tag": "section",
+  "class": "section archive-article-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The story content on this layout (video, images, quotes, captions) comes from this article's metafields (namespace: custom). Fill them in from the article's edit page in Shopify admin."
+    },
+    {
+      "type": "select",
+      "id": "hero_media",
+      "label": "Hero media",
+      "options": [
+        { "value": "image", "label": "Image (custom.hero_image)" },
+        { "value": "video", "label": "Video (custom.hero_video)" }
+      ],
+      "default": "image",
+      "info": "Applies to every article on this template. Choosing Image leaves any hero_video metafield in place, unused."
+    },
+    {
+      "type": "header",
+      "content": "Hero caption position"
+    },
+    {
+      "type": "range",
+      "id": "hero_text_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Position from top",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "hero_text_left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Position from left",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Share button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share_button",
+      "label": "Show share button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "share_label",
+      "label": "Share label",
+      "default": "Share"
+    },
+    {
+      "type": "header",
+      "content": "Archive note"
+    },
+    {
+      "type": "text",
+      "id": "note_label",
+      "label": "Label",
+      "default": "Archive Note"
+    },
+    {
+      "type": "color",
+      "id": "note_bg_color",
+      "label": "Background color",
+      "default": "#570F13"
+    },
+    {
+      "type": "color",
+      "id": "note_text_color",
+      "label": "Text color",
+      "default": "#FFFDEE"
+    }
+  ]
+}
+{% endschema %}

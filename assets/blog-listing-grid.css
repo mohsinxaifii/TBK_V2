@@ -1,0 +1,267 @@
+.blog-listing-grid {
+  width: 100%;
+}
+
+.blog-listing-grid-empty-state {
+  padding: 3rem 0;
+  text-align: center;
+  font-family: var(--font-body-family);
+  opacity: 0.7;
+}
+
+.blog-listing-grid-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.6rem;
+}
+
+@media screen and (min-width: 750px) {
+  .blog-listing-grid-list {
+    grid-template-columns: 30% 70%;
+    gap: 2.4rem;
+  }
+
+  .blog-listing-grid-item {
+    grid-column: var(--grid-col, auto);
+  }
+}
+
+.blog-listing-grid-item {
+  display: block;
+  color: currentColor;
+  text-decoration: none;
+}
+
+/*
+  Rituals layout, repeating every three cards as in Figma (node 3005:3902):
+  narrow 382 + 24 gap + wide 874, then one full-width 1280. Every card is 654
+  tall, so the aspect ratios below match the exported card_image frames exactly
+  and nothing gets cropped. fr keeps the 382:874 split at any width.
+*/
+@media screen and (min-width: 750px) {
+  .blog-listing-grid-list--alternating {
+    grid-template-columns: 382fr 874fr;
+  }
+
+  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 1) {
+    grid-column: 1;
+  }
+
+  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 2) {
+    grid-column: 2;
+  }
+
+  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 3),
+  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 1):last-child {
+    grid-column: 1 / -1;
+  }
+
+  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 1) .blog-listing-grid-item-media {
+    aspect-ratio: 382 / 654;
+  }
+
+  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 2) .blog-listing-grid-item-media {
+    aspect-ratio: 874 / 654;
+  }
+
+  /* The full-width row, plus a narrow card left with no partner on the last page. */
+  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 3) .blog-listing-grid-item-media,
+  .blog-listing-grid-list--alternating .blog-listing-grid-item:nth-child(3n + 1):last-child .blog-listing-grid-item-media {
+    aspect-ratio: 1280 / 654;
+  }
+}
+
+.blog-listing-grid-item-link {
+  display: block;
+  color: currentColor;
+  text-decoration: none;
+  height: 100%;
+}
+
+.blog-listing-grid-item-media {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: var(--grid-aspect, 4 / 3);
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* Single column below 750, so one ratio gives every card the same height.
+   blog-listing-grid.js writes --grid-aspect inline per item for the three-up
+   layout (3/4, 16/10, 21/9), which would otherwise leave the cards uneven
+   here; setting aspect-ratio outright supersedes it, since the inline value is
+   only a custom property and never the aspect-ratio declaration itself. */
+@media screen and (max-width: 749px) {
+  .blog-listing-grid-item-media {
+    aspect-ratio: 354 / 603;
+  }
+}
+
+.blog-listing-grid-item-image,
+.blog-listing-grid-item-media .placeholder-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* One landscape hero serves every card ratio here, from the 382/654 portrait
+     tile to the 1280/654 full-bleed one, so it is centre-cropped rather than
+     anchored to an edge. */
+  object-position: center;
+  transition: transform 0.6s ease;
+}
+
+.blog-listing-grid-item .blog-listing-grid-item-image {
+  filter: grayscale();
+  transition: all 0.3s ease-in;
+}
+
+.blog-listing-grid-item:hover .blog-listing-grid-item-image {
+  filter: none;
+  transition: all 0.3s ease-in;
+}
+
+.blog-listing-grid-item-link:hover .blog-listing-grid-item-image {
+  transform: scale(1.04);
+}
+
+.blog-listing-grid-item-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0.45) 0%,
+      rgba(0, 0, 0, 0) 28%,
+      rgba(0, 0, 0, 0) 62%,
+      rgba(0, 0, 0, 0.5) 100%);
+  pointer-events: none;
+}
+
+.blog-listing-grid-item-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 1.6rem 1.8rem;
+  color: currentColor;
+}
+
+.blog-listing-grid-item-index {
+  margin: 0 0 0.4em;
+  font-family: var(--font-body-family);
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: currentColor;
+}
+
+.blog-listing-grid-item-title {
+  margin: 0;
+  max-width: 32rem;
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  font-size: 2rem;
+  line-height: 1.25;
+  color: currentColor;
+}
+
+.blog-listing-grid-item-icons {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  padding: 1.6rem 1.8rem;
+}
+
+.blog-listing-grid-item-icon {
+  display: block;
+  height: auto;
+}
+
+.blog-listing-grid-item-icon--star {
+  width: 25px;
+  flex-shrink: 0;
+}
+
+.blog-listing-grid-item-icon--arrow {
+  width: 100%;
+  max-width: 13rem;
+  flex-shrink: 1;
+}
+
+.blog-listing-grid-heading {
+  max-width: 80%;
+  margin: 0 auto 60px;
+  text-align: center;
+}
+
+.blog-listing-grid-subtitle {
+  color: #181818;
+  margin: 0 0 16px;
+  font-family: var(--font-family-label);
+  font-size: var(--font-label-size);
+  line-height: var(--font-label-line-height);
+  font-weight: var(--font-eyebrow-weight);
+  letter-spacing: var(--font-label-letter-spacing);
+  text-transform: uppercase;
+}
+
+.blog-listing-grid-title {
+  text-align: center;
+  font-family: var(--font-family-display);
+  color: #181818;
+  font-size: var(--font-section-heading-size);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--font-section-heading-line-height);
+  letter-spacing: var(--font-blog-grid-title-letter-spacing);
+  max-width: unset;
+  margin: 0 0 24px;
+}
+
+.blog-listing-grid-description {
+  font-family: var(--font-body-family);
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #181818;
+}
+
+.blog-listing-grid-description p {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  font-weight: var(--font-body-copy-weight);
+  letter-spacing: var(--font-body-letter-spacing);
+}
+
+@media(max-width:768px) {
+  .blog-listing-grid-heading {
+    margin-bottom: 36px !important;
+  }
+
+  .blog-listing-grid-subtitle {
+    font-size: var(--font-label-size-mobile);
+    line-height: var(--font-label-line-height-mobile);
+    font-weight: var(--font-label-weight-mobile);
+    letter-spacing: var(--font-label-letter-spacing-mobile);
+    margin-bottom: 8px;
+  }
+
+  .blog-listing-grid-title {
+    font-size: var(--font-section-heading-size-mobile);
+    line-height: var(--font-section-heading-line-height-mobile);
+  }
+
+  .blog-listing-grid-description p {
+    font-size: var(--font-body-size-mobile);
+    line-height: var(--font-body-line-height-mobile);
+    font-weight: var(--font-body-weight-mobile);
+    letter-spacing: var(--font-body-letter-spacing-mobile);
+  }
+}

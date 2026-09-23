@@ -1,0 +1,55 @@
+.custom-banner-pin-space {
+    position: relative;
+}
+
+.custom-banner-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.custom-banner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.custom-banner_desktop-image,
+.custom-banner_desktop-video {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.custom-banner_mobile-image,
+.custom-banner_mobile-video {
+    display: none;
+    width: 100%;
+    height: auto;
+}
+
+@media (max-width: 749px) {
+    .custom-banner_desktop-image,
+    .custom-banner_desktop-video {
+        display: none;
+    }
+
+    .custom-banner_mobile-image,
+    .custom-banner_mobile-video {
+        display: block;
+    }
+}
+
+/* Scroll-cover reveal: applied by custom-banner.js to the section that follows this
+   banner. Its top margin is set inline (in JS) to the pinned media's actual rendered
+   height, pulling it flush against the sticky layer so it starts overlapping as soon
+   as the pin scroll begins — no blank gap, and no assumption about media height. */
+.custom-banner-cover-section {
+    position: relative;
+    z-index: 2;
+    background-color: rgb(var(--color-background));
+    box-shadow: 0 -3rem 6rem rgba(0, 0, 0, 0.3);
+    will-change: transform;
+}

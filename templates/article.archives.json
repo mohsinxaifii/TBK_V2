@@ -1,0 +1,56 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-article-archive",
+      "settings": {
+        "hero_media": "image",
+        "hero_text_top": 70,
+        "hero_text_left": 10,
+        "show_share_button": true,
+        "share_label": "Share",
+        "note_label": "Archive Note",
+        "note_bg_color": "#570F13",
+        "note_text_color": "#FFFDEE"
+      }
+    },
+    "continue_exploring": {
+      "type": "custom-continue-exploring",
+      "name": "Continue Exploring",
+      "settings": {
+        "eyebrow": "The Archives",
+        "heading": "Continue Exploring",
+        "blog": "archive",
+        "article_limit": 4,
+        "grayscale_images": true,
+        "star_icon": "shopify://shop_images/Vector_12.png",
+        "arrow_icon": "shopify://shop_images/Vector_22_3.png"
+      }
+    },
+    "story_tags_strip": {
+      "type": "custom-story-tags-strip",
+      "name": "Story Tags Strip",
+      "settings": {
+        "label": "Read more stories about",
+        "background_color": "#000000",
+        "text_color": "#FFFDEE",
+        "blog": "rituals",
+        "tag_limit": 5
+      }
+    },
+    "custom_bg_heading_iraT6Q": {
+      "type": "custom-bg-heading",
+      "name": "Custom BG Heading",
+      "settings": {
+        "heading": "Follow Us",
+        "heading_color": "#ff6344",
+        "background_color": "#570f13"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "continue_exploring",
+    "story_tags_strip",
+    "custom_bg_heading_iraT6Q"
+  ]
+}

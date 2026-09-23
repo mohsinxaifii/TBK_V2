@@ -1,0 +1,632 @@
+.custom-featured-product-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1440 / 721;
+    height: auto;
+    max-height: none;
+    /* Floor for narrow desktop widths, where the proportion alone would put
+       the card under more pressure than the copy can take. */
+    min-height: 620px;
+}
+
+.bg-image--mobile {
+    display: none;
+}
+
+/* The half the card sits on -- a flat colour set per section, not artwork. */
+.custom-featured-product__panel {
+    background-color: var(--featured-product-panel-color, #570F13);
+}
+
+/* Doubled class, not a single one: base.css resets `div:empty` to
+   display:none, and these panels are deliberately empty -- a one-class
+   selector loses to it on specificity and the panel never paints. */
+.custom-featured-product__panel--desktop.custom-featured-product__panel {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+}
+
+.custom-featured-product__panel--mobile.custom-featured-product__panel {
+    display: none;
+}
+
+.custom-featured-product__media {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+}
+
+.bg-image--right.bg-image--desktop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.custom-featured-product-left-cta_container img {
+    position: unset !important;
+}
+
+/* ---- Reversed layout (section setting "Reverse layout") ----
+   Mirrors the section: the photo half sits left, the content card right.
+   The --left/--right class names stay tied to their settings, so only
+   their placement flips here. */
+.custom-featured-product-container--reversed .custom-featured-product__panel--desktop {
+    left: auto;
+    right: 0;
+}
+
+.custom-featured-product-container--reversed .custom-featured-product__media {
+    right: auto;
+    left: 0;
+}
+
+.custom-featured-product-container--reversed .page-width {
+    flex-direction: row-reverse;
+}
+
+
+/* Caption rail: keyline now runs out to the right, label pinned left. */
+.custom-featured-product-container--reversed .custom-featured-product-right {
+    flex-direction: row-reverse;
+}
+
+.custom-featured-product-container--reversed .custom-featured-product-right p {
+    text-align: left;
+    padding-left: 0;
+    padding-right: 15px;
+}
+
+/* Desktop: pass through so .custom-featured-product-left stays a
+   direct flex item of .page-width, unaffected by this wrapper. */
+.custom-featured-product-left-wrap {
+    display: contents;
+}
+
+.custom-featured-product-left>img:first-child {
+    position: absolute;
+    inset: 0;
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover;
+    z-index: -1;
+}
+
+/* .page-width and the caption rail sit over the photo, which is a product
+   link -- let clicks fall through them; only the card itself takes input. */
+.custom-featured-product-container .page-width {
+    pointer-events: none;
+}
+
+.custom-featured-product-left {
+    pointer-events: auto;
+}
+
+.custom-featured-product-container .page-width {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    z-index: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 85% !important;
+    transform: translate(-50%, -50%);
+    width: 100%;
+}
+
+.custom-featured-product-left {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    object-fit: cover;
+    /* aspect-ratio: 656 / 685; */
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.custom-featured-product-left p {
+    margin: 0;
+}
+
+/* Drops the intro a little below the card's top padding. Taken out of the
+   slack space-between is distributing, so the two gaps around the purchase
+   row stay equal to each other -- just smaller. */
+.custom-featured-product-left-inner_upper {
+    margin-top: 30px;
+}
+
+.custom-featured-product-left-inner_upper p:nth-child(1) {
+    font-family: var(--font-family-label);
+    color: #181818;
+    font-size: var(--font-label-size);
+    font-weight: 400;
+    line-height: var(--font-label-line-height);
+    letter-spacing: var(--font-label-letter-spacing);
+    text-align: left;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.custom-featured-product-left-inner_upper p:nth-child(2) {
+    font-family: var(--font-family-display);
+    color: #181818;
+    font-size: var(--font-featured-product-heading-size);
+    font-weight: var(--font-featured-product-heading-weight);
+    line-height: var(--font-featured-product-heading-line-height);
+    letter-spacing: var(--font-featured-product-heading-letter-spacing);
+    text-align: left;
+}
+
+.custom-featured-product-left-description {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    gap: 22px;
+    margin-top: 25px;
+}
+
+.custom-featured-product-left .custom-featured-product-left-description p {
+    font-family: var(--font-family-body);
+    color: #181818;
+    font-size: var(--font-body-size);
+    font-weight: 300;
+    line-height: var(--font-body-line-height);
+    letter-spacing: var(--font-body-letter-spacing);
+    text-align: left;
+    margin-top: 17px;
+    text-transform: none;
+    margin-bottom: 0;
+    margin: 0;
+}
+
+/* ---- Purchase row: size / price / tax note, stepper opposite ----
+   A sibling of the upper and lower blocks rather than the tail of the upper
+   one, so the card's space-between splits the slack evenly above and below
+   it. Any margin here would tip that back out of balance. */
+.custom-featured-product__purchase {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 10%;
+    width: 100%;
+}
+
+.custom-featured-product__meta {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+    row-gap: 2px;
+    color: #181818;
+}
+
+.custom-featured-product-left .custom-featured-product__size,
+.custom-featured-product-left .custom-featured-product__meta-divider,
+.custom-featured-product-left .custom-featured-product__price {
+    font-family: var(--font-family-accent);
+    font-size: var(--font-featured-product-price-size);
+    font-weight: var(--font-featured-product-price-weight);
+    line-height: var(--font-featured-product-price-line-height);
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* Pack multiplier ("120 gm X 3"): set small, with its cap line flush to the
+   weight's. text-top measures to Piazzolla's ascender, which sits well above
+   the caps and leaves it floating; middle centres it on the x-height. A
+   length raises the baseline by a fixed amount instead. 0.46em of this
+   element puts its cap flush with the weight's, and holds at either size
+   since both scale together (measured against Piazzolla's cap ratio, which
+   drifts a little with optical size). line-height 1 keeps it off the row. */
+.custom-featured-product-left .custom-featured-product__size-multiplier {
+    font-size: 0.55em;
+    line-height: 1;
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
+.custom-featured-product-left .custom-featured-product__tax-note {
+    font-family: var(--font-family-body);
+    font-size: var(--font-featured-product-tax-note-size);
+    font-weight: var(--font-copy-weight);
+    line-height: var(--font-featured-product-tax-note-line-height);
+    letter-spacing: var(--font-featured-product-tax-note-letter-spacing);
+    margin: 0;
+}
+
+/* ---- Stepper ----
+   Reuses the theme's <quantity-input> element (and the .quantity class
+   contract its JS keys off), so only the chrome is restated here -- the same
+   approach .pdp-sticky-bar__quantity takes. */
+.custom-featured-product__quantity.quantity {
+    width: auto;
+    min-height: 0;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 3px;
+    padding: 0 8px;
+    border: 1px solid #181818;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+/* The base component paints its border and inner surface through these. */
+.custom-featured-product__quantity.quantity::before,
+.custom-featured-product__quantity.quantity::after {
+    display: none;
+}
+
+.custom-featured-product__quantity .quantity__input {
+    /* Explicit, not auto: on an <input> auto means its intrinsic size (the
+       `size` attribute's ~20 characters), which blows the box out to the
+       width of a text field. */
+    width: 2em;
+    min-width: 0;
+    flex-grow: 0;
+    padding: 0;
+    opacity: 1;
+    color: #181818;
+    font-family: var(--font-family-body);
+    font-size: var(--font-featured-product-qty-value-size);
+    font-weight: var(--font-featured-product-qty-value-weight);
+    line-height: var(--font-featured-product-qty-value-line-height);
+    -moz-appearance: textfield;
+}
+
+.custom-featured-product__quantity .quantity__input::-webkit-outer-spin-button,
+.custom-featured-product__quantity .quantity__input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.custom-featured-product__quantity .quantity__button {
+    width: auto;
+    min-width: 0;
+    padding: 0;
+    flex: 0 0 auto;
+    color: #181818;
+    font-family: var(--font-family-body);
+    line-height: var(--font-featured-product-qty-sign-line-height);
+}
+
+/* The design sizes the two signs differently -- the minus is set larger to
+   carry the same optical weight as the plus. */
+.custom-featured-product__quantity .quantity__button[name='minus'] {
+    font-size: var(--font-featured-product-qty-minus-size);
+    font-weight: var(--font-copy-weight);
+}
+
+.custom-featured-product__quantity .quantity__button[name='plus'] {
+    font-size: var(--font-featured-product-qty-plus-size);
+    font-weight: var(--font-featured-product-qty-value-weight);
+}
+
+/* The base component insets the end buttons by the border width; the box
+   here carries its own padding instead. */
+.custom-featured-product__quantity .quantity__button:first-child,
+.custom-featured-product__quantity .quantity__button:last-child {
+    margin: 0;
+}
+
+.custom-featured-product__quantity .quantity__button-text {
+    pointer-events: none;
+}
+
+.custom-featured-product__quantity .quantity__button.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.custom-featured-product-left-inner_lower button {
+    font-family: var(--font-family-accent);
+    font-size: var(--font-featured-product-cta-size);
+    color: #181818;
+    font-weight: var(--font-featured-product-cta-weight);
+    text-decoration: underline;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.custom-featured-product-right {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    justify-content: start;
+    align-items: start;
+    display: flex;
+}
+
+.custom-featured-product-right hr {
+    border: none;
+    background: #FFFDEE;
+    width: 100%;
+    height: 1px;
+    margin: 0;
+}
+
+.custom-featured-product-right p {
+    color: #FFFDEE;
+    font-family: var(--font-family-accent);
+    font-size: var(--font-featured-product-caption-size);
+    font-weight: var(--font-featured-product-caption-weight);
+    line-height: var(--font-featured-product-caption-line-height);
+    letter-spacing: var(--font-featured-product-caption-letter-spacing);
+    text-align: right;
+    margin: -10px 0 0 0;
+    text-wrap: nowrap;
+    padding-left: 15px;
+}
+
+.custom-featured-product-left-cta_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.custom-featured-product-left-cta_container img {
+    width: 60px !important;
+    height: auto;
+}
+
+.custom-featured-product__button-text {
+    display: inline-block;
+}
+
+.custom-featured-product__cta {
+    position: relative;
+}
+
+.custom-featured-product__cta .loading__spinner {
+    display: none;
+}
+
+.custom-featured-product__cta.loading .loading__spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.custom-featured-product__cta.loading .custom-featured-product__button-text {
+    visibility: hidden;
+}
+
+@media screen and (max-width: 989px) {
+    .custom-featured-product-left .custom-featured-product__size, .custom-featured-product-left .custom-featured-product__price{
+        font-weight: 600;
+    }
+    .custom-featured-product-container {
+        aspect-ratio: unset;
+        display: block;
+        height: auto;
+        min-height: 0;
+        max-height: unset;
+    }
+
+    .bg-image--desktop {
+        display: none;
+    }
+
+    /* Trunk/grass photo shows at its complete, uncropped height */
+    .custom-featured-product__media {
+        position: relative;
+        top: auto;
+        right: auto;
+        width: 100%;
+        height: auto;
+    }
+
+    .bg-image--right.bg-image--mobile {
+        display: block;
+        position: static;
+        width: 100%;
+        height: auto;
+    }
+
+    .custom-featured-product-container .page-width {
+        position: static;
+        transform: none;
+        top: auto;
+        left: auto;
+        height: auto;
+        width: 100%;
+        max-width: none;
+        padding: 0;
+        margin: 0;
+        display: block;
+    }
+
+    /* Sizes itself to wrap just the card (so the pattern image below
+       can fill exactly that box), keeping .custom-featured-product-right
+       positioned against the container/photo instead. */
+    .custom-featured-product-left-wrap {
+        display: grid;
+        position: relative;
+    }
+
+    /* Patterned image sizes itself to the wrapper, which is itself
+       sized to fit the card's content — no viewport units. Sharing a
+       grid cell with .custom-featured-product-left lets the card be
+       centered with align-self instead of transform, since GSAP owns
+       transform on that element for the intro animation. */
+    .custom-featured-product__panel--desktop.custom-featured-product__panel {
+        display: none;
+    }
+
+    .custom-featured-product__panel--mobile.custom-featured-product__panel {
+        display: block;
+        grid-area: 1 / 1;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+
+    /* Overlays the top of .bg-image--right.bg-image--mobile, which is
+       the first element in normal flow inside the container. */
+    .custom-featured-product-right {
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        z-index: 2;
+        box-sizing: border-box;
+        padding: 40px 0 0;
+        align-items: flex-start;
+    }
+.custom-featured-product-container--reversed .custom-featured-product-right{
+    left: unset;
+    right: 0;
+    justify-content: end;
+}
+    .custom-featured-product-right hr {
+        width: 47%;
+    }
+
+    .custom-featured-product-right p {
+        font-size: var(--font-featured-product-caption-size-mobile);
+        letter-spacing: var(--font-featured-product-caption-letter-spacing-mobile);
+    }
+
+    .custom-featured-product-left {
+        grid-area: 1 / 1;
+        align-self: center;
+        justify-self: end;
+        /* A floor, not a fixed gap: the stacked card's copy usually fills it,
+           leaving space-between nothing to distribute and the three blocks
+           touching. Any slack beyond this still splits evenly. */
+        gap: 24px;
+        height: auto;
+        padding: 28px 24px 32px;
+        box-sizing: border-box;
+        width: calc(100% - 2.8rem);
+        min-height: 70%;
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+
+    .custom-featured-product-left-inner_upper {
+        margin-top: 0;
+    }
+
+    .custom-featured-product-left-inner_upper p:nth-child(1) {
+        font-size: var(--font-label-size-mobile);
+        letter-spacing: var(--font-label-letter-spacing-mobile);
+        margin-bottom: 14px;
+    }
+
+    .custom-featured-product-left-inner_upper p:nth-child(2) {
+        font-size: var(--font-featured-product-heading-size-mobile);
+        line-height: var(--font-featured-product-heading-line-height-mobile);
+        font-weight: var(--font-featured-product-heading-weight-mobile);
+        letter-spacing: var(--font-featured-product-heading-letter-spacing-mobile);
+    }
+
+    .custom-featured-product-left-description p {
+        gap: 16px;
+        margin-top: 14px;
+        font-size: var(--font-body-size-mobile) !important;
+        font-weight: var(--font-body-weight-mobile) !important;
+        line-height: var(--font-body-line-height-mobile) !important;
+    }
+
+    .custom-featured-product-left .custom-featured-product-left-description p {
+        font-size: var(--font-body-size-mobile);
+        line-height: 22px;
+    }
+
+    .custom-featured-product__purchase {
+        gap: 14px;
+    }
+
+    .custom-featured-product-left .custom-featured-product__size,
+    .custom-featured-product-left .custom-featured-product__meta-divider,
+    .custom-featured-product-left .custom-featured-product__price {
+        font-size: var(--font-featured-product-price-size-mobile);
+        line-height: var(--font-featured-product-price-line-height-mobile);
+    }
+
+    .custom-featured-product-left .custom-featured-product__tax-note {
+        font-size: var(--font-featured-product-tax-note-size-mobile);
+        line-height: var(--font-featured-product-tax-note-line-height-mobile);
+    }
+
+    /* iOS/Android lay Helvetica Neue out by its hhea metrics (714/-191),
+       which put the digits ~0.09em above the centre of the line; Windows
+       uses the taller win metrics (900/-214), where they land dead centre.
+       The nudge is mobile-only for that reason -- the signs already sit
+       centred under hhea and are left alone. */
+    .custom-featured-product__quantity .quantity__input {
+        font-size: var(--font-featured-product-qty-value-size-mobile);
+        line-height: var(--font-featured-product-qty-sign-line-height-mobile);
+        transform: translateY(0.09em);
+    }
+
+    .custom-featured-product__quantity .quantity__button {
+        line-height: var(--font-featured-product-qty-sign-line-height-mobile);
+    }
+
+    .custom-featured-product__quantity .quantity__button[name='minus'] {
+        font-size: var(--font-featured-product-qty-minus-size-mobile);
+    }
+
+    .custom-featured-product__quantity .quantity__button[name='plus'] {
+        font-size: var(--font-featured-product-qty-plus-size-mobile);
+    }
+
+    .custom-featured-product-left-inner_lower button {
+        font-size: var(--font-featured-product-cta-size-mobile);
+    }
+
+    .custom-featured-product-left-cta_container {
+        padding-right: 0;
+    }
+
+    .custom-featured-product-left-cta_container img {
+        width: 48px !important;
+    }
+
+    .custom-featured-product-container .page-width {
+        height: unset !important;
+    }
+
+    /* Reversed: card gutter moves to the right edge, and the caption
+       rail mirrors so the label sits against the left edge. */
+    .custom-featured-product-container--reversed .custom-featured-product-left {
+        justify-self: start;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .custom-featured-product-left {
+        padding: 48px 30px 48px;
+    }
+
+    .custom-featured-product-left-inner_upper p:nth-child(2) {
+        font-size: var(--font-featured-product-heading-size-xs);
+        line-height: var(--font-featured-product-heading-line-height-xs);
+    }
+}

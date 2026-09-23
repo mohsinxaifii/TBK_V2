@@ -1,0 +1,435 @@
+.custom-blogs-carousel-container {
+    position: relative;
+    width: 100%;
+    background: #570f13;
+}
+
+.custom-blogs-carousel-viewport {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    max-height: 1000px;
+}
+
+.custom-blogs-carousel-slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.custom-blogs-carousel-slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    z-index: 1;
+}
+
+@media screen and (min-width: 750px) {
+    .custom-blogs-carousel-slide {
+        flex-direction: row;
+    }
+}
+
+.custom-blogs-carousel-media {
+    position: relative;
+    width: 100%;
+    height: 340px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #2b0c0f;
+}
+
+@media screen and (min-width: 750px) {
+    .custom-blogs-carousel-media {
+        width: 50%;
+        height: 100%;
+    }
+}
+
+.custom-blogs-carousel-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 32%, rgba(0, 0, 0, 0) 68%, rgba(0, 0, 0, 0.4) 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.custom-blogs-carousel-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform-origin: center center;
+    will-change: transform, opacity;
+}
+
+.custom-blogs-carousel-tag {
+    position: absolute;
+    z-index: 2;
+    margin: 0;
+    font-family: var(--font-family-label);
+    font-size: var(--font-blogs-tag-size);
+    font-weight: var(--font-blogs-tag-weight);
+    letter-spacing: var(--font-blogs-tag-letter-spacing);
+    text-transform: uppercase;
+    color: #fffdee;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+    will-change: transform, opacity;
+}
+
+.custom-blogs-carousel-tag-1 {
+    top: 7%;
+    left: 7%;
+}
+
+.custom-blogs-carousel-tag-2 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.custom-blogs-carousel-tag-3 {
+    bottom: 7%;
+    right: 7%;
+}
+
+.custom-blogs-carousel-content {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    padding: 28px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+}
+
+@media screen and (min-width: 750px) {
+    .custom-blogs-carousel-content {
+        width: 50%;
+        height: 100%;
+        padding: 56px 56px 48px;
+        justify-content: flex-start;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .custom-blogs-carousel-content {
+        padding: 64px 72px 56px;
+    }
+}
+
+.custom-blogs-carousel-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    margin-bottom: 20px;
+    will-change: transform, opacity;
+}
+
+@media screen and (min-width: 750px) {
+    .custom-blogs-carousel-meta {
+        margin-bottom: 28px;
+    }
+}
+
+.custom-blogs-carousel-caption {
+    margin: 0;
+    font-family: var(--font-family-label);
+    font-size: var(--font-blogs-caption-size);
+    font-weight: var(--font-blogs-caption-weight);
+    letter-spacing: var(--font-blogs-caption-letter-spacing);
+    text-transform: uppercase;
+    color: #fffdee;
+}
+
+.custom-blogs-carousel-counter {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    font-family: var(--font-family-label);
+    font-size: var(--font-blogs-caption-size);
+    font-weight: var(--font-blogs-caption-weight);
+    letter-spacing: var(--font-blogs-caption-letter-spacing);
+    text-transform: uppercase;
+    color: #fffdee;
+    gap: 4px;
+}
+
+.custom-blogs-carousel-heading {
+    margin: 0 0 20px;
+    max-width: 92%;
+    font-family: var(--font-family-display);
+    font-size: 30px;
+    font-weight: var(--font-blogs-heading-weight);
+    line-height: var(--font-blogs-heading-line-height);
+    color: #fffdee;
+    will-change: transform, opacity;
+}
+
+@media screen and (min-width: 750px) {
+    .custom-blogs-carousel-heading {
+        max-width: 85%;
+        font-size: var(--font-blogs-heading-size-tablet);
+        margin-bottom: 28px;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .custom-blogs-carousel-heading {
+        margin-bottom: 32px;
+    }
+}
+
+.custom-blogs-carousel-description {
+    margin: auto 0 0;
+    max-width: 85%;
+    will-change: transform, opacity;
+}
+
+/* Mobile body role (see font-variables 3b), switching at the same 989px
+   breakpoint the reference section uses rather than this file's 750px one.
+   Colour is deliberately not part of the role: this copy sits on a
+   photograph and needs the light value. */
+.custom-blogs-carousel-description p {
+    margin: 0;
+    font-family: var(--font-family-body);
+    font-weight: var(--font-body-weight-mobile);
+    font-size: var(--font-body-size-mobile);
+    line-height: var(--font-body-line-height-mobile);
+    letter-spacing: var(--font-body-letter-spacing-mobile);
+    text-transform: none;
+    color: rgba(255, 253, 238, 0.85);
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@media screen and (min-width: 750px) {
+    .custom-blogs-carousel-description p {
+        line-clamp: 6;
+    }
+}
+
+@media screen and (min-width: 990px) {
+    .custom-blogs-carousel-description p {
+        font-size: var(--font-body-size);
+        font-weight: 300;
+        line-height: var(--font-body-line-height);
+        letter-spacing: var(--font-body-letter-spacing);
+    }
+}
+
+.custom-blogs-carousel-cta {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    max-width: 85%;
+    text-decoration: none;
+    will-change: transform, opacity;
+}
+
+@media screen and (min-width: 750px) {
+    .custom-blogs-carousel-cta {
+        margin-top: 28px;
+    }
+}
+
+.custom-blogs-carousel-cta-text {
+    font-family: var(--font-family-display);
+    font-size: var(--font-blogs-cta-size);
+    letter-spacing: var(--font-blogs-cta-letter-spacing);
+    color: #fffdee;
+}
+
+.custom-blogs-carousel-cta-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fffdee;
+    transition: transform 0.3s ease;
+}
+
+.custom-blogs-carousel-cta-arrow-icon {
+    width: 40px;
+    height: auto;
+    display: block;
+}
+
+.custom-blogs-carousel-cta:hover .custom-blogs-carousel-cta-arrow {
+    transform: translateX(6px);
+}
+
+.custom-blogs-carousel-nav {
+    position: absolute;
+    top: 170px;
+    transform: translateY(-50%);
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid rgba(255, 253, 238, 0.55);
+    border-radius: 50%;
+    background: rgba(255, 253, 238, 0.12);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #fffdee;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.custom-blogs-carousel-nav:hover {
+    background: rgba(255, 253, 238, 0.24);
+    border-color: #fffdee;
+}
+
+.custom-blogs-carousel-nav:active {
+    transform: translateY(-50%) scale(0.92);
+}
+
+.custom-blogs-carousel-nav-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.custom-blogs-carousel-nav-prev {
+    left: 16px;
+}
+
+.custom-blogs-carousel-nav-next {
+    right: 16px;
+}
+
+.custom-blogs-carousel-nav-next .custom-blogs-carousel-nav-icon {
+    transform: rotate(180deg);
+}
+
+@media screen and (min-width: 750px) {
+    .custom-blogs-carousel-nav {
+        top: 50%;
+        width: 52px;
+        height: 52px;
+    }
+
+    .custom-blogs-carousel-nav-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .custom-blogs-carousel-nav-prev {
+        left: 28px;
+    }
+
+    .custom-blogs-carousel-nav-next {
+        right: 28px;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .custom-blogs-carousel-nav-prev {
+        left: 40px;
+    }
+
+    .custom-blogs-carousel-nav-next {
+        right: 40px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .custom-blogs-carousel-image,
+    .custom-blogs-carousel-tag,
+    .custom-blogs-carousel-heading,
+    .custom-blogs-carousel-description,
+    .custom-blogs-carousel-cta,
+    .custom-blogs-carousel-meta {
+        transition: none !important;
+    }
+}
+
+/* Mobile: no fixed 100vh box and no image cropping. The viewport's
+   height is set inline by custom-blogs-carousel.js to match the
+   active slide's natural (image + content) height and updates on
+   slide change and resize. */
+@media screen and (max-width: 749px) {
+    .custom-blogs-carousel-heading {
+        font-size: var(--font-section-heading-size-mobile);
+        line-height: var(--font-section-heading-line-height-mobile);
+    }
+
+    .custom-blogs-carousel-caption,
+    .custom-blogs-carousel-counter {
+        font-size: var(--font-label-size-mobile);
+        line-height: var(--font-label-line-height-mobile);
+        font-weight: var(--font-label-weight-mobile);
+        letter-spacing: var(--font-label-letter-spacing-mobile);
+    }
+
+    .custom-blogs-carousel-tag {
+        font-size: var(--font-label-size-mobile);
+        line-height: var(--font-label-line-height-mobile);
+        font-weight: var(--font-label-weight-mobile);
+        letter-spacing: var(--font-label-letter-spacing-mobile);
+    }
+
+    .custom-blogs-carousel-description p:first-of-type {
+        margin-top: 90px !important;
+    }
+
+    .custom-blogs-carousel-cta-text {
+        font-size: var(--font-cta-size-mobile);
+        text-decoration: underline 1px;
+        text-underline-offset: 4px;
+    }
+
+    .custom-blogs-carousel-description {
+        max-width: unset;
+    }
+
+    .custom-blogs-carousel-cta {
+        max-width: unset;
+    }
+
+    .custom-blogs-carousel-cta-arrow-icon {
+        width: 30px;
+    }
+
+    .custom-blogs-carousel-viewport {
+        height: auto;
+        overflow: visible;
+        transition: height 0.35s ease;
+    }
+
+    .custom-blogs-carousel-media {
+        height: auto;
+    }
+
+    .custom-blogs-carousel-image {
+        position: static;
+        display: block;
+        height: auto;
+        object-fit: unset;
+    }
+
+}
+
+@media screen and (max-width: 749px) and (prefers-reduced-motion: reduce) {
+    .custom-blogs-carousel-viewport {
+        transition: none;
+    }
+}

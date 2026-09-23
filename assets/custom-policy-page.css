@@ -1,0 +1,296 @@
+.policy-page__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.policy-page__title {
+  margin: 0;
+  text-align: left;
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--font-policy-title-letter-spacing);
+  margin-top: 50px;
+  margin-bottom: 20px;
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.policy-page__layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.policy-page__content p,
+.policy-page__content span {
+  margin: 0 0 40px 0;
+  font-family: var(--font-family-body);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  font-weight: var(--font-body-copy-weight);
+  letter-spacing: var(--font-body-letter-spacing);
+}
+
+@media screen and (min-width: 750px) {
+  .policy-page__layout {
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 48px;
+  }
+
+  .policy-page__title {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .policy-page__nav {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .policy-page__content {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  /* Mobile-only dropdown nav (see .policy-page__nav-mobile below) */
+  .policy-page__nav-mobile {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 749px) {
+
+  /* The sidebar nav is desktop-only below 750px — .policy-page__nav-mobile
+     (rendered after .policy-page__content, so it lands underneath it) is
+     the dropdown replacement instead. */
+  .policy-page__nav {
+    display: none;
+  }
+}
+
+.policy-page__nav {
+  align-self: start;
+}
+
+@media screen and (min-width: 750px) {
+  .policy-page__nav {
+    position: sticky;
+    top: 32px;
+  }
+}
+
+.policy-page__nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  border-radius: 4px;
+}
+
+.policy-page__nav-item {
+  margin: 0;
+}
+
+.policy-page__nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #181818;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-policy-nav-link-size);
+  line-height: 27px;
+  letter-spacing: .5px;
+}
+
+.policy-page__nav-link:hover {
+  opacity: 1;
+}
+
+.policy-page__nav-dot {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  position: relative;
+}
+
+.policy-page__nav-dot::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.policy-page__nav-link--active .policy-page__nav-dot::after {
+  opacity: 1;
+}
+
+.policy-page__nav-mobile {
+  margin-top: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.policy-page__nav-mobile-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 24px;
+  list-style: none;
+  cursor: pointer;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-policy-nav-mobile-summary-size);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.policy-page__nav-mobile-summary::-webkit-details-marker {
+  display: none;
+}
+
+.policy-page__nav-mobile-icon {
+  flex-shrink: 0;
+  display: flex;
+  width: 12px;
+  transform-origin: 50% 50%;
+}
+
+.policy-page__nav-mobile-icon .icon-caret {
+  position: static;
+  width: 100%;
+  height: auto;
+  right: auto;
+  top: auto;
+}
+
+/* Instant fallback rotation for when JS/GSAP isn't driving the icon (see
+   custom-policy-page.js, which adds --js only once it takes over). Scoped
+   away from the JS case so the two never fight over the transform property
+   at the same time — that fight was what made the icon appear to drift
+   sideways instead of rotating cleanly in place. */
+.policy-page__nav-mobile[open]:not(.policy-page__nav-mobile--js) .policy-page__nav-mobile-icon {
+  transform: rotate(180deg);
+}
+
+.policy-page__nav-mobile-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color: #fffdee;
+}
+
+.policy-page__nav-mobile-item+.policy-page__nav-mobile-item {
+  border-top: 1px solid rgba(24, 24, 24, 0.12);
+}
+
+.policy-page__nav-mobile-link {
+  display: block;
+  padding: 16px 24px;
+  text-decoration: none;
+  color: #181818;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-policy-nav-mobile-link-size);
+  letter-spacing: .5px;
+}
+
+.policy-page__content>*+* {
+  margin-top: 1.6em;
+}
+
+.policy-page__content h2 {
+  font-size: 2.2rem;
+  margin: 0 0 0.6em;
+}
+
+.policy-page__content h3,
+.policy-page__content h3 span {
+  font-size: var(--font-policy-subheading-size);
+  margin: 0 0 20px;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+/* Bulleted clauses are new to this content -- .rte only sets list-style and
+   padding, so the list items had no body type of their own. */
+.policy-page__content ul {
+  margin: 0 0 40px;
+  padding-left: 2.4rem;
+  list-style-position: outside;
+}
+
+.policy-page__content li {
+  margin: 0 0 8px;
+  font-family: var(--font-family-body);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  font-weight: var(--font-body-copy-weight);
+  letter-spacing: var(--font-body-letter-spacing);
+}
+
+/* A list that closes a clause sits directly above the next heading, which
+   already brings its own top margin. */
+.policy-page__content ul:last-child {
+  margin-bottom: 0;
+}
+
+@media(max-width:768px) {
+  .policy-page-template--21411759521986__custom_policy_page_gXU97p-padding {
+    padding-bottom: 0 !important;
+  }
+
+  .policy-page__inner {
+    padding: 0;
+  }
+
+  .policy-page__title {
+    padding: 0 1.5rem 0 !important;
+    margin: 20px 0 0;
+  }
+
+  .policy-page__content {
+    padding: 0 1.5rem !important;
+  }
+
+  .policy-page__content h3,
+  .policy-page__content h3 span {
+    font-size: var(--font-subheading-size-mobile) !important;
+    line-height: var(--font-subheading-line-height-mobile);
+  }
+
+  /* Body role. The h3 span above out-specifies this, so it keeps its own
+     weight and tracking. */
+  .policy-page__content p,
+  .policy-page__content span {
+    margin: 0 0 30px 0;
+    font-size: var(--font-body-size-mobile);
+    line-height: var(--font-body-line-height-mobile);
+    font-weight: var(--font-body-weight-mobile);
+    letter-spacing: var(--font-body-letter-spacing-mobile);
+  }
+
+  .policy-page__content ul {
+    margin-bottom: 30px;
+  }
+
+  .policy-page__content li {
+    font-size: var(--font-body-size-mobile);
+    line-height: var(--font-body-line-height-mobile);
+    font-weight: var(--font-body-weight-mobile);
+    letter-spacing: var(--font-body-letter-spacing-mobile);
+  }
+}

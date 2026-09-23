@@ -1,0 +1,186 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "page_top_banner_JWFV3E": {
+      "type": "page-top_banner",
+      "name": "Page Top Banner",
+      "settings": {
+        "media_type": "image"
+      }
+    },
+    "custom_story_text_intro": {
+      "type": "custom-story-text",
+      "name": "Custom Story Text",
+      "settings": {
+        "layout": "split",
+        "heading": "Preserving India's culinary\ninheritance.",
+        "body": "<p>Not every tradition survives because it is written. Some survive because someone refuses to change them.</p>"
+      }
+    },
+    "custom_inset_image_1": {
+      "type": "custom-inset-image",
+      "name": "Custom Inset Image",
+      "settings": {
+        "video": "shopify://files/videos/TBK (1).mp4",
+        "video_ratio_desktop": "2.5",
+        "image": "shopify://shop_images/tbk-about-inset-1-desktop-v2.png",
+        "image_mobile": "shopify://shop_images/tbk-about-inset-1-mobile-v2.png"
+      }
+    },
+    "custom_story_text_places": {
+      "type": "custom-story-text",
+      "name": "Custom Story Text",
+      "settings": {
+        "layout": "stacked",
+        "heading": "There was a time when recipes belonged to places.",
+        "body": "<p>Before food became categories, it belonged to landscapes. To deserts where moth beans learned to survive impossible summers. To coastal villages where salt carried its own character. To mountain homes where smoke became an ingredient. Recipes were never invented in isolation. They were shaped by geography, climate, migration, trade, faith and memory. Every preparation carried the fingerprint of the place that created it. Today those distinctions are slowly disappearing. Not because the recipes have been forgotten. Because the reasons behind them have.</p>"
+      }
+    },
+    "custom_inset_image_2": {
+      "type": "custom-inset-image",
+      "name": "Custom Inset Image",
+      "settings": {
+        "image": "shopify://shop_images/tbk-about-inset-2-desktop-v2.png",
+        "image_mobile": "shopify://shop_images/tbk-about-inset-2-mobile-v2.png"
+      }
+    },
+    "custom_practices_main": {
+      "type": "custom-practices",
+      "blocks": {
+        "practice_1": {
+          "type": "practice",
+          "settings": {
+            "label": "Single-use oil",
+            "description": "Because it preserves clarity."
+          }
+        },
+        "practice_2": {
+          "type": "practice",
+          "settings": {
+            "label": "Bhatti cooking",
+            "description": "Because fire cannot always be standardised."
+          }
+        },
+        "practice_3": {
+          "type": "practice",
+          "settings": {
+            "label": "Small batches",
+            "description": "Because attention does not scale infinitely."
+          }
+        },
+        "practice_4": {
+          "type": "practice",
+          "settings": {
+            "label": "Regional ingredients",
+            "description": "Because origin shapes every recipe."
+          }
+        },
+        "practice_5": {
+          "type": "practice",
+          "settings": {
+            "label": "Hand-guided preparation",
+            "description": "Because judgement remains the finest instrument."
+          }
+        }
+      },
+      "block_order": [
+        "practice_1",
+        "practice_2",
+        "practice_3",
+        "practice_4",
+        "practice_5"
+      ],
+      "name": "Custom Practices",
+      "settings": {
+        "heading": "We are not historians.\nWe are practitioners.",
+        "body": "<p>Our responsibility is not to recreate nostalgia. It is to preserve methods whose value continues to reveal itself with time. Every batch is an opportunity to ask a simple question: Has anything unnecessary changed? If the answer is yes - we begin again.</p>",
+        "image": "shopify://shop_images/tbk-about-practices-desktop-v2.png",
+        "image_mobile": "shopify://shop_images/tbk-about-practices-mobile-v2.png",
+        "background_color": "#fffdee"
+      }
+    },
+    "custom_highlight_banner_ambition": {
+      "type": "custom-highlight-banner",
+      "name": "Custom Highlight Banner",
+      "settings": {
+        "eyebrow": "The Ambition",
+        "heading": "To become a living archive of recipes, landscapes, ingredients, craftsmanship and traditions that deserve to endure.",
+        "body": "<p>India's culinary heritage has never been defined by recipes alone. It is shaped by landscapes, trade routes, craftsmanship, communities and generations of quiet refinement. Every method carries a reason, every ingredient a place of origin, and every tradition a way of seeing the world. The Bikaneri Kitchen exists to preserve this inheritance with honesty and care. Through our recipes, archives and stories, we celebrate the people, practices and regional wisdom that continue to shape Indian food culture. We believe a recipe is also preserving the memory of a place, the discipline of its people, and a legacy worthy of being carried forward.</p>",
+        "eyebrow_color": "#FFFDEE",
+        "heading_color": "#FFFDEE",
+        "background_color": "#C0A959"
+      }
+    },
+    "custom_people_craft": {
+      "type": "custom-people-craft",
+      "name": "Custom People Craft",
+      "blocks": {
+        "person_jai": {
+          "type": "person",
+          "settings": {
+            "image": "shopify://shop_images/tbk-about-craft-jai.png",
+            "image_mobile": "shopify://shop_images/tbk-about-craft-jai-mobile.png",
+            "image_position": "left",
+            "eyebrow": "FOUNDER",
+            "name": "Jai Agarwal",
+            "text": "<p>20+ years of experience in the Indian food industry. Deep rooted connection to Bikaner and its culinary heritage. Dedicated to sharing the authentic flavors of Bikaner across India and beyond.</p><p>Leads four growing food brands, each with a distinct expression of Indian cuisine. Guided by tradition, and  craftsmanship. </p>"
+          }
+        },
+        "person_deepak": {
+          "type": "person",
+          "settings": {
+            "image": "shopify://shop_images/tbk-about-craft-deepak.png",
+            "image_mobile": "shopify://shop_images/tbk-about-craft-deepak-mobile.png",
+            "image_position": "right",
+            "eyebrow": "STRATEGIC PARTNER",
+            "name": "Deepak Agarwal",
+            "text": "<p>With 21+ years of extensive experience in the food industry, specializing in ethnic snacks and sweets, Mr. Deepak Agarwal provides strategic direction and business insights to the Company. Brings deep industry expertise and institutional knowledge to support long-term business strategy, sustainable growth, innovation and operational excellence. Provides strategic oversight across business to help strengthen the Company’s premium position and drive long-term value creation.</p>"
+          }
+        }
+      },
+      "block_order": ["person_jai", "person_deepak"],
+      "settings": {
+        "heading": "Behind The Craft",
+        "text_color": "#181818",
+        "background_color": "#FFFDEE"
+      }
+    },
+    "custom_bg_heading_gwzayb": {
+      "type": "custom-bg-heading",
+      "name": "Custom BG Heading",
+      "settings": {
+        "heading": "Follow Us",
+        "heading_color": "#ff6344",
+        "background_color": "#570f13"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "page_top_banner_JWFV3E",
+    "custom_story_text_intro",
+    "custom_inset_image_1",
+    "custom_story_text_places",
+    "custom_inset_image_2",
+    "custom_practices_main",
+    "custom_highlight_banner_ambition",
+    "custom_people_craft",
+    "custom_bg_heading_gwzayb"
+  ]
+}

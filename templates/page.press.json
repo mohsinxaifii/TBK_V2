@@ -1,0 +1,65 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "custom_press_banner_qyGHpw": {
+      "type": "custom-press-banner",
+      "name": "Press Banner",
+      "settings": {
+        "overlay_opacity": 0,
+        "eyebrow": "Featured In",
+        "heading": "Lorem ipsum dolor sit amet consectetur.",
+        "body": "<p>Lorem ipsum dolor sit amet consectetur. Rhoncus semper a eu lectus viverra nunc eget ligula. Purus auctor id vitae amet massa neque pharetra.</p>",
+        "background_color": "#d0aa5d",
+        "text_color": "#181818",
+        "min_height": 420
+      }
+    },
+    "custom_press_articles_grid_FXybtn": {
+      "type": "custom-press-articles-grid",
+      "name": "Press Articles Grid",
+      "settings": {
+        "heading": "Featured Articles",
+        "blog": "archive",
+        "posts_to_show": 9,
+        "read_label": "Read",
+        "background_color": "#fffdee",
+        "text_color": "#121212",
+        "card_background_color": "#570f13",
+        "card_text_color": "#fffdee",
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
+    },
+    "custom_bg_heading_xfjNxk": {
+      "type": "custom-bg-heading",
+      "name": "Custom BG Heading",
+      "settings": {
+        "heading": "Follow Us",
+        "heading_color": "#ff6344",
+        "background_color": "#570f13"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "custom_press_banner_qyGHpw",
+    "custom_press_articles_grid_FXybtn",
+    "custom_bg_heading_xfjNxk"
+  ]
+}

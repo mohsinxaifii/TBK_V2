@@ -1,0 +1,309 @@
+{{ 'custom-contact-page.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'custom-contact-page.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --contact-page-row-gap: {{ section.settings.row_gap }}px;
+  }
+
+  #shopify-section-{{ section.id }} .contact-page__intro {
+    background-color: {{ section.settings.intro_background_color }};
+    color: {{ section.settings.intro_text_color }};
+  }
+
+  #shopify-section-{{ section.id }} .contact-page__form {
+    background-color: {{ section.settings.form_background_color }};
+    color: {{ section.settings.form_text_color }};
+  }
+{%- endstyle -%}
+
+<div class="contact-page">
+  <div class="contact-page__row contact-page__row--top">
+    <div class="contact-page__col contact-page__intro">
+      {%- if section.settings.heading != blank -%}
+        <h1 class="contact-page__title section-heading{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+          {{ section.settings.heading | escape }}
+        </h1>
+      {%- endif -%}
+      {%- liquid
+        assign has_info_head = false
+        if section.settings.info_label != blank or section.settings.info_value != blank
+          assign has_info_head = true
+        endif
+      -%}
+      {%- if has_info_head or section.settings.body != blank -%}
+        <div class="contact-page__info{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+          {%- if has_info_head -%}
+            <p class="contact-page__info-head">
+              <span class="contact-page__info-head-label">{{ section.settings.info_label | escape }}</span>
+              <span class="contact-page__info-head-value">{{ section.settings.info_value | escape }}</span>
+            </p>
+            <hr class="contact-page__info-divider">
+          {%- endif -%}
+          {%- if section.settings.body != blank -%}
+            <div class="contact-page__rich-text rte">
+              {{ section.settings.body }}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="contact-page__col contact-page__image">
+      {%- if section.settings.image != blank -%}
+        <img
+          src="{{ section.settings.image | image_url: width: 1500 }}"
+          srcset="{{ section.settings.image | image_url: width: 750 }} 750w, {{ section.settings.image | image_url: width: 1500 }} 1500w"
+          sizes="(min-width: 750px) 50vw, 100vw"
+          alt="{{ section.settings.image.alt | escape }}"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+          loading="lazy"
+          class="contact-page__image-img"
+        >
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'contact-page__image-img placeholder-svg' }}
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="contact-page__row contact-page__row--bottom">
+    <div class="contact-page__col contact-page__map">
+      {%- liquid
+        assign map_src = section.settings.map_embed_url
+        if map_src contains '<iframe'
+          assign map_src = map_src | split: 'src="' | last | split: '"' | first
+        endif
+      -%}
+      {%- if map_src != blank -%}
+        <iframe
+          src="{{ map_src }}"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+          title="Map"
+        ></iframe>
+      {%- endif -%}
+    </div>
+
+    <div class="contact-page__col contact-page__form">
+      {%- if section.settings.form_heading != blank -%}
+        <h2 class="contact-page__form-heading section-heading">{{ section.settings.form_heading | escape }}</h2>
+      {%- endif -%}
+
+      {%- form 'contact', id: 'ContactPageForm', class: 'contact-page__form-el' -%}
+        {%- comment -%}
+          custom-contact-page.js swaps this container's contents in from the
+          background post's response, so keep it empty (no whitespace) when
+          there is no message: :empty hides it.
+        {%- endcomment -%}
+        <div class="contact-page__form-status">
+          {%- if form.posted_successfully? -%}
+            <h3 class="contact-page__form-message contact-page__form-message--success" tabindex="-1" autofocus>
+              {{ 'templates.contact.form.post_success' | t }}
+            </h3>
+          {%- elsif form.errors -%}
+            <div class="contact-page__form-message contact-page__form-message--error" role="alert" tabindex="-1" autofocus>
+              {{ 'templates.contact.form.error_heading' | t }}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="contact-page__field">
+          <input
+            class="contact-page__field-input"
+            autocomplete="name"
+            type="text"
+            id="ContactPageForm-name"
+            name="contact[{{ 'templates.contact.form.name' | t }}]"
+            value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+            placeholder="{{ section.settings.name_placeholder | escape }}"
+          >
+        </div>
+
+        <div class="contact-page__field">
+          <input
+            class="contact-page__field-input"
+            autocomplete="email"
+            type="email"
+            id="ContactPageForm-email"
+            name="contact[email]"
+            spellcheck="false"
+            autocapitalize="off"
+            value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+            aria-required="true"
+            placeholder="{{ section.settings.email_placeholder | escape }}"
+          >
+        </div>
+
+        <div class="contact-page__field">
+          <input
+            class="contact-page__field-input"
+            type="tel"
+            id="ContactPageForm-phone"
+            autocomplete="tel"
+            name="contact[{{ 'templates.contact.form.phone' | t }}]"
+            pattern="[0-9\-]*"
+            value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+            placeholder="{{ section.settings.phone_placeholder | escape }}"
+          >
+        </div>
+
+        <div class="contact-page__field">
+          <textarea
+            class="contact-page__field-input"
+            rows="4"
+            id="ContactPageForm-body"
+            name="contact[{{ 'templates.contact.form.comment' | t }}]"
+            placeholder="{{ section.settings.message_placeholder | escape }}"
+          >{{ form.body }}</textarea>
+        </div>
+
+        <button type="submit" class="contact-page__submit">
+          {{ section.settings.submit_label | escape }}
+          {%- render 'loading-spinner' -%}
+        </button>
+      {%- endform -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Contact Page",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Intro"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Contact Us"
+    },
+    {
+      "type": "text",
+      "id": "info_label",
+      "label": "Info heading (left)",
+      "default": "COMPANY INFORMATION"
+    },
+    {
+      "type": "text",
+      "id": "info_value",
+      "label": "Info heading (right)",
+      "default": "The Bikaneri Kitchen"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Text",
+      "info": "One paragraph per row. Wrap the label in bold and it sits above its value.",
+      "default": "<p><strong>LEGAL NAME</strong>Better For You Foods Private Limited</p><p><strong>ADDRESS</strong>Opposite Income Tax Office, Beside GCK Tower, Bikaner, Rajasthan - 334001</p><p><strong>EMAIL ID</strong>hello@thebikanerikitchen.com</p><p><strong>PHONE NUMBER</strong>+91 9521001244</p><p><strong>GST NUMBER</strong>08AAECF7831P1Z1</p>"
+    },
+    {
+      "type": "color",
+      "id": "intro_background_color",
+      "label": "Background color",
+      "default": "#fffdee"
+    },
+    {
+      "type": "color",
+      "id": "intro_text_color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Map"
+    },
+    {
+      "type": "text",
+      "id": "map_embed_url",
+      "label": "Google Maps embed URL",
+      "info": "Paste the src URL, or the whole <iframe> embed code, from Google Maps' 'Embed a map' panel."
+    },
+    {
+      "type": "header",
+      "content": "Form"
+    },
+    {
+      "type": "text",
+      "id": "form_heading",
+      "label": "Heading",
+      "default": "Get in Touch!"
+    },
+    {
+      "type": "color",
+      "id": "form_background_color",
+      "label": "Background color",
+      "default": "#fffdee"
+    },
+    {
+      "type": "color",
+      "id": "form_text_color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "type": "text",
+      "id": "name_placeholder",
+      "label": "Name field placeholder",
+      "default": "Name"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email field placeholder",
+      "default": "E-Mail"
+    },
+    {
+      "type": "text",
+      "id": "phone_placeholder",
+      "label": "Phone field placeholder",
+      "default": "Phone Number"
+    },
+    {
+      "type": "text",
+      "id": "message_placeholder",
+      "label": "Message field placeholder",
+      "default": "Tell us something you want to know."
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit button label",
+      "default": "Submit"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "row_gap",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap between rows",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Page"
+    }
+  ]
+}
+{% endschema %}

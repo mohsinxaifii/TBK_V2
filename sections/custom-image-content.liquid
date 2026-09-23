@@ -1,0 +1,117 @@
+{{ 'custom-image-content.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'custom-image-content.js' | asset_url }}" defer="defer"></script>
+
+{%- capture chevron_icon -%}
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <path d="M14.5 6L9 12L14.5 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+{%- endcapture -%}
+
+<div
+  style="background: url({{ section.settings.bg_image | image_url }})"
+  class="custom-image-content-container"
+  id="CustomImageContent-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="custom-image-content-viewport">
+    {%- for block in section.blocks -%}
+      <div
+        class="custom-image-content-slide{% if forloop.first %} is-active{% endif %}"
+        {{ block.shopify_attributes }}
+      >
+        <div class="page-width custom-image-content-inner">
+          <div
+            class="custom-image-content-image"
+            style="--portrait-ratio: {{ block.settings.portrait.aspect_ratio | default: 0.8 }};"
+          >
+            <img
+              src="{{ block.settings.portrait | image_url }}"
+              alt=""
+              width="{{ block.settings.portrait.width }}"
+              height="{{ block.settings.portrait.height }}"
+              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+            >
+          </div>
+          <div class="custom-image-content-inner-container">
+            <p>{{ block.settings.header }}</p>
+            <h3>{{ block.settings.title }}</h3>
+            <div class="custom-image-content-description">
+              {{ block.settings.content }}
+            </div>
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- if section.blocks.size > 1 -%}
+    <button
+      type="button"
+      class="custom-image-content-nav custom-image-content-nav-prev"
+      aria-label="{{ 'general.slider.previous_slide' | t }}"
+      aria-controls="CustomImageContent-{{ section.id }}"
+    >
+      <span class="custom-image-content-nav-icon">{{ chevron_icon }}</span>
+    </button>
+    <button
+      type="button"
+      class="custom-image-content-nav custom-image-content-nav-next"
+      aria-label="{{ 'general.slider.next_slide' | t }}"
+      aria-controls="CustomImageContent-{{ section.id }}"
+    >
+      <span class="custom-image-content-nav-icon">{{ chevron_icon }}</span>
+    </button>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Custom Image Content",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "portrait",
+          "label": "Portrait Image"
+        },
+        {
+          "type": "text",
+          "id": "header",
+          "label": "Header Text"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title Text"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Image Content",
+      "blocks": [
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

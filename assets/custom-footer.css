@@ -1,0 +1,201 @@
+/* Spacing follows the Figma footer frame (node 1518:3921): a 1440 frame with
+   64px gutters and 80px top/bottom padding, and a uniform 40px between every
+   row — icons, wordmark, nav, divider, copyright. */
+
+/* The shared .page-width is 1400 max / 50px gutters, which leaves the footer
+   12px narrower than the design. Overridden here so the footer's content box
+   is the design's 1312. */
+@media screen and (min-width: 990px) {
+  .custom-footer .page-width {
+    max-width: 144rem;
+    padding-left: 6.4rem;
+    padding-right: 6.4rem;
+  }
+}
+
+/* Row 1 — decorative icons */
+.custom-footer__icons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 4rem;
+}
+
+.custom-footer__icon {
+  display: block;
+  line-height: 0;
+  will-change: transform;
+}
+
+.custom-footer__icon svg,
+.custom-footer__icon img {
+  display: block;
+  height: auto;
+  object-fit: contain;
+}
+
+.custom-footer__icon--one svg,
+.custom-footer__icon--one img {
+  width: clamp(1.8rem, 2.1vw, 2.5rem);
+  color: var(--custom-footer-accent);
+}
+
+.custom-footer__icon--two svg,
+.custom-footer__icon--two img {
+  width: clamp(3rem, 1.8vw, 6.1rem);
+  color: rgb(var(--color-foreground));
+}
+
+.custom-footer__icon--three svg,
+.custom-footer__icon--three img {
+  width: clamp(2rem, 2.3vw, 2.7rem);
+  color: var(--custom-footer-accent);
+}
+
+/* Brand wordmark */
+.custom-footer__brand {
+  margin: 0 0 4rem;
+  text-align: center;
+  font-family: var(--font-family-wordmark);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  color: rgb(var(--color-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 0.94;
+  font-size: clamp(3.4rem, 8.4vw, 8.8rem);
+}
+
+.custom-footer__brand--image img {
+  display: inline-block;
+  width: 100%;
+  height: auto;
+}
+
+/* Row 2 — menus + social */
+.custom-footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2.6rem 4rem;
+  margin: 0 0 4rem;
+}
+
+.custom-footer__lists {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem 8rem;
+}
+
+.custom-footer__list-col {
+  min-width: 0;
+}
+
+.custom-footer__list-heading {
+  margin: 0 0 0.9rem;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(var(--color-foreground), 0.65);
+}
+
+.custom-footer__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.custom-footer__link {
+  color: var(--custom-footer-accent);
+  text-decoration: none;
+  font-size: var(--font-footer-link-size);
+  line-height: var(--font-footer-link-line-height);
+  letter-spacing: var(--font-footer-link-letter-spacing);
+  transition: opacity 0.2s ease;
+  font-family: var(--font-family-label);
+  font-weight: var(--font-footer-link-weight);
+}
+
+.custom-footer__link:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+/* Note — script paragraph sitting opposite the menu columns.
+   Figma: 505px column, Beaurencourt FY 20/32, 0.4px tracking, accent colour. */
+.custom-footer__note {
+  flex: 0 1 50.5rem;
+  max-width: 50.5rem;
+  color: var(--custom-footer-accent);
+  font-family: var(--font-family-script);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-footer-note-size);
+  line-height: var(--font-footer-note-line-height);
+  letter-spacing: var(--font-footer-note-letter-spacing);
+}
+
+.custom-footer__note p {
+  margin: 0;
+}
+
+.custom-footer__note p + p {
+  margin-top: 1.2rem;
+}
+
+/* Divider */
+.custom-footer__divider {
+  display: block;
+  height: 0;
+  border: none;
+  border-top: 1px solid var(--custom-footer-accent);
+  opacity: 0.35;
+  margin: 0 0 4rem;
+}
+
+/* Copyright */
+.custom-footer__copyright {
+  margin: 0;
+  font-size: var(--font-footer-copyright-size);
+  line-height: var(--font-footer-copyright-line-height);
+  letter-spacing: var(--font-footer-copyright-letter-spacing);
+  color: #FF6344;
+  font-family: var(--font-family-label);
+  font-weight: var(--font-footer-copyright-weight);
+}
+
+@media screen and (max-width: 749px) {
+  .custom-footer__icons,
+  .custom-footer__brand,
+  .custom-footer__nav,
+  .custom-footer__divider {
+    margin-bottom: 2.6rem;
+  }
+
+  .custom-footer__nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Two-up grid: three menu columns become 2 + 1 rather than one tall stack.
+     The base rule's 80px column gap is a desktop measure, so it's reset too. */
+  .custom-footer__lists {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .8rem 2rem;
+    width: 100%;
+  }
+
+  /* .custom-footer__nav turns into a column here, so the note stacks under the
+     menus and takes the full width rather than its 505px design measure. */
+  .custom-footer__note {
+    flex: 1 1 auto;
+    max-width: none;
+    font-size: var(--font-footer-note-size-mobile);
+    line-height: var(--font-footer-note-line-height-mobile);
+  }
+}

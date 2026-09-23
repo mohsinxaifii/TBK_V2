@@ -1,0 +1,150 @@
+.custom-home_values-container {
+    background-color: #F7EEE5;
+}
+
+.custom-home_values-heading {
+    margin: 0;
+    padding: 120px 0 20px;
+    width: 70%;
+}
+
+.custom-home_values-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    padding-bottom: 120px;
+}
+
+.custom-home_values-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 17%;
+}
+
+.custom-home_values-item-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.custom-home_values-icon {
+    display: flex;
+    width: 100%;
+    height: auto;
+}
+
+.custom-home_values-title {
+    color: #181818;
+    text-align: center;
+    margin: 15px 0 0;
+    font-size: var(--font-value-title-size);
+    font-family: var(--font-family-body);
+    width: 90%;
+    line-height: var(--font-body-line-height);
+    font-weight: 300;
+}
+
+@media screen and (min-width: 990px) and (hover: hover) and (pointer: fine) {
+    .custom-home_values-item {
+        cursor: pointer;
+    }
+}
+
+/* Cursor-following floater, styled and animated identically to
+   .custom-audio-player-cursor-tag (see custom-home-values.js) — the item's
+   own title is never touched; this shows block.settings.floater instead. */
+.custom-home_values-cursor-tag {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: none;
+    pointer-events: none;
+    will-change: transform;
+}
+
+.custom-home_values-cursor-tag.is-active {
+    display: flex;
+}
+
+.custom-home_values-cursor-tag-flip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 250px;
+    padding: 8px 15px;
+    background: #570f13;
+    color: #FFFDEE;
+    font-family: var(--font-family-label);
+    font-size: var(--font-audio-tag-size);
+    font-weight: 300;
+    letter-spacing: var(--font-audio-tag-letter-spacing);
+    text-wrap: wrap;
+    text-align: center;
+    opacity: 0;
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+.custom-home_values-cursor-tag-text-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+}
+
+.custom-home_values-cursor-tag-text {
+    display: inline-block;
+    vertical-align: top;
+    will-change: transform;
+    line-height: 18px;
+}
+
+@media (hover: none),
+(pointer: coarse) {
+    .custom-home_values-cursor-tag {
+        display: none !important;
+    }
+}
+
+.custom-home_values-item--extra {
+    display: none;
+}
+
+@media screen and (max-width: 749px) {
+    .custom-home_values-item--extra {
+        display: flex;
+        width: 18% !important;
+        padding-bottom: 30px;
+    }
+
+    .custom-home_values-heading {
+        padding: 40px 0 4px;
+        width: 100%;
+    }
+
+    .custom-home_values-inner {
+        gap: 28px;
+        padding-bottom: 44px;
+    }
+
+    .custom-home_values-item-container {
+        row-gap: 32px;
+        width: 93%;
+        align-items: center;
+    }
+
+    .custom-home_values-item {
+        width: 30%;
+    }
+
+    .custom-home_values-title {
+        margin-top: 14px;
+        font-size: var(--font-value-title-size-mobile);
+        line-height: var(--font-value-title-line-height-mobile);
+    }
+}

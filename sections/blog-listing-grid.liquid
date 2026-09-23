@@ -1,0 +1,288 @@
+{{ 'blog-listing-grid.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blog-listing-grid.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .blog-listing-grid-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-listing-grid-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  class="blog-listing-grid blog-listing-grid-{{ section.id }}-padding"
+  data-section-id="{{ section.id }}"
+  data-grid-layout="{{ section.settings.grid_layout }}"
+  style="background-color: {{ section.settings.background_color }}; color: {{ section.settings.text_color }}; --blog-listing-grid-bg: {{ section.settings.background_color }};"
+>
+  <div class="page-width blog-listing-grid-inner">
+    {%- if section.settings.subtitle != blank or section.settings.title != blank or section.settings.description != blank -%}
+      <div class="blog-listing-grid-heading">
+        {%- if section.settings.subtitle != blank -%}
+          <p class="blog-listing-grid-subtitle">{{ section.settings.subtitle }}</p>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="blog-listing-grid-title">{{ section.settings.title | newline_to_br }}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <div class="blog-listing-grid-description rte">{{ section.settings.description }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.blog != blank -%}
+      {%- assign blog = section.settings.blog -%}
+      {%- paginate blog.articles by section.settings.posts_to_show -%}
+        <div class="blog-listing-grid-list{% if section.settings.grid_layout == 'alternating' %} blog-listing-grid-list--alternating{% endif %}">
+          {%- for article in blog.articles -%}
+            {%- liquid
+              assign global_index = paginate.current_offset | plus: forloop.index
+              assign padded_index = '00' | append: global_index | slice: -3, 3
+
+              # card_image / card_image_mobile are 2x exports of the Figma card
+              # frames (text and icons hidden), so a post that has them shows the
+              # designed cover as-is. Without them the card falls back to the
+              # desktop hero, then the featured image, centre-cropped. The mobile
+              # hero is never used here: it is framed for a full-bleed phone
+              # screen and crops badly inside these smaller cards.
+              assign designed_card_image = article.metafields.custom.card_image.value
+              assign card_image_mobile = article.metafields.custom.card_image_mobile.value
+              assign card_image = designed_card_image | default: article.metafields.custom.hero_image.value | default: article.image
+              assign card_alt = card_image.alt | default: article.title | escape
+            -%}
+            <div
+              class="blog-listing-grid-item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+                style="--animation-order: {{ forloop.index }};"
+              {% endif %}
+            >
+              <a href="{{ article.url }}" class="blog-listing-grid-item-link">
+                <div class="blog-listing-grid-item-media">
+                  {%- if card_image != blank -%}
+                    <picture>
+                      {%- if card_image_mobile != blank -%}
+                        <source
+                          media="(max-width: 749px)"
+                          srcset="
+                            {{ card_image_mobile | image_url: width: 354 }} 354w,
+                            {{ card_image_mobile | image_url: width: 708 }} 708w
+                          "
+                          sizes="100vw"
+                        >
+                      {%- endif -%}
+                      <img
+                        class="blog-listing-grid-item-image"
+                        src="{{ card_image | image_url: width: 1600 }}"
+                        srcset="
+                          {{ card_image | image_url: width: 375 }} 375w,
+                          {{ card_image | image_url: width: 550 }} 550w,
+                          {{ card_image | image_url: width: 750 }} 750w,
+                          {{ card_image | image_url: width: 1100 }} 1100w,
+                          {{ card_image | image_url: width: 1500 }} 1500w,
+                          {{ card_image | image_url: width: 2000 }} 2000w,
+                          {{ card_image | image_url: width: 2560 }} 2560w
+                        "
+                        sizes="(min-width: 750px) 70vw, 100vw"
+                        alt="{{ card_alt }}"
+                        loading="lazy"
+                      >
+                    </picture>
+                  {%- else -%}
+                    {{ 'lifestyle-1' | placeholder_svg_tag: 'blog-listing-grid-item-image placeholder-svg' }}
+                  {%- endif -%}
+
+                  {%- comment -%} The Figma card has no gradient; any tint is already baked into the export. {%- endcomment -%}
+                  {%- if designed_card_image == blank -%}
+                    <div class="blog-listing-grid-item-scrim"></div>
+                  {%- endif -%}
+
+                  <div class="blog-listing-grid-item-text">
+                    <p class="blog-listing-grid-item-index">{{ padded_index }}</p>
+                    <h3 class="blog-listing-grid-item-title">{{ article.title }}</h3>
+                  </div>
+
+                  <div class="blog-listing-grid-item-icons">
+                    {%- if section.settings.star_icon -%}
+                      <img
+                        src="{{ section.settings.star_icon | image_url: width: 80 }}"
+                        alt=""
+                        class="blog-listing-grid-item-icon blog-listing-grid-item-icon--star"
+                        loading="lazy"
+                        width="28"
+                        height="28"
+                      >
+                    {%- endif -%}
+                    {%- if section.settings.arrow_icon -%}
+                      <img
+                        src="{{ section.settings.arrow_icon | image_url: width: 240 }}"
+                        alt=""
+                        class="blog-listing-grid-item-icon blog-listing-grid-item-icon--arrow"
+                        loading="lazy"
+                        width="120"
+                        height="24"
+                      >
+                    {%- endif -%}
+                  </div>
+                </div>
+              </a>
+            </div>
+          {%- else -%}
+            {%- if request.design_mode -%}
+              <div class="blog-listing-grid-item">
+                <div class="blog-listing-grid-item-media">
+                  {{ 'lifestyle-1' | placeholder_svg_tag: 'blog-listing-grid-item-image placeholder-svg' }}
+                  <div class="blog-listing-grid-item-scrim"></div>
+                  <div class="blog-listing-grid-item-text">
+                    <p class="blog-listing-grid-item-index">001</p>
+                    <h3 class="blog-listing-grid-item-title">This blog has no posts yet</h3>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          {%- render 'pagination', paginate: paginate -%}
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- elsif request.design_mode -%}
+      <div class="blog-listing-grid-empty-state">
+        <p>Select a blog in the section settings to populate this grid with its posts.</p>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Blog Listing Grid",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Title",
+      "info": "Press Enter/Return to force a line break."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Posts"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "range",
+      "id": "posts_to_show",
+      "label": "Posts per page",
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "select",
+      "id": "grid_layout",
+      "label": "Grid layout",
+      "options": [
+        {
+          "value": "three_up",
+          "label": "Three-up rhythm (tall, wide, full-bleed)"
+        },
+        {
+          "value": "alternating",
+          "label": "Rituals rhythm (narrow/wide, full-width)"
+        }
+      ],
+      "default": "three_up"
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "image_picker",
+      "id": "star_icon",
+      "label": "Star icon"
+    },
+    {
+      "type": "image_picker",
+      "id": "arrow_icon",
+      "label": "Arrow icon"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FFFDEE"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFDEE"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog Listing Grid"
+    }
+  ]
+}
+{% endschema %}

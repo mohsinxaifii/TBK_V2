@@ -1,0 +1,112 @@
+{{ 'bullets-scroller.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'bullets-scroller.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign bullets = product.metafields.custom.top_bullets.value
+  if bullets == blank and section.settings.fallback_bullets != blank
+    assign bullets = section.settings.fallback_bullets | split: newline
+  endif
+-%}
+
+{%- if bullets != blank -%}
+  <div
+    class="bullets-scroller-container"
+    data-bullets-scroller
+    data-direction="{{ section.settings.direction }}"
+    data-speed="{{ section.settings.speed }}"
+    style="--bullets-scroller-bg: {{ section.settings.background_color }}; --bullets-scroller-color: {{ section.settings.text_color }};"
+  >
+    <span class="visually-hidden">
+      {{ bullets | join: ', ' }}
+    </span>
+    <div class="bullets-scroller-reveal" aria-hidden="true">
+      <div class="bullets-scroller-viewport">
+        <div class="bullets-scroller-lens"></div>
+        <div class="bullets-scroller-track">
+          {%- for i in (1..6) -%}
+            <div class="bullets-scroller-set">
+              {%- for bullet in bullets -%}
+                <span class="bullets-scroller-item">
+                  {{- bullet | strip -}}
+                  <span class="bullets-scroller-dot">{{ section.settings.separator }}</span>
+                </span>
+              {%- endfor -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- elsif request.design_mode -%}
+  <div
+    class="bullets-scroller-container bullets-scroller-container--placeholder"
+    style="--bullets-scroller-bg: {{ section.settings.background_color }}; --bullets-scroller-color: {{ section.settings.text_color }};"
+  >
+    <p class="bullets-scroller-placeholder-text">
+      Add bullets via the product's "top_bullets" list metafield (or the fallback bullets setting below) to preview this section.
+    </p>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Bullets Scroller",
+  "tag": "section",
+  "class": "section bullets-scroller-section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#c9a063"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#181818"
+    },
+    {
+      "type": "text",
+      "id": "separator",
+      "label": "Separator",
+      "default": "•"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 20,
+      "max": 220,
+      "step": 5,
+      "unit": "px",
+      "label": "Base scroll speed",
+      "info": "Speed increases further while the page is being scrolled.",
+      "default": 70
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Scroll direction",
+      "options": [
+        { "value": "normal", "label": "Left" },
+        { "value": "reverse", "label": "Right" }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "textarea",
+      "id": "fallback_bullets",
+      "label": "Fallback bullets",
+      "info": "One bullet per line. Used only in the theme editor preview when the product's \"top_bullets\" list metafield is empty."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bullets Scroller"
+    }
+  ]
+}
+{% endschema %}

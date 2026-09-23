@@ -1,0 +1,126 @@
+{% comment %}
+  Renders the product reviews carousel and a trust-badge row.
+  Reads published entries from the `tbk_product_review` metaobject, filtered to this product.
+  Accepts:
+  - block: {Object} block object with settings: trust_text_1, trust_text_2, trust_text_3
+  - product: {Object}
+
+  Usage:
+  {% render 'product-reviews', block: block, product: product %}
+{% endcomment %}
+{%- liquid
+  assign all_reviews = shop.metaobjects.tbk_product_review.values
+  assign review_count = 0
+  for review in all_reviews
+    if review.product.value.id == product.id
+      assign review_count = review_count | plus: 1
+    endif
+  endfor
+-%}
+
+<div class="product-reviews-wrapper" {{ block.shopify_attributes }}>
+  {%- if review_count > 0 -%}
+    <product-reviews-carousel class="product-reviews" data-section-id="{{ section.id }}">
+      <div class="product-reviews__header">
+        <p class="product-reviews__count">
+          {{ 'products.product.reviews.verified_reviews' | t: count: review_count }}
+        </p>
+        <p class="product-reviews__pagination">
+          <span class="product-reviews__pagination-current">1</span>
+          <span aria-hidden="true">&nbsp;|&nbsp;</span>
+          <span class="product-reviews__pagination-total">{{ review_count }}</span>
+        </p>
+      </div>
+      <div class="product-reviews__divider"></div>
+      <div class="product-reviews__body">
+        <button
+          type="button"
+          class="product-reviews__nav product-reviews__nav--prev"
+          {% if review_count <= 1 %}disabled{% endif %}
+          aria-label="{{ 'products.product.reviews.previous' | t }}"
+        >
+          <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+        </button>
+
+        <ul class="product-reviews__list list-unstyled">
+          {%- assign matched_index = -1 -%}
+          {%- for review in all_reviews -%}
+            {%- if review.product.value.id != product.id -%}
+              {%- continue -%}
+            {%- endif -%}
+            {%- assign matched_index = matched_index | plus: 1 -%}
+            {%- comment -%}
+              The first review is active from the server: the others are taken
+              out of flow, so without this the list would render at zero height
+              until product-reviews.js runs, then jump.
+            {%- endcomment -%}
+            <li
+              class="product-reviews__item{% if matched_index == 0 %} is-active{% endif %}"
+              {% unless matched_index == 0 %}hidden{% endunless %}
+              data-review-index="{{ matched_index }}"
+            >
+              <blockquote class="product-reviews__quote">
+                <p>&ldquo;{{ review.review_body.value }}&rdquo;</p>
+              </blockquote>
+              <div class="product-reviews__rating" aria-hidden="true">
+                {%- assign rating_value = review.rating.value | default: 0 -%}
+                {%- for i in (1..5) -%}
+                  <span class="product-reviews__star{% if i <= rating_value %} is-filled{% endif %}">
+                    {{- 'icon-star.svg' | inline_asset_content -}}
+                  </span>
+                {%- endfor -%}
+              </div>
+              <p class="product-reviews__author">
+                {{- review.reviewer_name.value -}}
+                {%- if review.reviewer_location.value != blank -%}
+                  , {{ review.reviewer_location.value }}
+                {%- endif -%}
+              </p>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        <button
+          type="button"
+          class="product-reviews__nav product-reviews__nav--next"
+          {% if review_count <= 1 %}disabled{% endif %}
+          aria-label="{{ 'products.product.reviews.next' | t }}"
+        >
+          <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+        </button>
+      </div>
+      <div class="product-reviews__divider"></div>
+    </product-reviews-carousel>
+  {%- endif -%}
+
+  <div class="product-reviews__trust-row" data-product-reviews-trust-marquee>
+    <div class="product-reviews__trust-track" data-product-reviews-trust-track>
+      <div class="product-reviews__trust-set">
+        {%- if block.settings.trust_text_1 != blank -%}
+          <span>{{ block.settings.trust_text_1 }}</span>
+        {%- endif -%}
+        {%- if block.settings.trust_text_2 != blank -%}
+          <span aria-hidden="true" class="product-reviews__trust-divider">|</span>
+          <span>{{ block.settings.trust_text_2 }}</span>
+        {%- endif -%}
+        {%- if block.settings.trust_text_3 != blank -%}
+          <span aria-hidden="true" class="product-reviews__trust-divider">|</span>
+          <span>{{ block.settings.trust_text_3 }}</span>
+        {%- endif -%}
+        {%- comment -%}
+          Only shown once the row switches into the looping marquee (see
+          .is-marquee in section-main-product.css) — clones with the rest of
+          this set so the loop seam between one repeat and the next reads
+          the same as every other divider instead of a bare gap. Left out of
+          the static single-row layout on purpose: with no repeat after it,
+          a trailing pipe there would just dangle.
+        {%- endcomment -%}
+        <span aria-hidden="true" class="product-reviews__trust-divider product-reviews__trust-divider--loop">|</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'product-reviews.js' | asset_url }}" defer="defer"></script>

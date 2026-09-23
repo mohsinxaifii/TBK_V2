@@ -1,0 +1,205 @@
+{{ 'custom-press-articles-grid.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .press-articles-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .press-articles-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  #shopify-section-{{ section.id }} .press-articles__panel {
+    background-color: {{ section.settings.card_background_color }};
+    color: {{ section.settings.card_text_color }};
+  }
+
+  #shopify-section-{{ section.id }} .press-articles__date {
+    background-color: {{ section.settings.card_background_color }};
+    color: {{ section.settings.card_text_color }};
+  }
+{%- endstyle -%}
+
+{%- capture arrow_icon -%}
+  <svg class="press-articles__read-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+{%- endcapture -%}
+
+<div
+  class="press-articles press-articles-{{ section.id }}-padding"
+  style="background-color: {{ section.settings.background_color }}; color: {{ section.settings.text_color }};"
+>
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="press-articles__heading section-heading{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+        {{ section.settings.heading | escape }}
+      </h2>
+    {%- endif -%}
+
+    {%- if section.settings.blog != blank -%}
+      {%- assign blog = section.settings.blog -%}
+      <div class="press-articles__grid">
+        {%- for article in blog.articles limit: section.settings.posts_to_show -%}
+          {%- liquid
+            assign card_heading = article.metafields.custom.press_card_heading
+            assign card_subheading = article.metafields.custom.press_card_subheading
+            assign external_link = article.metafields.custom.external_link.value | default: article.url
+          -%}
+          <a
+            href="{{ external_link }}"
+            class="press-articles__card{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {% if external_link != article.url %}
+              target="_blank"
+              rel="noopener"
+            {% endif %}
+          >
+            <div class="press-articles__media">
+              {%- if article.image -%}
+                {%- assign article_image_alt = article.image.alt | escape -%}
+                {{
+                  article.image
+                  | image_url: width: 900
+                  | image_tag:
+                    class: 'press-articles__image',
+                    alt: article_image_alt,
+                    loading: 'lazy',
+                    sizes: '(min-width: 990px) 33vw, (min-width: 600px) 50vw, 100vw',
+                    widths: '375, 550, 750, 900'
+                }}
+              {%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'press-articles__image placeholder-svg' }}
+              {%- endif -%}
+              <p class="press-articles__date">{{ article.published_at | date: '%b %Y' }}</p>
+            </div>
+
+            <div class="press-articles__panel">
+              {%- if card_heading != blank -%}
+                <h3 class="press-articles__publication">{{ card_heading }}</h3>
+              {%- endif -%}
+              {%- if card_subheading != blank -%}
+                <p class="press-articles__excerpt">{{ card_subheading }}</p>
+              {%- endif -%}
+              <hr class="press-articles__divider">
+              <span class="press-articles__read">
+                {{ section.settings.read_label | escape }}
+                {{ arrow_icon }}
+              </span>
+            </div>
+          </a>
+        {%- else -%}
+          {%- if request.design_mode -%}
+            <p class="press-articles__empty">This blog has no posts yet.</p>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- elsif request.design_mode -%}
+      <p class="press-articles__empty">Select a blog in the section settings to populate this grid.</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Press Articles Grid",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured Articles"
+    },
+    {
+      "type": "header",
+      "content": "Posts"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog",
+      "info": "Cards pull the image, heading (custom.press_card_heading metafield), subheading (custom.press_card_subheading metafield) and link (custom.external_link metafield, falls back to the post URL) from each article."
+    },
+    {
+      "type": "range",
+      "id": "posts_to_show",
+      "label": "Posts to show",
+      "min": 3,
+      "max": 24,
+      "step": 3,
+      "default": 9
+    },
+    {
+      "type": "text",
+      "id": "read_label",
+      "label": "Read link label",
+      "default": "Read"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fffdee"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background color",
+      "default": "#570f13"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text color",
+      "default": "#fffdee"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "Press Articles Grid"
+    }
+  ]
+}
+{% endschema %}

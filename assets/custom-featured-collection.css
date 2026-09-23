@@ -1,0 +1,77 @@
+.collection {
+    background-color: #FFFDEE;
+}
+
+slider-component product-component .card-wrapper .card .card__information {
+    padding: 0px;
+}
+
+slider-component product-component .card-wrapper .card .card__content .quick-add {
+    margin: 0px;
+}
+
+slider-component product-component .card-wrapper .card .card__content .quick-add button::before,
+slider-component product-component .card-wrapper .card .card__content .quick-add button::after {
+    box-shadow: none;
+}
+
+slider-component product-component .card-wrapper .card .card__content {
+    padding: 15px 15px 4px;
+}
+
+slider-component product-component .card-wrapper .card .card__content h3 a {
+    font-family: var(--font-family-accent);
+    font-size: var(--font-card-title-size);
+    color: #FFFDEE;
+    font-weight: var(--font-card-title-weight);
+    line-height: var(--font-card-title-line-height);
+    margin-bottom: 12px;
+    text-decoration: none !important;
+}
+
+slider-component product-component .card-wrapper .card .card__content .quick-add button {
+    border-top: solid 1px #FFFDEE80;
+    margin-top: 13px;
+    font-size: var(--font-card-quick-add-size);
+    font-family: var(--font-family-body);
+    text-transform: capitalize;
+    font-weight: var(--font-card-quick-add-weight);
+}
+
+slider-component product-component .price__container {
+    font-family: var(--font-family-body);
+    font-size: var(--font-card-price-size);
+    color: #FFFDEE;
+    font-weight: var(--font-card-price-weight);
+    line-height: var(--font-card-price-line-height);
+}
+
+/* Carousel showing exactly 1.2 cards per view (one full card + a
+   peek of the next), overriding Dawn's fixed 3rem peek subtraction
+   with a proportional width so the ratio holds at any viewport. */
+@media screen and (max-width: 989px) {
+    .custom-featured-collection__grid.grid--peek.grid--1-col-tablet-down .grid__item {
+        width: calc(72.333% - var(--grid-mobile-horizontal-spacing));
+        max-width: calc(72.333% - var(--grid-mobile-horizontal-spacing));
+    }
+}
+
+.collection .slider-buttons {
+    display: none;
+}
+
+@media screen and (min-width: 769px) {
+    .custom-featured-collection__grid--center {
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    slider-component product-component .price__container {
+        font-size: var(--font-card-price-size-mobile);
+    }
+
+    slider-component product-component .card-wrapper .card .card__content h3 a {
+        font-size: var(--font-card-title-size-mobile);
+    }
+}

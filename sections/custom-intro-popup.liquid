@@ -1,0 +1,243 @@
+{{ 'custom-intro-popup.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'custom-intro-popup.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign cta_1_url = section.settings.cta_1_link | default: '/collections/the-bhandaar'
+  assign cta_2_url = section.settings.cta_2_link | default: '/pages/archives'
+-%}
+{%- comment -%}
+  Split on the newline itself rather than running newline_to_br and replacing
+  its output: the break needs a class on it (mobile drops the forced split and
+  lets the heading wrap), and matching the filter's exact `<br />` spelling is
+  the kind of thing that breaks silently.
+{%- endcomment -%}
+{%- assign newline = '
+' -%}
+{%- assign heading_lines = section.settings.heading | strip | split: newline -%}
+
+{%- if section.settings.enabled -%}
+  <div
+    class="custom-intro-popup"
+    id="CustomIntroPopup-{{ section.id }}"
+    data-custom-intro-popup
+    data-delay="{{ section.settings.delay_seconds }}"
+    data-frequency="{{ section.settings.frequency }}"
+    {%- comment -%}
+      The overlay is the scrollable box, so it is the element Lenis has to keep
+      its hands off — while Lenis is stopped it preventDefaults wheel events
+      outright unless something in the path opted out.
+    {%- endcomment -%}
+    data-lenis-prevent
+    hidden
+  >
+    <div
+      class="custom-intro-popup__dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="CustomIntroPopupHeading-{{ section.id }}"
+    >
+      <button
+        type="button"
+        class="custom-intro-popup__close"
+        data-custom-intro-popup-close
+        aria-label="{{ 'accessibility.close' | t }}"
+      >
+        <svg class="custom-intro-popup__close-icon" viewBox="0 0 14.5 13.5" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0.750004 12.75L13.75 0.750004M0.750004 0.750004L13.75 12.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <div class="custom-intro-popup__media">
+        {%- if section.settings.image != blank -%}
+          {%- comment -%}
+            Both images are the Figma frames exported with the copy and close
+            icon hidden, at 2x: 1728x1008 for the 864x504 desktop card and
+            708x1304 for the 354x652 mobile one. They are the card's
+            background, and the blurred maroon scrim behind the text is baked
+            into them, so nothing here re-crops -- the CSS fills a box of the
+            same ratio.
+
+            Eager, despite being off-screen: the overlay starts at display:none,
+            and browsers don't fetch lazy images inside a hidden box — the photo
+            would only start downloading as the popup opened, and pop in late.
+            fetchpriority=low keeps it out of the way of the banner's LCP.
+          {%- endcomment -%}
+          <picture class="custom-intro-popup__picture">
+            {%- if section.settings.image_mobile != blank -%}
+              <source
+                media="(max-width: 749px)"
+                srcset="
+                  {{ section.settings.image_mobile | image_url: width: 354 }} 354w,
+                  {{ section.settings.image_mobile | image_url: width: 708 }} 708w
+                "
+                sizes="354px"
+                width="{{ section.settings.image_mobile.width }}"
+                height="{{ section.settings.image_mobile.height }}"
+              >
+            {%- endif -%}
+            <img
+              class="custom-intro-popup__image"
+              src="{{ section.settings.image | image_url: width: 864 }}"
+              srcset="
+                {{ section.settings.image | image_url: width: 864 }} 864w,
+                {{ section.settings.image | image_url: width: 1728 }} 1728w
+              "
+              sizes="864px"
+              width="{{ section.settings.image.width }}"
+              height="{{ section.settings.image.height }}"
+              alt="{{ section.settings.image.alt | escape }}"
+              loading="eager"
+              fetchpriority="low"
+            >
+          </picture>
+        {%- endif -%}
+      </div>
+
+      <div class="custom-intro-popup__content">
+        <div class="custom-intro-popup__text">
+          {%- if section.settings.heading != blank -%}
+            <h2 class="custom-intro-popup__heading" id="CustomIntroPopupHeading-{{ section.id }}">
+              {%- for line in heading_lines -%}
+                {{- line | strip | escape -}}
+                {%- unless forloop.last -%}
+                  {%- comment -%}
+                    The space after the <br> is load-bearing. Mobile hides the
+                    break with display:none, and because the lines were split
+                    on the newline and stripped, there is otherwise no
+                    whitespace at all between them -- the heading ran together
+                    as "Welcome toThe Bikaneri Kitchen!". On desktop the break
+                    still fires and the space, now first on the new line, is
+                    collapsed away by normal whitespace processing, so it costs
+                    nothing there.
+                  {%- endcomment -%}
+                  <br class="custom-intro-popup__break">{{ ' ' }}
+                {%- endunless -%}
+              {%- endfor -%}
+            </h2>
+          {%- endif -%}
+          {%- if section.settings.body != blank -%}
+            <p class="custom-intro-popup__body">{{ section.settings.body | escape | newline_to_br }}</p>
+          {%- endif -%}
+        </div>
+
+        <div class="custom-intro-popup__actions">
+          {%- if section.settings.cta_1_label != blank -%}
+            <a class="custom-intro-popup__cta custom-intro-popup__cta--primary" href="{{ cta_1_url }}">
+              {{- section.settings.cta_1_label -}}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.cta_2_label != blank -%}
+            <a class="custom-intro-popup__cta custom-intro-popup__cta--secondary" href="{{ cta_2_url }}">
+              {{- section.settings.cta_2_label -}}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Custom Intro Popup",
+  "tag": "div",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows once to first-time visitors, on whichever template this section is added to. In the theme editor it reopens every reload so you can style it."
+    },
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable popup",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "delay_seconds",
+      "label": "Delay before showing",
+      "unit": "s",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 5,
+      "info": "Counted from when the page preloader finishes."
+    },
+    {
+      "type": "select",
+      "id": "frequency",
+      "label": "Show again",
+      "options": [
+        { "value": "once", "label": "Never — first visit only" },
+        { "value": "session", "label": "Once per browser session" }
+      ],
+      "default": "once"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Welcome to\nThe Bikaneri Kitchen!",
+      "info": "Press Enter/Return to force a line break. The break is ignored on mobile, where the heading wraps on its own."
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body text",
+      "default": "A place where preparations are crafted by hand and stories are preserved through time."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image (desktop)",
+      "info": "Shown at 432×504, so supply it already cropped at that ratio — it is not cropped again."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image (mobile)",
+      "info": "Shown at 330×326. Falls back to the desktop image, which would letterbox — supply this one."
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "cta_1_label",
+      "label": "Primary button label",
+      "default": "Explore The Shop"
+    },
+    {
+      "type": "url",
+      "id": "cta_1_link",
+      "label": "Primary button link",
+      "info": "Defaults to /collections/the-bhandaar when left empty."
+    },
+    {
+      "type": "text",
+      "id": "cta_2_label",
+      "label": "Secondary button label",
+      "default": "Visit The Archive"
+    },
+    {
+      "type": "url",
+      "id": "cta_2_link",
+      "label": "Secondary button link",
+      "info": "Defaults to /pages/archives when left empty."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Intro Popup"
+    }
+  ]
+}
+{% endschema %}

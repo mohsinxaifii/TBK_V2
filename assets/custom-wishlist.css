@@ -1,0 +1,113 @@
+.wishlist-page {
+  padding-top: 50px;
+  padding-bottom: 60px;
+}
+
+/*
+  .wishlist-page__heading intentionally has no rules of its own — it relies
+  entirely on .section-heading (shared with the collection page's "The
+  Bhandaar" heading) so the two stay visually identical.
+*/
+
+.wishlist-page__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  padding: 60px 20px;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+
+
+/*
+  [hidden] has the same specificity as a class selector, so without this the
+  display:flex/block rules above win the cascade (author styles load after
+  the browser default) and the hidden attribute is silently ignored.
+*/
+.wishlist-page__empty[hidden],
+.wishlist-page__shop-more[hidden],
+ul[data-wishlist-page][hidden] {
+  display: none;
+}
+
+.wishlist-page__shop-more {
+  display: block;
+  width: fit-content;
+  margin: 35px auto 0;
+  color: #181818;
+  font-family: var(--font-family-body);
+  font-size: var(--font-cta-size);
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.wishlist-page__empty-heading {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-wishlist-empty-heading-size);
+  color: #181818;
+}
+
+.wishlist-page__empty-body {
+  margin: 0 0 12px;
+  font-family: var(--font-family-body);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  font-weight: var(--font-body-copy-weight);
+  letter-spacing: var(--font-body-letter-spacing);
+  color: #181818;
+}
+
+.custom-inset-image-section .page-width {
+  margin-top: 0;
+  padding: unset;
+  margin: 0;
+  max-width: unset;
+}
+
+.clp-collection__subtitle {
+  margin-top: 0 !important;
+}
+
+@media screen and (max-width: 749px) {
+  .wishlist-page {
+    padding-top: 32px;
+    padding-bottom: 44px;
+  }
+
+  .wishlist-page__heading {
+    font-size: var(--font-section-heading-size-mobile);
+    line-height: var(--font-section-heading-line-height-mobile);
+  }
+
+  .wishlist-page__empty-heading {
+    font-size: var(--font-subheading-size-mobile);
+    line-height: var(--font-subheading-line-height-mobile);
+  }
+
+  .wishlist-page__empty-body {
+    font-size: var(--font-body-size-mobile);
+    line-height: var(--font-body-line-height-mobile);
+    font-weight: var(--font-body-weight-mobile);
+    letter-spacing: var(--font-body-letter-spacing-mobile);
+  }
+
+  .wishlist-page__shop-more {
+    font-size: var(--font-cta-size-mobile);
+  }
+
+  .wishlist-page .grid__item {
+    width: 100% !important;
+    max-width: unset;
+  }
+
+  .wishlist-page .product-grid {
+    gap: 15px;
+  }
+}

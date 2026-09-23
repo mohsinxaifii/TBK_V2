@@ -1,0 +1,159 @@
+{{ 'custom-people-craft.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  "Behind The Craft" (about). Layout from Figma: desktop 3209:3834, mobile
+  3209:3870. A centred heading, then one row per person block: photo beside
+  an eyebrow, name and bio on desktop, photo stacked above them below 990px.
+  Type is NOT Figma's: it uses the shared roles the rest of the about page
+  reads (section heading, eyebrow, body), as the highlight banner does. The
+  photos are 2x exports of the Figma image frames, so they carry the designed
+  crop; the mobile board crops Deepak slightly tighter, hence the mobile image.
+{%- endcomment -%}
+<div
+  class="custom-people-craft"
+  style="--people-craft-bg: {{ section.settings.background_color }}; --people-craft-text: {{ section.settings.text_color }};"
+>
+  <div class="custom-people-craft__inner">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-heading custom-people-craft__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    {%- for block in section.blocks -%}
+      <div
+        class="custom-people-craft__row custom-people-craft__row--image-{{ block.settings.image_position }}"
+        {{ block.shopify_attributes }}
+      >
+        <div class="custom-people-craft__media">
+          {%- if block.settings.image != blank -%}
+            <picture>
+              {%- if block.settings.image_mobile != blank -%}
+                <source
+                  media="(max-width: 989px)"
+                  srcset="{{ block.settings.image_mobile | image_url: width: 708 }} 708w, {{ block.settings.image_mobile | image_url: width: 1062 }} 1062w"
+                  sizes="calc(100vw - 48px)"
+                >
+              {%- endif -%}
+              {{
+                block.settings.image
+                | image_url: width: 1232
+                | image_tag:
+                  class: 'custom-people-craft__img',
+                  widths: '400, 616, 924, 1232',
+                  sizes: '(min-width: 1440px) 616px, (min-width: 990px) calc((100vw - 208px) / 2), calc(100vw - 48px)',
+                  loading: 'lazy',
+                  alt: block.settings.name
+              }}
+            </picture>
+          {%- elsif request.design_mode -%}
+            {{ 'image' | placeholder_svg_tag: 'custom-people-craft__img placeholder-svg' }}
+          {%- endif -%}
+        </div>
+
+        <div class="custom-people-craft__text">
+          {%- if block.settings.eyebrow != blank -%}
+            <p class="custom-people-craft__eyebrow">{{ block.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          {%- if block.settings.name != blank -%}
+            <h3 class="section-heading custom-people-craft__name">{{ block.settings.name | escape }}</h3>
+          {%- endif -%}
+          {%- if block.settings.text != blank -%}
+            <div class="custom-people-craft__body">{{ block.settings.text }}</div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom People Craft",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Behind The Craft"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FFFDEE"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "person",
+      "name": "Person",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo",
+          "info": "Shown at 616 x 725 (portrait). Export the Figma frame at 2x."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Photo (mobile)",
+          "info": "Optional. Shown at 354 x 417. Falls back to the photo above when not set."
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "Photo position on desktop",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left",
+          "info": "On mobile the photo always sits above the text."
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Founder"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Name"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Bio",
+          "info": "Each paragraph is separated by one blank line."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom People Craft",
+      "blocks": [
+        { "type": "person", "settings": { "image_position": "left" } },
+        { "type": "person", "settings": { "image_position": "right" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

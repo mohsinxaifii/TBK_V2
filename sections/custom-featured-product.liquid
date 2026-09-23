@@ -1,0 +1,307 @@
+{{ 'custom-featured-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign layout_classes = 'custom-featured-product-container'
+  if section.settings.reverse_layout
+    assign layout_classes = layout_classes | append: ' custom-featured-product-container--reversed'
+  endif
+
+  assign product = section.settings.featured_product
+  assign featured_variant = product.selected_or_first_available_variant
+  if featured_variant == null and product != blank
+    assign featured_variant = product.variants.first
+  endif
+
+  assign product_form_id = 'custom-featured-product-form-' | append: section.id
+  assign quantity_id = 'custom-featured-product-quantity-' | append: section.id
+  assign bg_right_image_mobile = section.settings.bg_right_image_mobile | default: section.settings.bg_right_image
+
+  comment
+    A pack multiplier ("120 gm X 3") is set small and raised against the
+    weight it follows, so the split happens here. Lower-case x is folded in
+    first so one test covers "X 3", "x 3", "X3" and "x3"; a size with no
+    multiplier just falls through whole.
+  endcomment
+  assign size_base = section.settings.size
+  assign size_multiplier = ''
+  assign size_probe = section.settings.size | replace: ' x', ' X'
+  if size_probe contains ' X'
+    assign size_parts = size_probe | split: ' X'
+    assign size_base = size_parts[0] | strip
+    assign size_multiplier = size_parts[1] | strip
+  endif
+
+  comment
+    Only emitted when a colour is actually set. An empty custom property is
+    still a *set* property, so it would swallow the var() fallback in the
+    stylesheet and leave the panel transparent rather than falling back.
+  endcomment
+  assign panel_style = ''
+  if section.settings.bg_left_color != blank
+    assign panel_style = '--featured-product-panel-color: ' | append: section.settings.bg_left_color | append: ';'
+  endif
+-%}
+<div
+  class="{{ layout_classes }}"
+  {% if panel_style != blank %}style="{{ panel_style }}"{% endif %}
+>
+  {%- comment -%}
+    The half the card sits on. A flat colour rather than artwork, so it is a
+    plain element here instead of the image it used to be.
+  {%- endcomment -%}
+  <div class="custom-featured-product__panel custom-featured-product__panel--desktop"></div>
+
+  {%- comment -%}
+    Wraps both photo variants so the scrim (::after) can cover exactly the
+    photo at either breakpoint -- half the section on desktop, the full-width
+    block at the top of the stack on mobile. Becomes a link to the product
+    once one is assigned; without one it stays a plain wrapper.
+  {%- endcomment -%}
+  {%- if product != blank -%}
+    <a
+      class="custom-featured-product__media"
+      href="{{ product.url }}"
+      aria-label="{{ product.title | escape }}"
+    >
+  {%- else -%}
+    <div class="custom-featured-product__media">
+  {%- endif -%}
+    <img
+      class="bg-image bg-image--right bg-image--desktop"
+      src="{{ section.settings.bg_right_image | image_url }}"
+      alt="{{ section.settings.bg_right_image.alt | escape }}"
+      width="{{ section.settings.bg_right_image.width }}"
+      height="{{ section.settings.bg_right_image.height }}"
+    >
+    <img
+      class="bg-image bg-image--right bg-image--mobile"
+      src="{{ bg_right_image_mobile | image_url }}"
+      alt="{{ bg_right_image_mobile.alt | escape }}"
+      width="{{ bg_right_image_mobile.width }}"
+      height="{{ bg_right_image_mobile.height }}"
+    >
+  {%- if product != blank -%}
+    </a>
+  {%- else -%}
+    </div>
+  {%- endif -%}
+
+  <div class="page-width">
+    <div class="custom-featured-product-left-wrap">
+      <div class="custom-featured-product__panel custom-featured-product__panel--mobile"></div>
+    <div class="custom-featured-product-left">
+      <img
+        src="{{ section.settings['featured-product-left-bg'] | image_url }}"
+        alt="{{ section.settings['featured-product-left-bg'].alt | escape }}"
+        width="{{ section.settings['featured-product-left-bg'].width }}"
+        height="{{ section.settings['featured-product-left-bg'].height }}"
+      >
+      <div class="custom-featured-product-left-inner_upper">
+        <p>{{ section.settings.top_left_caption }}</p>
+        <p>{{ section.settings.heading }}</p>
+        <div class="custom-featured-product-left-description">
+          <p>{{ section.settings.description }}</p>
+        </div>
+      </div>
+      {%- if product != blank and featured_variant != null -%}
+        <div class="custom-featured-product__purchase">
+          <div class="custom-featured-product__meta">
+            {%- if section.settings.size != blank -%}
+              <span class="custom-featured-product__size">
+                {{- size_base -}}
+                {%- if size_multiplier != blank -%}
+                  <span class="custom-featured-product__size-multiplier">x{{ size_multiplier }}</span>
+                {%- endif -%}
+              </span>
+              <span class="custom-featured-product__meta-divider" aria-hidden="true">|</span>
+            {%- endif -%}
+            <span class="custom-featured-product__price">
+              {{- featured_variant.price | money_without_trailing_zeros -}}
+            </span>
+            {%- if section.settings.tax_note != blank -%}
+              <span class="custom-featured-product__tax-note">{{ section.settings.tax_note }}</span>
+            {%- endif -%}
+          </div>
+          {%- comment -%}
+            Sits outside the form (the form wraps only the CTA further down),
+            so it reaches the submission through the form attribute -- same
+            arrangement main-product.liquid uses.
+          {%- endcomment -%}
+          <quantity-input class="quantity custom-featured-product__quantity">
+            <button class="quantity__button" name="minus" type="button">
+              <span class="visually-hidden">
+                {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
+              </span>
+              <span class="quantity__button-text" aria-hidden="true">-</span>
+            </button>
+            <input
+              class="quantity__input"
+              type="number"
+              name="quantity"
+              id="{{ quantity_id }}"
+              form="{{ product_form_id }}"
+              aria-label="{{ 'products.product.quantity.label' | t }}"
+              data-min="{{ featured_variant.quantity_rule.min }}"
+              min="{{ featured_variant.quantity_rule.min }}"
+              {% if featured_variant.quantity_rule.max != null %}
+                data-max="{{ featured_variant.quantity_rule.max }}"
+                max="{{ featured_variant.quantity_rule.max }}"
+              {% endif %}
+              step="{{ featured_variant.quantity_rule.increment }}"
+              value="{{ featured_variant.quantity_rule.min }}"
+            >
+            <button class="quantity__button" name="plus" type="button">
+              <span class="visually-hidden">
+                {{- 'products.product.quantity.increase' | t: product: product.title | escape -}}
+              </span>
+              <span class="quantity__button-text" aria-hidden="true">+</span>
+            </button>
+          </quantity-input>
+        </div>
+      {%- endif -%}
+      <div class="custom-featured-product-left-inner_lower">
+        <div class="custom-featured-product-left-cta_container">
+          <img
+            src="{{ section.settings.icon | image_url }}"
+            alt="{{ section.settings.icon.alt | escape }}"
+            width="{{ section.settings.icon.width }}"
+            height="{{ section.settings.icon.height }}"
+          >
+          {% if product != blank and featured_variant != null %}
+            <product-form class="product-form" data-hide-errors="false" data-section-id="{{ section.id }}">
+              <div class="product-form__error-message-wrapper" role="alert" hidden>
+                <span class="product-form__error-message"></span>
+              </div>
+              {%- form 'product',
+                product,
+                id: product_form_id,
+                class: 'form',
+                novalidate: 'novalidate',
+                data-type: 'add-to-cart-form'
+              -%}
+                <input type="hidden" name="id" value="{{ featured_variant.id }}" class="product-variant-id">
+                <div class="product-form__buttons">
+                  <button
+                    type="submit"
+                    name="add"
+                    class="product-form__submit custom-featured-product__cta"
+                    {% unless featured_variant.available %}
+                      disabled
+                    {% endunless %}
+                  >
+                    <span class="custom-featured-product__button-text">
+                      {% if featured_variant.available %}
+                        {{ section.settings.cta }}
+                      {% else %}
+                        Sold out
+                      {% endif %}
+                    </span>
+                    {% render 'loading-spinner' %}
+                  </button>
+                </div>
+              {%- endform -%}
+            </product-form>
+          {% else %}
+            <button type="button" disabled>{{ section.settings.cta }}</button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="custom-featured-product-right">
+      <hr>
+      <p>{{ section.settings.top_right_caption }}</p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Featured Product",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "reverse_layout",
+      "label": "Reverse layout",
+      "default": false,
+      "info": "Mirrors the section: product image on the left, content panel on the right."
+    },
+    {
+      "type": "product",
+      "id": "featured_product",
+      "label": "Featured Product"
+    },
+    {
+      "type": "color",
+      "id": "bg_left_color",
+      "label": "Content Panel Background",
+      "default": "#570F13",
+      "info": "Fills the half the content card sits on."
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_right_image",
+      "label": "Background Right Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_right_image_mobile",
+      "label": "Background Right Image (Mobile)",
+      "info": "Optional. Falls back to the desktop image if not set."
+    },
+    {
+      "type": "image_picker",
+      "id": "featured-product-left-bg",
+      "label": "Featured Product Left Background"
+    },
+    {
+      "type": "text",
+      "id": "top_left_caption",
+      "label": "Top Left Caption"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "size",
+      "label": "Size"
+    },
+    {
+      "type": "text",
+      "id": "tax_note",
+      "label": "Tax Note",
+      "default": "(Inclusive of all taxes.)",
+      "info": "Shown next to the price. Leave blank to hide."
+    },
+    {
+      "type": "image_picker",
+      "id": "icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "cta",
+      "label": "CTA Text"
+    },
+    {
+      "type": "text",
+      "id": "top_right_caption",
+      "label": "Top Right Caption"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Featured Product"
+    }
+  ]
+}
+{% endschema %}

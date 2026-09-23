@@ -1,0 +1,297 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "bullets_scroller_qaQmhr": {
+      "type": "bullets-scroller",
+      "name": "Bullets Scroller",
+      "settings": {
+        "background_color": "#d0aa5d",
+        "text_color": "#181818",
+        "separator": "•",
+        "speed": 25,
+        "direction": "normal",
+        "fallback_bullets": ""
+      }
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "cards",
+            "swatch_shape": "none"
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "disabled": true,
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_gift_card_recipient": false
+          }
+        },
+        "discount_callout": {
+          "type": "discount_callout",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/Vector_10.png",
+            "text": "<p>Use code <strong>[[code]]</strong> to avail <strong>10% off</strong></p>",
+            "discount_code": "TBK10"
+          }
+        },
+        "product_reviews": {
+          "type": "product_reviews",
+          "settings": {
+            "trust_text_1": "Free shipping above 1299",
+            "trust_text_2": "Secure payments",
+            "trust_text_3": "COD available"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "description",
+        "variant_picker",
+        "price",
+        "quantity_selector",
+        "buy_buttons",
+        "discount_callout",
+        "product_reviews"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "medium",
+        "constrain_to_viewport": false,
+        "media_fit": "cover",
+        "gallery_layout": "thumbnail_slider",
+        "mobile_thumbnails": "show",
+        "media_position": "left",
+        "image_zoom": "none",
+        "hide_variants": true,
+        "enable_video_looping": true,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "pdp_fold_2_NqQJ3V": {
+      "type": "pdp_fold_2",
+      "blocks": {
+        "bullet_ygJwxf": {
+          "type": "bullet",
+          "settings": {
+            "bullet_text": "Made in high Oleic sunflower oil",
+            "bullet_content": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+          }
+        },
+        "bullet_pA86gH": {
+          "type": "bullet",
+          "settings": {
+            "bullet_text": "No re-use of oil, ensuring purity of taste",
+            "bullet_content": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+          }
+        },
+        "bullet_WXYB7z": {
+          "type": "bullet",
+          "settings": {
+            "bullet_text": "Slow-cooked using Bhatti.",
+            "bullet_content": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+          }
+        },
+        "bullet_Pch9ha": {
+          "type": "bullet",
+          "settings": {
+            "bullet_text": "Made with low sodium salt",
+            "bullet_content": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+          }
+        },
+        "bullet_TwH9Cf": {
+          "type": "bullet",
+          "settings": {
+            "bullet_text": "Prepared by skilled hands in small batches",
+            "bullet_content": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+          }
+        }
+      },
+      "block_order": [
+        "bullet_ygJwxf",
+        "bullet_pA86gH",
+        "bullet_WXYB7z",
+        "bullet_Pch9ha",
+        "bullet_TwH9Cf"
+      ],
+      "name": "PDP Fold 2",
+      "settings": {
+        "pdp_fold_2_left_heading": "Prepared with a discipline that remains unchanged.",
+        "pdp_fold_2_right_image": "shopify://shop_images/Frame_1321317983_2_602e62dc-e34b-427f-b59e-db390e7b3d0a.png"
+      }
+    },
+    "custom_audio_player_9bp7pg": {
+      "type": "custom-audio-player",
+      "blocks": {
+        "subtitle_line_CckRNW": {
+          "type": "subtitle_line",
+          "settings": {
+            "hindi": "<p>आओ, आओ, आओ! आज मैं तुम्हें एक ऐसी कहानी सुनाऊँगा, जो शायद तुम्हारे दादा-दादी ने भी न सुनी हो। ये कहानी है नमक की, मिर्च की, और एक महाराजा के मनवार की। ये कहानी है भुजिया की!<br/><br/>बात है करीब डेढ़ सौ साल पहले की। रेत के समंदर के बीच बसा बीकानेर। लाल पत्थरों की दीवारें, आसमान छूते महल, और चारों ओर फैला थार। उस वक़्त बीकानेर के तख़्त पर थे महाराजा श्री डूंगर सिंहजी। साल था 1877।<br/><br/>महल में एक बड़ी दावत की तैयारी थी। दूर-दूर से मेहमान आने वाले थे। महाराजा ने अपने सबसे काबिल रसोइयों को बुलाया और फरमाया, “कुछ ऐसा बनाओ जो पहले कभी न बना हो। कुछ ऐसा जो इसी धरती से जन्म ले। कुछ ऐसा जिसमें बीकानेर की रूह बसी हो।”<br/><br/>अब रसोइये सोच में पड़ गए। क्या बनाया जाए?<br/><br/>लेकिन उन्हीं के बीच एक बुज़ुर्ग रसोइदारनी चुपचाप खड़ी थी। बालों में सफेदी। और हाथों में बरसों का हुनर। वह कुछ नहीं बोली। बस मुस्कुराई और भंडार की ओर चल पड़ी।<br/><br/>वहाँ रखा था मोठ, थार की तपती धरती में पनपने वाला छोटा-सा दाना। उसने साथ लिया बेसन। फिर काली मिर्च, लाल मिर्च, इलायची और लौंग। सबको एक नज़र देखा और बोली, “बस, इतना ही चाहिए।”<br/><br/>फिर क्या था! आटा गूँधा गया। उसे बारीक छलनी से दबाकर सीधे खौलते तेल में उतारा गया। और निकले पतले-पतले, सुनहरे लच्छे।<br/><br/>खुशबू ऐसी कि रसोई के बाहर खड़े सिपाही भी सोचने लगे, “आख़िर अंदर बन क्या रहा है?”<br/><br/>थाल महाराजा के सामने पहुँचा। सबकी नज़रें वहीं टिक गईं। महाराजा ने एक लच्छा उठाया। फिर दूसरा। फिर एक मुट्ठी और। देखते-देखते मेहमानों के हाथ भी थाल तक पहुँच गए।<br/><br/>महाराजा ने पूछा, “ये क्या है?”<br/><br/>रसोइदारनी ने सिर झुकाकर कहा, “अभी तक इसका कोई नाम नहीं, हुज़ूर।”<br/><br/>महाराजा मुस्कुराए। और कहते हैं, उस दिन उस नए स्वाद को एक नाम मिला, भुजिया।<br/><br/>लेकिन ठहरो, कहानी अभी बाकी है।<br/><br/>साल बीतते गए। भुजिया बनाने का हुनर एक हाथ से दूसरे हाथ तक पहुँचता गया। राजमहल की रसोई से बीकानेर की गलियों में। गलियों से दुकानों तक। और दुकानों से घर-घर।<br/><br/>पीढ़ियाँ बदलती रहीं। बनाने वाले हाथ बदलते रहे। लेकिन मोठ, मसाले, भट्टी और हाथ का वह पुराना हुनर आगे बढ़ता रहा।<br/><br/>और धीरे-धीरे भुजिया सिर्फ़ बीकानेर में बनने वाला स्वाद नहीं रही। भुजिया में ही बीकानेर बस गया।<br/><br/>तो अगली बार जब बीकानेरी भुजिया की एक मुट्ठी उठाओ, याद रखना। एक महाराजा की सोच से जन्मी। एक रसोइदारनी के हाथों से बनी। और थार की मिट्टी में पली।<br/><br/>ये है कहानी हमारी बीकानेरी भुजिया की।</p>",
+            "english": "<p>Come, come, come! Today, I am going to tell you a story that perhaps even your grandparents have never heard. It is a story of salt and spice, and of a Maharaja’s grand feast. This is the story of Bhujia!<br/><br/>Our story begins nearly a century and a half ago. In the middle of a sea of sand stood Bikaner. Walls of red sandstone, palaces reaching towards the sky, and the vast Thar stretching in every direction. At the time, the throne of Bikaner was held by Maharaja Shri Dungar Singhji. The year was 1877.<br/><br/>A grand feast was being prepared at the palace. Guests were expected from far and wide. The Maharaja summoned the finest cooks of his royal kitchen and commanded, “Make something that has never been made before. Something born of this very land. Something that carries the spirit of Bikaner within it.”<br/><br/>The cooks were left wondering. What could they possibly make?<br/><br/>Among them stood an elderly cook, quietly observing. Silver in her hair. Years of skill written into her hands. She said nothing. She simply smiled and walked towards the pantry.<br/><br/>There she found moth beans, small desert beans that flourished in the scorching soil of the Thar. She took some gram flour. Then black pepper, red chilli, cardamom and clove. She looked at everything before her and said, “This is all I need.”<br/><br/>And then, the kitchen came alive. The dough was kneaded. It was pressed through a fine sieve straight into bubbling hot oil. Out came fine, golden strands.<br/><br/>The aroma was such that even the guards outside the kitchen began to wonder, “What in the world are they making in there?”<br/><br/>A platter was carried before the Maharaja. Every eye turned towards it. The Maharaja picked up a strand. Then another. Then another handful. Before long, even the guests were reaching for more.<br/><br/>The Maharaja asked, “What is this?”<br/><br/>The elderly cook bowed her head and replied, “It does not have a name yet, Your Highness.”<br/><br/>The Maharaja smiled. And, as the story goes, that day this new taste found its name, Bhujia.<br/><br/>But wait, the story is not over yet.<br/><br/>Years passed. The art of making Bhujia travelled from one pair of hands to another. From the royal kitchens into the lanes of Bikaner. From the lanes to its shops. And from the shops into homes.<br/><br/>Generations changed. The hands that made it changed. But the moth beans, the spices, the fire, and the age-old skill of making it continued to be passed on.<br/><br/>And slowly, Bhujia was no longer simply a taste made in Bikaner. Bikaner itself came to live within Bhujia.<br/><br/>So the next time you pick up a handful of Bikaneri Bhujia, remember. Born from a Maharaja’s idea. Brought to life by an elderly cook’s hands. And nurtured by the soil of the Thar.<br/><br/>This is the story of our Bikaneri Bhujia.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "subtitle_line_CckRNW"
+      ],
+      "name": "Custom Audio Player",
+      "settings": {
+        "banner_image": "shopify://shop_images/Wireframe_-_10.jpg",
+        "mobile_banner_image": "shopify://shop_images/Frame_1321317972_45afb4e3-0468-4667-91f9-4f7cf4cb61cd.jpg",
+        "heading": "Aao Sune Kahani\nBikaneri Bhujia Ki",
+        "audio_url": "https://cdn.shopify.com/s/files/1/0764/0953/6706/files/Story_1.mp3?v=1785132523",
+        "audio_url_english": "https://cdn.shopify.com/s/files/1/0764/0953/6706/files/Story_1.mp3?v=1785132523",
+        "default_language": "hi"
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "disabled": true,
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "padding_top": 36,
+        "padding_bottom": 28
+      }
+    },
+    "custom_featured_collection_4hUABe": {
+      "type": "custom-featured-collection",
+      "name": "Custom Featured Coll",
+      "settings": {
+        "collection": "frontpage",
+        "products_to_show": 4,
+        "title": "The Bhandaar",
+        "heading_subtitle": "Store",
+        "heading_size": "h1",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "columns_desktop": 4,
+        "enable_desktop_slider": true,
+        "full_width": false,
+        "show_view_all": false,
+        "view_all_style": "solid",
+        "color_scheme": "scheme-e41ba56d-f51d-47f6-8e6e-e04c8cbcade2",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "custom_pdp_faqs_Rmdrqr": {
+      "type": "custom_pdp_faqs",
+      "blocks": {
+        "faq_PAdHmQ": {
+          "type": "faq",
+          "settings": {
+            "question": "What makes this Bikaneri Bhujia different?",
+            "answer": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+          }
+        },
+        "faq_EhG9wL": {
+          "type": "faq",
+          "settings": {
+            "question": "What ingredients are used?",
+            "answer": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+          }
+        },
+        "faq_TqKq7p": {
+          "type": "faq",
+          "settings": {
+            "question": "How is the texture different from regular bhujia?",
+            "answer": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+          }
+        },
+        "faq_78Jjbf": {
+          "type": "faq",
+          "settings": {
+            "question": "How should it be stored?",
+            "answer": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+          }
+        },
+        "faq_Hdj7Nh": {
+          "type": "faq",
+          "settings": {
+            "question": "What is the shelf life?",
+            "answer": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_PAdHmQ",
+        "faq_EhG9wL",
+        "faq_TqKq7p",
+        "faq_78Jjbf",
+        "faq_Hdj7Nh"
+      ],
+      "name": "Custom PDP FAQs",
+      "settings": {
+        "heading": "FAQ",
+        "right_image": "shopify://shop_images/Codex_Image_Sep_11_2026_06_31_45_PM.png"
+      }
+    },
+    "custom_bg_heading_KyQTB7": {
+      "type": "custom-bg-heading",
+      "name": "Custom BG Heading",
+      "settings": {
+        "heading": "Follow Us",
+        "heading_color": "#ff6344",
+        "background_color": "#570f13"
+      }
+    }
+  },
+  "order": [
+    "bullets_scroller_qaQmhr",
+    "main",
+    "pdp_fold_2_NqQJ3V",
+    "custom_audio_player_9bp7pg",
+    "related-products",
+    "custom_featured_collection_4hUABe",
+    "custom_pdp_faqs_Rmdrqr",
+    "custom_bg_heading_KyQTB7"
+  ]
+}

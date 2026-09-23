@@ -1,0 +1,95 @@
+{{ 'pdp_fold_2.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'pdp_fold_2.js' | asset_url }}" defer="defer"></script>
+
+<div
+  class="pdp-fold-2-container"
+  data-section-id="{{ section.id }}"
+  data-animations-enabled="{{ settings.animations_reveal_on_scroll }}"
+>
+  <div class="pdp-fold-2-left">
+    <h3 class="pdp-fold-2-heading">{{ section.settings.pdp_fold_2_left_heading }}</h3>
+    <div class="pdp-fold-2-list">
+      {% for block in section.blocks %}
+        <details
+          class="pdp-fold-2-item"
+          name="pdp-fold-2-accordion-{{ section.id }}"
+          {% if forloop.first %}open{% endif %}
+          {{ block.shopify_attributes }}
+        >
+          <summary class="pdp-fold-2-item-summary">
+            <span class="pdp-fold-2-item-question">{{ block.settings.bullet_text }}</span>
+            <span class="pdp-fold-2-item-icon" aria-hidden="true">
+              <span class="pdp-fold-2-item-icon-bar pdp-fold-2-item-icon-bar--h"></span>
+              <span class="pdp-fold-2-item-icon-bar pdp-fold-2-item-icon-bar--v"></span>
+            </span>
+          </summary>
+          <div class="pdp-fold-2-item-content">
+            <div class="pdp-fold-2-item-answer">{{ block.settings.bullet_content }}</div>
+          </div>
+        </details>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="pdp-fold-2-right">
+    <img
+      class="pdp-fold-2-right-image"
+      src="{{ section.settings.pdp_fold_2_right_image | image_url }}"
+      alt=""
+      loading="lazy"
+    >
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "PDP Fold 2",
+  "settings": [
+    {
+      "type": "text",
+      "id": "pdp_fold_2_left_heading",
+      "label": "Left Heading",
+      "default": "Prepared with a discipline that remains unchanged."
+    },
+    {
+      "type": "image_picker",
+      "id": "pdp_fold_2_right_image",
+      "label": "Right Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "bullet",
+      "name": "Bullet",
+      "settings": [
+        {
+          "type": "text",
+          "id": "bullet_text",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "bullet_content",
+          "label": "Content"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Fold 2",
+      "blocks": [
+        {
+          "type": "bullet"
+        },
+        {
+          "type": "bullet"
+        },
+        {
+          "type": "bullet"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

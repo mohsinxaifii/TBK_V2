@@ -1,0 +1,140 @@
+.custom-banner-container {
+    position: relative;
+}
+
+/* Color theme matches .custom-audio-player-transcript-arrow: maroon
+   outline/text at rest, solid maroon fill once active. */
+.custom-banner-mute-toggle {
+    position: absolute;
+    z-index: 3;
+    right: 24px;
+    bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid #570f13;
+    background: transparent;
+    color: #570f13;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    transform-origin: center;
+}
+
+.custom-banner-mute-toggle:hover,
+.custom-banner-mute-toggle.is-unmuted {
+    background: #570f13;
+    border-color: #570f13;
+    color: #FFFDEE;
+}
+
+.custom-banner-mute-toggle:active {
+    transform: scale(0.94);
+}
+
+.custom-banner-mute-icon {
+    display: flex;
+    width: 17px;
+    height: 17px;
+    transform-origin: center;
+}
+
+.custom-banner-mute-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.custom-banner-mute-icon-unmuted {
+    display: none;
+}
+
+.custom-banner-mute-toggle.is-unmuted .custom-banner-mute-icon-muted {
+    display: none;
+}
+
+.custom-banner-mute-toggle.is-unmuted .custom-banner-mute-icon-unmuted {
+    display: flex;
+}
+
+/* Cursor tag: mirrors .custom-audio-player-cursor-tag in custom-audio-player.css
+   -- a small pill that follows the pointer anywhere over the video and toggles
+   mute on click, the real cursor staying visible alongside it. Split into two
+   elements for the same reason as that one: the outer only ever translates to
+   follow the cursor, the inner (-flip) only ever rotates for the open/close
+   flip -- combining percentage translation with 3D rotation on a single
+   element sheared it into a parallelogram instead of a clean flip.
+
+   custom-banner-audio.js moves this element to a direct child of <body> at
+   setup, so visibility is toggled via .is-enabled on itself rather than a
+   .has-cursor-tag ancestor class (there's no longer a fixed ancestor to hang
+   that off of by design -- see the comment in the JS for why). */
+.custom-banner-container video {
+    cursor: pointer;
+}
+
+.custom-banner-cursor-tag {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    display: none;
+    pointer-events: none;
+    will-change: transform;
+}
+
+.custom-banner-cursor-tag.is-enabled {
+    display: flex;
+}
+
+.custom-banner-cursor-tag-flip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 15px;
+    background: #570f13;
+    color: #FFFDEE;
+    font-family: var(--font-family-label);
+    font-size: var(--font-audio-tag-size);
+    font-weight: 300;
+    letter-spacing: var(--font-audio-tag-letter-spacing);
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0;
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+.custom-banner-cursor-tag-text-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+}
+
+.custom-banner-cursor-tag-text {
+    display: inline-block;
+    vertical-align: top;
+    will-change: transform;
+}
+
+@media (hover: none),
+(pointer: coarse) {
+    .custom-banner-cursor-tag {
+        display: none !important;
+    }
+}
+
+@media (max-width: 749px) {
+    .custom-banner-mute-toggle {
+        right: 16px;
+        bottom: 16px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .custom-banner-mute-icon {
+        width: 14px;
+        height: 14px;
+    }
+}

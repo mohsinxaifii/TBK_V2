@@ -1,0 +1,117 @@
+.story-tags-strip__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 32px;
+}
+
+.story-tags-strip__empty {
+  margin: 0;
+  opacity: 0.6;
+}
+
+.story-tags-strip__label {
+  margin: 0;
+  font-family: var(--font-family-label);
+  font-size: var(--font-label-size);
+  line-height: var(--font-label-line-height);
+  font-weight: var(--font-eyebrow-weight);
+  letter-spacing: var(--font-label-letter-spacing);
+  text-transform: uppercase;
+  color: #fffdee;
+}
+
+.story-tags-strip__marquee {
+  position: relative;
+  overflow: hidden;
+  width: 60%;
+  max-width: 60%;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 40px,
+    #000 calc(100% - 40px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(to right, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
+}
+
+.story-tags-strip__marquee.is-dragging {
+  cursor: grabbing;
+}
+
+.story-tags-strip__list {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+  width: max-content;
+  list-style: none;
+  will-change: transform;
+}
+
+.story-tags-strip__item {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.story-tags-strip__tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 20px;
+  border: 1px solid #fffdee;
+  text-decoration: none;
+  color: currentColor;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.story-tags-strip__tag:hover {
+  background-color: #fffdee;
+  color: #181818;
+}
+
+
+.story-tags-strip__tag-text,
+.story-tags-strip__tag-text p {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-size: var(--font-story-tags-tag-size);
+  font-weight: var(--font-copy-weight);
+  letter-spacing: 1px;
+}
+
+@media screen and (max-width: 749px) {
+  .story-tags-strip__inner {
+    gap: 14px 20px;
+  }
+
+  .story-tags-strip__marquee {
+    width: 100%;
+    max-width: 100%;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 24px,
+      #000 calc(100% - 24px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  }
+
+  .story-tags-strip__tag {
+    padding: 7px 16px;
+  }
+
+  .story-tags-strip__label {
+    font-size: var(--font-label-size-mobile);
+    line-height: var(--font-label-line-height-mobile);
+    font-weight: var(--font-label-weight-mobile);
+    letter-spacing: var(--font-label-letter-spacing-mobile);
+  }
+}

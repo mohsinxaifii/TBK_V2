@@ -1,0 +1,83 @@
+{{ 'custom-highlight-banner.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'custom-highlight-banner.js' | asset_url }}" defer="defer"></script>
+
+<div class="custom-highlight-banner-container" style="background-color: {{ section.settings.background_color }};">
+  <div class="page-width custom-highlight-banner-inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="custom-highlight-banner-eyebrow" style="color: {{ section.settings.eyebrow_color }};">
+        {{- section.settings.eyebrow -}}
+      </p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-heading custom-highlight-banner-heading" style="color: {{ section.settings.heading_color }};">
+        {{- section.settings.heading | newline_to_br -}}
+      </h2>
+    {%- endif -%}
+    {%- if section.settings.body != blank -%}
+      <div class="custom-highlight-banner-body rte" style="color: {{ section.settings.heading_color }};">
+        {{ section.settings.body }}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Highlight Banner",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Press Enter/Return to force a line break."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow color",
+      "default": "#2B1810"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading & body color",
+      "default": "#FFFDEE"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#96904C"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Highlight Banner",
+      "settings": {
+        "eyebrow": "The Ambition",
+        "heading": "To become a living archive of recipes, landscapes, ingredients, craftsmanship and traditions that deserve to endure.",
+        "body": "<p>India's culinary heritage has never been defined by recipes alone. It is shaped by landscapes, trade routes, craftsmanship, communities and generations of quiet refinement. Every method carries a reason, every ingredient a place of origin, and every tradition a way of seeing the world. The Bikaneri Kitchen exists to preserve this inheritance with honesty and care. Through our recipes, archives and stories, we celebrate the people, practices and regional wisdom that continue to shape Indian food culture. We believe a recipe is also preserving the memory of a place, the discipline of its people, and a legacy worthy of being carried forward.</p>"
+      }
+    }
+  ]
+}
+{% endschema %}

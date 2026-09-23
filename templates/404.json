@@ -1,0 +1,39 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-404",
+      "disabled": true,
+      "settings": {}
+    },
+    "custom_404": {
+      "type": "custom-404",
+      "settings": {
+        "background_image": "shopify://shop_images/5a8cb29c0010c41e3bef04e6aeee6956c1ccc917_ce7ae98a-0d79-4a12-9a01-7df3b6fc1aad.png",
+        "overlay_opacity": 0,
+        "eyebrow": "Oh No!",
+        "heading": "Error 404\nPage Not Found.",
+        "subtext": "We suggest you to visit our homepage.",
+        "button_label": "Visit",
+        "button_link": "",
+        "background_color": "#181818",
+        "card_background_color": "#fffdee",
+        "text_color": "#181818",
+        "button_background_color": "#181818",
+        "button_text_color": "#fffdee"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "custom_404"
+  ]
+}

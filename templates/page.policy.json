@@ -1,0 +1,83 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "custom_policy_page_gXU97p": {
+      "type": "custom-policy-page",
+      "blocks": {
+        "link_CdmPjg": {
+          "type": "link",
+          "settings": {
+            "label": "Privacy Policy",
+            "link": "shopify://pages/privacy-policy"
+          }
+        },
+        "link_T8dXGi": {
+          "type": "link",
+          "settings": {
+            "label": "Terms and Conditions",
+            "link": "shopify://pages/terms-conditions"
+          }
+        },
+        "link_mKJttG": {
+          "type": "link",
+          "settings": {
+            "label": "Shipping Policy",
+            "link": "shopify://pages/shipping-policy"
+          }
+        },
+        "link_xnVc8E": {
+          "type": "link",
+          "settings": {
+            "label": "Return & Refund",
+            "link": "shopify://pages/return-refund"
+          }
+        }
+      },
+      "block_order": [
+        "link_CdmPjg",
+        "link_T8dXGi",
+        "link_mKJttG",
+        "link_xnVc8E"
+      ],
+      "settings": {
+        "background_color": "#fffdee",
+        "text_color": "#121212",
+        "nav_background_color": "#e4cea0",
+        "nav_text_color": "#121212",
+        "nav_active_color": "#121212",
+        "padding_top": 36,
+        "padding_bottom": 60
+      }
+    },
+    "custom_bg_heading_Fpa7Gm": {
+      "type": "custom-bg-heading",
+      "name": "Custom BG Heading",
+      "settings": {
+        "heading": "Follow Us",
+        "heading_color": "#ff6344",
+        "background_color": "#570f13"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "custom_policy_page_gXU97p",
+    "custom_bg_heading_Fpa7Gm"
+  ]
+}

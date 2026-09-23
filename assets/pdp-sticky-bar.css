@@ -1,0 +1,123 @@
+/* Mobile-only mirror of .product-form__quantity-cart-row (see
+   section-main-product.css) — shown via assets/pdp-sticky-bar.js exactly
+   when the real row is out of view. Hidden by default (both visually and
+   from assistive tech) so there's no flash before JS/GSAP takes over, and
+   hard-hidden above the breakpoint regardless of JS state.
+
+   No `transform` here on purpose: assets/pdp-sticky-bar.js drives
+   yPercent/scale via GSAP on this same element. GSAP reads the element's
+   current *computed* transform the first time it touches it to establish
+   its internal baseline — if a CSS rule had already authored a combined
+   translateY()+scale() transform, GSAP would decompose that matrix on its
+   own terms (its internal composition order isn't guaranteed to match how
+   the CSS was written) and can come out with a nonsense offset instead of
+   the intended one. Transform is GSAP's alone here; CSS only ever sets
+   opacity/visibility, which don't have this conflict. */
+.pdp-sticky-bar { 
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: block;
+  background-color: #FFFDEE;
+  border-top: 1px solid #181818;
+  padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px));
+  opacity: 0;
+  visibility: hidden;
+  /* Set by trackVisualViewport() in pdp-sticky-bar.js: the distance between
+     the layout viewport's bottom (where bottom:0 puts us) and the visual
+     viewport's, which is where the bar actually needs to sit. */
+  transform: translateY(var(--pdp-sticky-bar-shift, 0px));
+}
+
+/* Belt and braces for the same problem: even mid-gesture, while a collapsing
+   toolbar is animating and no resize event has fired yet, this keeps the bar's
+   own background painted past its bottom edge so the page can never show
+   through as a transparent strip. Sits behind the bar's content and is
+   invisible whenever the bar is flush, which is the normal case. */
+.pdp-sticky-bar::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background-color: inherit;
+  pointer-events: none;
+}
+.pdp-sticky-bar.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.pdp-sticky-bar__inner {
+  display: flex;
+  align-items: flex-end;
+}
+
+.pdp-sticky-bar__quantity.quantity {
+  flex: 0 0 30%;
+  width: 30%;
+  background-color: #FFFDEE !important;
+  border: solid 1px #181818 !important;
+  box-shadow: none !important;
+  height: 4.8rem;
+  min-height: 0;
+}
+
+.pdp-sticky-bar__quantity .quantity__input,
+.pdp-sticky-bar__quantity .quantity__button,
+.pdp-sticky-bar__quantity span {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-copy-weight);
+}
+
+.pdp-sticky-bar__quantity .quantity__input {
+  font-size: 20px;
+  font-weight: var(--font-quantity-value-weight);
+  opacity: 1;
+  /* The bar is phones-only, where Helvetica Neue's hhea metrics sit the
+     digits ~0.09em high -- same correction as the in-page quantity row, and
+     padding for the same reason (a transform would slide the input's
+     background over the box's bottom border). */
+  padding-top: 0.18em;
+}
+
+.pdp-sticky-bar__quantity .quantity__button {
+  font-size: var(--font-quantity-button-size) !important;
+  line-height: 1;
+}
+
+.pdp-sticky-bar__quantity .quantity__button-text {
+  pointer-events: none;
+}
+
+.pdp-sticky-bar__quantity::after {
+  box-shadow: none !important;
+}
+
+.pdp-sticky-bar__buttons.product-form__buttons {
+  flex: 0 0 70%;
+  width: 70%;
+  max-width: unset;
+  min-width: unset;
+  margin-bottom: 0;
+  display: flex;
+}
+
+.pdp-sticky-bar__buttons .product-form__submit {
+  height: 4.8rem;
+  min-height: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--font-copy-weight);
+  font-size: var(--font-add-to-cart-size);
+  font-family: var(--font-family-body);
+}
+
+@media screen and (min-width: 768px) {
+  .pdp-sticky-bar {
+    display: none;
+  }
+}

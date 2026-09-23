@@ -1,0 +1,130 @@
+.press-articles__heading {
+  max-width: unset;
+}
+
+.press-articles__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+@media screen and (min-width: 600px) {
+  .press-articles__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .press-articles__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.press-articles__card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+}
+
+.press-articles__media {
+  position: relative;
+}
+
+.press-articles__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.press-articles__date {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  margin: 0;
+  padding: 4px 24px;
+  font-size: var(--font-small-size);
+  line-height: var(--font-small-line-height);
+  font-weight: var(--font-weight-extralight);
+  font-family: var(--font-family-body);
+  letter-spacing: var(--font-small-letter-spacing);
+}
+
+.press-articles__panel {
+  padding: 28px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.press-articles__publication {
+  margin: 0 0 12px;
+  font-size: var(--font-press-publication-size);
+  color: #FFFDEE;
+  font-family: var(--font-family-accent);
+}
+
+.press-articles__excerpt {
+  margin: 0 0 16px;
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  font-weight: var(--font-body-copy-weight);
+  letter-spacing: var(--font-body-letter-spacing);
+  color: #FFFDEE;
+  font-family: var(--font-family-accent);
+}
+
+.press-articles__divider {
+  border: none;
+  border-top: 1px solid currentColor;
+  opacity: 0.4;
+  margin: 0 0 16px;
+}
+
+.press-articles__read {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--font-cta-size);
+  font-family: var(--font-family-accent);
+}
+
+.press-articles__read-icon {
+  width: 29px;
+  height: auto;
+}
+
+.press-articles__empty {
+  text-align: center;
+  opacity: 0.6;
+}
+
+/* ---- Mobile type scale (font-variables 3b-3d) ----
+   Each card reads date -> publication -> excerpt -> "read": small print,
+   sub-heading, body and CTA, the same run as the featured product's card. */
+@media screen and (max-width: 749px) {
+  .press-articles__date {
+    font-size: var(--font-small-size-mobile);
+    line-height: var(--font-small-line-height-mobile);
+    letter-spacing: var(--font-small-letter-spacing-mobile);
+  }
+
+  .press-articles__publication {
+    font-size: var(--font-subheading-size-mobile);
+    line-height: var(--font-subheading-line-height-mobile);
+  }
+
+  .press-articles__excerpt {
+    font-size: var(--font-body-size-mobile);
+    line-height: var(--font-body-line-height-mobile);
+    font-weight: var(--font-body-weight-mobile);
+    letter-spacing: var(--font-body-letter-spacing-mobile);
+  }
+
+  .press-articles__read {
+    font-size: var(--font-cta-size-mobile);
+  }
+}

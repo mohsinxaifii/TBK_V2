@@ -1,0 +1,160 @@
+{{ 'custom-inset-image.css' | asset_url | stylesheet_tag }}
+{{ 'custom-practices.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'custom-practices.js' | asset_url }}" defer="defer"></script>
+
+<div
+  class="custom-practices"
+  style="background-color: {{ section.settings.background_color }};"
+>
+  <div class="page-width custom-practices-inner">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-heading custom-practices-heading">
+        {{- section.settings.heading | newline_to_br -}}
+      </h2>
+    {%- endif -%}
+
+    {%- if section.settings.body != blank -%}
+      <div class="custom-practices-body rte">{{ section.settings.body }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.image != blank -%}
+      <div class="custom-inset-image-wrap custom-practices-image">
+        <picture>
+          {%- if section.settings.image_mobile != blank -%}
+            <source media="(max-width: 768px)" srcset="{{ section.settings.image_mobile | image_url }}">
+          {%- endif -%}
+          <img
+            src="{{ section.settings.image | image_url }}"
+            alt="{{ section.settings.image.alt | escape }}"
+            width="{{ section.settings.image.width }}"
+            height="{{ section.settings.image.height }}"
+            loading="lazy"
+            class="custom-inset-image-img"
+          >
+        </picture>
+      </div>
+    {%- endif -%}
+
+    <div class="custom-practices-list">
+      {%- for block in section.blocks -%}
+        <div class="custom-practices-row" {{ block.shopify_attributes }}>
+          <span class="custom-practices-row-label">{{ block.settings.label }}</span>
+          <span class="custom-practices-row-description">{{ block.settings.description }}</span>
+        </div>
+      {%- else -%}
+        {%- if request.design_mode -%}
+          <div class="custom-practices-row">
+            <span class="custom-practices-row-label">Add a practice row to get started.</span>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Practices",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Press Enter/Return to force a line break.",
+      "default": "We are not historians.\nWe are practitioners."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text",
+      "default": "<p>Our responsibility is not to recreate nostalgia. It is to preserve methods whose value continues to reveal itself with time. Every batch is an opportunity to ask a simple question: Has anything unnecessary changed? If the answer is yes - we begin again.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image (mobile)",
+      "info": "Optional. Falls back to the image above when not set."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#F8F3E8"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "practice",
+      "name": "Practice",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Practices",
+      "blocks": [
+        {
+          "type": "practice",
+          "settings": {
+            "label": "Single-use oil",
+            "description": "Because it preserves clarity."
+          }
+        },
+        {
+          "type": "practice",
+          "settings": {
+            "label": "Bhatti cooking",
+            "description": "Because fire cannot always be standardised."
+          }
+        },
+        {
+          "type": "practice",
+          "settings": {
+            "label": "Small batches",
+            "description": "Because attention does not scale infinitely."
+          }
+        },
+        {
+          "type": "practice",
+          "settings": {
+            "label": "Regional ingredients",
+            "description": "Because origin shapes every recipe."
+          }
+        },
+        {
+          "type": "practice",
+          "settings": {
+            "label": "Hand-guided preparation",
+            "description": "Because judgement remains the finest instrument."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

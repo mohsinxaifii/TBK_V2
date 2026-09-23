@@ -1,0 +1,361 @@
+.custom-home-testimonials-container {
+  /* No aspect-ratio at any width: height comes from the content (header +
+     carousel), which is normal-flow now (see .custom-home-testimonials-content
+     below) — so it just grows to fit instead of clipping/overlapping
+     whenever a heading or card is taller than a ratio meant for the
+     background image would allow. */
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  background: #cdb68d;
+}
+
+.custom-home-testimonials-bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Corner logo + prev/next arrows sit in their own row below the carousel
+   (not position: absolute against the whole banner) — that way they're
+   always right under the cards, in a predictable spot, regardless of how
+   tall the heading above or the cards themselves end up being. */
+.custom-home-testimonials-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+@media screen and (min-width: 750px) {
+  .custom-home-testimonials-footer {
+    margin-top: 28px;
+  }
+}
+
+.custom-home-testimonials-corner {
+  flex-shrink: 0;
+  width: 30px;
+  height: auto;
+}
+
+.custom-home-testimonials-arrow-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.custom-home-testimonials-arrow {
+  width: 100%;
+  height: auto;
+}
+
+.custom-home-testimonials-nav-prev .custom-home-testimonials-arrow {
+  margin-top: -3px;
+}
+
+.custom-home-testimonials-content {
+  /* relative, not absolute: stays in normal flow at every width so the
+     container's height comes from it (header + carousel) instead of a
+     fixed aspect-ratio — position: relative (rather than static) only so
+     z-index: 2 keeps this painting above the absolutely-positioned
+     background image. */
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 100px 20px;
+}
+
+.custom-home-testimonials-header {
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.custom-home-testimonials-caption {
+  margin: 0 0 6px;
+  font-family: var(--font-family-label);
+  font-size: var(--font-label-size);
+  font-weight: var(--font-label-weight);
+  letter-spacing: var(--font-label-letter-spacing);
+  text-transform: uppercase;
+  color: #181810;
+}
+
+.custom-home-testimonials-heading {
+  margin: 0 auto 20px;
+}
+
+@media screen and (min-width: 750px) {
+  .custom-home-testimonials-heading {
+    font-size: var(--font-section-heading-size);
+  }
+}
+
+.custom-home-testimonials-carousel {
+  /* Single source of truth for the card grid: custom-home-testimonials.js
+     reads --cards-per-view via getComputedStyle instead of keeping its own
+     hardcoded breakpoint copy, so the carousel's "how many cards fit" math
+     and this CSS can never drift out of sync (that drift — CSS showing one
+     card count, JS assuming another — is what caused cards to overlap/clip
+     at various widths before). */
+  --cards-per-view: 1;
+  --card-gap: 14px;
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+@media screen and (min-width: 750px) {
+  .custom-home-testimonials-carousel {
+    --cards-per-view: 2;
+    --card-gap: 24px;
+    gap: 16px;
+    margin-top: 24px;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .custom-home-testimonials-carousel {
+    --cards-per-view: 3;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .custom-home-testimonials-carousel {
+    --cards-per-view: 4;
+  }
+}
+
+.custom-home-testimonials-viewport {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  /* Keeps the scroller on its own GPU layer so Safari doesn't repaint it
+     from scratch when correctBounds() jumps scrollLeft instantly to wrap
+     the loop — without this, that jump can show a blank frame (the cards
+     briefly vanish) on some iOS devices. */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: scroll-position;
+}
+
+.custom-home-testimonials-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.custom-home-testimonials-viewport.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+
+.custom-home-testimonials-track {
+  display: flex;
+  width: 100%;
+  gap: var(--card-gap, 14px);
+}
+
+.custom-home-testimonials-viewport.is-dragging .custom-home-testimonials-track {
+  pointer-events: none;
+  user-select: none;
+}
+
+.custom-home-testimonials-card {
+  position: relative;
+  /* 80% (not a full 100%/1-card formula) below 750px is a deliberate
+     partial-card peek hinting the row scrolls; 750px and up shows whole
+     cards sized from --cards-per-view, so nothing is ever mid-card unless
+     the carousel is actually being dragged. */
+  flex: 0 0 80%;
+  max-width: 80%;
+  align-self: stretch;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+@media screen and (min-width: 750px) {
+  .custom-home-testimonials-card {
+    flex: 0 0 calc((100% - (var(--cards-per-view) - 0) * var(--card-gap)) / var(--cards-per-view));
+    max-width: calc((100% - (var(--cards-per-view) - 0) * var(--card-gap)) / var(--cards-per-view));
+  }
+}
+
+.custom-home-testimonials-card-face {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #F7EEE5;
+  padding: 22px 20px;
+}
+
+@media screen and (min-width: 750px) {
+  .custom-home-testimonials-card-face {
+    padding: 30px 24px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .custom-home-testimonials-card-face {
+    padding: 36px 24px;
+  }
+}
+
+.custom-home-testimonials-quote {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Figma's card copy is 16/24 at every width, which is the mobile body role
+   (see font-variables 3b), so there's no desktop step-up here. Colour matches
+   the reference card's #181818, since this quote also sits on a light
+   (#F7EEE5) ground. */
+.custom-home-testimonials-quote p {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-body-weight-mobile);
+  font-size: var(--font-body-size-mobile);
+  line-height: var(--font-body-line-height-mobile);
+  letter-spacing: var(--font-body-letter-spacing-mobile);
+  text-transform: none;
+  color: #181818;
+}
+
+/* Hindi testimonials: Latin type roles don't fit Devanagari, so this is its
+   own size (Figma's 16/24 at every width) and no tracking, which would pull
+   the shirorekha apart. Line breaks come from the block's rich text. */
+.custom-home-testimonials-quote.custom-home-testimonials-quote--hindi p {
+  font-family: var(--font-family-devanagari);
+  font-size: var(--font-testimonial-hindi-size);
+  font-weight: var(--font-testimonial-hindi-weight);
+  line-height: var(--font-testimonial-hindi-line-height);
+  letter-spacing: 0;
+}
+
+.custom-home-testimonials-person {
+  position: relative;
+  margin-top: auto;
+  padding-top: 64px;
+}
+
+/* height: fit-content used to let each portrait keep its own aspect ratio, so
+   with ten differently-shaped source images every card's person block came out
+   a different height. Both dimensions are fixed now and object-fit: cover does
+   the cropping, which is what it was already set up for -- it just had nothing
+   to crop against. 52x70 at every width is the Figma card's portrait box.
+   object-position sits high because these are head-and-shoulders portraits:
+   cropping from the centre cuts faces off. */
+.custom-home-testimonials-avatar {
+  display: block;
+  width: 52px;
+  height: 70px;
+  object-fit: cover;
+  object-position: center 20%;
+  margin-bottom: 12px;
+}
+
+/* Figma card name: IBM Plex Serif SemiBold 16/24, uppercase. The location
+   isn't in the Figma card; it takes the same face at regular weight. */
+.custom-home-testimonials-name {
+  margin: 0;
+  font-family: 'Baskervville';
+  font-size: var(--font-testimonial-name-size);
+  font-weight: var(--font-testimonial-name-weight);
+  line-height: var(--font-testimonial-name-line-height);
+  text-transform: uppercase;
+  color: #181818;
+}
+
+.custom-home-testimonials-location {
+  margin: 0;
+  font-family: var(--font-family-product-meta);
+  font-size: var(--font-testimonial-location-size);
+  font-weight: var(--font-testimonial-location-weight);
+  line-height: var(--font-testimonial-name-line-height);
+  color: #181818;
+}
+
+.custom-home-testimonials-nav {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+}
+
+@media screen and (min-width: 750px) {
+  .custom-home-testimonials-nav {
+    width: 44px;
+  }
+}
+
+/* Mouse only: on touch screens a tap leaves :hover stuck on, so the arrow
+   would sit dimmed after every press. */
+@media (hover: hover) and (pointer: fine) {
+  .custom-home-testimonials-nav:hover {
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .custom-home-testimonials-viewport {
+    scroll-behavior: auto !important;
+  }
+}
+
+@media screen and (max-width: 749px) {
+
+  /* last-child only: a multi-stanza (e.g. Hindi) quote shouldn't get this
+     quote-to-name gap between its own paragraphs. */
+  .custom-home-testimonials-quote p:last-child {
+    margin: 0 0 50px !important;
+  }
+
+  .custom-home-testimonials-person {
+    padding-top: 40px;
+  }
+
+  .custom-home-testimonials-nav {
+    width: 50px;
+  }
+
+  .custom-home-testimonials-content {
+    /* No more reserved 120px at the bottom: that was headroom for the old
+       absolutely-positioned arrow-container, which now sits in a normal
+       row below the carousel instead of floating over the banner. */
+    padding: 62px 20px 40px;
+  }
+
+  .custom-home-testimonials-caption {
+    font-size: var(--font-label-size-mobile);
+    line-height: var(--font-label-line-height-mobile);
+    font-weight: var(--font-label-weight-mobile);
+    letter-spacing: var(--font-label-letter-spacing-mobile);
+    margin-bottom: 5px !important;
+  }
+}

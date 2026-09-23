@@ -1,0 +1,158 @@
+{{ 'custom_pdp_faqs.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'custom_pdp_faqs.js' | asset_url }}" defer="defer"></script>
+
+<div
+  class="pdp-faqs-container"
+  data-section-id="{{ section.id }}"
+  data-animations-enabled="{{ settings.animations_reveal_on_scroll }}"
+>
+  {%- comment -%}
+    product.json is a single template shared by every product, so the FAQ
+    cannot live in block settings if the answers differ per product -- both
+    products would show whichever copy was typed last. The content therefore
+    comes from two per-product list metafields, paired by index:
+
+      custom.faq_questions  list.single_line_text_field
+      custom.faq_answers    list.single_line_text_field
+
+    The section's blocks stay as the fallback, so a product with no metafields
+    set (or a merchant preferring the editor) still renders. Pairing is by
+    position, so the two lists must stay the same length -- any question
+    without a matching answer is skipped rather than rendered empty.
+  {%- endcomment -%}
+  {%- assign faq_questions = product.metafields.custom.faq_questions.value -%}
+  {%- assign faq_answers = product.metafields.custom.faq_answers.value -%}
+
+  <div class="pdp-faqs-left">
+    <h2 class="pdp-faqs-heading">{{ section.settings.heading }}</h2>
+    <div class="pdp-faqs-list">
+      {%- if faq_questions != blank and faq_questions.size > 0 -%}
+        {%- for question in faq_questions -%}
+          {%- assign answer = faq_answers[forloop.index0] -%}
+          {%- if question != blank and answer != blank -%}
+            <details
+              class="pdp-faqs-item"
+              name="pdp-faqs-accordion-{{ section.id }}"
+              {% if forloop.first %}open{% endif %}
+            >
+              <summary class="pdp-faqs-item-summary">
+                <span class="pdp-faqs-item-question">{{ question }}</span>
+                <span class="pdp-faqs-item-icon" aria-hidden="true">
+                  <span class="pdp-faqs-item-icon-bar pdp-faqs-item-icon-bar--h"></span>
+                  <span class="pdp-faqs-item-icon-bar pdp-faqs-item-icon-bar--v"></span>
+                </span>
+              </summary>
+              <div class="pdp-faqs-item-content">
+                <div class="pdp-faqs-item-answer"><p>{{ answer }}</p></div>
+              </div>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {% for block in section.blocks %}
+          <details
+            class="pdp-faqs-item"
+            name="pdp-faqs-accordion-{{ section.id }}"
+            {% if forloop.first %}open{% endif %}
+            {{ block.shopify_attributes }}
+          >
+            <summary class="pdp-faqs-item-summary">
+              <span class="pdp-faqs-item-question">{{ block.settings.question }}</span>
+              <span class="pdp-faqs-item-icon" aria-hidden="true">
+                <span class="pdp-faqs-item-icon-bar pdp-faqs-item-icon-bar--h"></span>
+                <span class="pdp-faqs-item-icon-bar pdp-faqs-item-icon-bar--v"></span>
+              </span>
+            </summary>
+            <div class="pdp-faqs-item-content">
+              <div class="pdp-faqs-item-answer">{{ block.settings.answer }}</div>
+            </div>
+          </details>
+        {% endfor %}
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="pdp-faqs-right">
+    <img
+      class="pdp-faqs-right-image"
+      src="{{ section.settings.right_image | image_url }}"
+      alt=""
+      loading="lazy"
+    >
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom PDP FAQs",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "FAQ"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_image",
+      "label": "Right Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom PDP FAQs",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What makes this Bikaneri Bhujia different?",
+            "answer": "<p>This preparation follows a method that has remained unchanged over time. Each batch is pressed by hand, cooked in measured heat, and finished at the exact moment it is ready. The result is a finer texture, balanced flavour, and a clean finish</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What ingredients are used?"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How is the texture different from regular bhujia?"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How should it be stored?"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What is the shelf life?"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

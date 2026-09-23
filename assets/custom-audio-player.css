@@ -1,0 +1,851 @@
+.custom-audio-player-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Everything that used to size/clip against the container now does it
+   here instead, so .custom-audio-player-controls can sit below as a
+   normal-height full-width bar rather than fighting the hero for space
+   inside one aspect-ratio box. */
+.custom-audio-player-hero {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1440 / 740;
+    height: auto;
+    max-height: 1000px;
+    overflow: hidden;
+}
+
+/* Scoped to this one instance on purpose — NOT a change to the shared
+   .page-width utility. This is what makes the puppets' left/right %
+   below resolve against the centered content column's width instead of
+   the full-bleed hero, while height:100% keeps their pixel top/bottom
+   offsets anchored the same as when they sized against .hero directly.
+   .custom-audio-player-overlay stays a sibling of this, not a child, so
+   its full-bleed gradient wash still sizes against .hero, unaffected. */
+.custom-audio-player-hero-inner {
+    position: relative;
+    height: 100%;
+}
+
+.custom-audio-player_desktop-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    object-position: center 84%;
+}
+
+.custom-audio-player_mobile-image {
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.custom-audio-player-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    background: linear-gradient(180deg, rgba(20, 8, 6, 0.1) 0%, rgba(20, 8, 6, 0.4) 100%);
+    cursor: pointer;
+}
+
+.custom-audio-player-overlay .page-width {
+    position: absolute;
+    top: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.custom-audio-player-card {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    color: #FFFDEE;
+}
+
+.custom-audio-player-heading {
+    max-width: 74%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Cursor tag: a small pill that follows to the right of the pointer
+   anywhere over this section (outside the controls that have their own
+   precise affordance) and toggles playback on click. The real cursor
+   stays visible — this rides alongside it, not in place of it. JS only
+   ever adds .has-cursor-tag when GSAP is present, motion is allowed and
+   the pointer is a fine/hover one, so the section is never left without
+   a visible way to control playback.
+   Split into two elements on purpose: this outer one only ever gets
+   translated (x/y/xPercent/yPercent in custom-audio-player.js) to follow
+   the cursor — it never rotates. Combining percentage-based translation
+   with 3D rotation on the SAME element was producing a sheared
+   parallelogram instead of a clean flip, so the rotation lives on
+   .custom-audio-player-cursor-tag-flip below instead, which only ever
+   rotates and never moves. */
+.custom-audio-player-cursor-tag {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    display: none;
+    pointer-events: none;
+    will-change: transform;
+}
+
+.custom-audio-player-container.has-cursor-tag .custom-audio-player-cursor-tag {
+    display: flex;
+}
+
+/* backface-visibility guards the 3D open/close flip (custom-audio-player.js
+   tweens rotationX on this element) so an elastic overshoot past 90deg
+   never flashes the mirrored backside of the text mid-animation. */
+.custom-audio-player-cursor-tag-flip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 15px;
+    background: #570f13;
+    color: #FFFDEE;
+    font-family: var(--font-family-label);
+    font-size: var(--font-audio-tag-size);
+    font-weight: 300;
+    letter-spacing: var(--font-audio-tag-letter-spacing);
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0;
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+/* Same masked-rise convention as .ha-mask/.ha-unit in site-animations.js
+   (see custom-story-text-heading): the mask clips while the text travels
+   up into place. custom-audio-player.js runs its own small rise on this
+   pair whenever the label swaps between "Play audio"/"Pause audio",
+   rather than the site-wide script's one-time scroll reveal, since this
+   text changes repeatedly in response to playback state instead of once
+   on scroll-enter. */
+.custom-audio-player-cursor-tag-text-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+}
+
+.custom-audio-player-cursor-tag-text {
+    display: inline-block;
+    vertical-align: top;
+    will-change: transform;
+}
+
+@media (hover: none),
+(pointer: coarse) {
+    .custom-audio-player-cursor-tag {
+        display: none !important;
+    }
+}
+
+.custom-audio-player-transcript {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    gap: 14px;
+    max-width: 680px;
+    margin: 0 auto 28px;
+}
+
+/* The scrollable "notebook window", split into two layers:
+   .custom-audio-player-transcript-scroll is a static, non-scrolling frame
+   at a fixed height showing the full paper-cut PNG uncropped. Nested inside
+   it, .custom-audio-player-transcript-scroll-inner is inset 15px from its
+   top and bottom and is the element that actually scrolls -- since the
+   inset is on the OUTER frame rather than expressed as padding on the
+   scrolled content, it holds at every scroll position (text can never
+   scroll up under it to touch the top/bottom edge), not just before the
+   first line and after the last. */
+.custom-audio-player-transcript-scroll {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    height: 320px;
+    overflow: hidden;
+    background-image: url('https://cdn.shopify.com/s/files/1/0764/0953/6706/files/image.png?v=1785138075');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    cursor: grab;
+}
+
+/* data-lenis-prevent (see the liquid template) keeps the site's Lenis
+   smooth scroll from swallowing wheel/touch input meant for this inner
+   scroller. Native scrollbar hidden since the up/down arrows in
+   .custom-audio-player-transcript-nav are the intended affordance. */
+.custom-audio-player-transcript-scroll-inner {
+    position: absolute;
+    top: 35px;
+    bottom: 35px;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.custom-audio-player-transcript-scroll-inner::-webkit-scrollbar {
+    display: none;
+}
+
+/* .is-dragging is toggled by the pointerdown/up handlers in
+   custom-audio-player.js for grab-to-scroll -- user-select:none stops the
+   drag from also starting a text selection underneath it. */
+.custom-audio-player-transcript-scroll-inner.is-dragging {
+    cursor: grabbing;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.custom-audio-player-transcript-content {
+    position: relative;
+    padding: 0 42px;
+}
+
+.custom-audio-player-transcript-text {
+    display: none;
+    font-family: var(--font-family-body);
+    font-size: var(--font-body-size);
+    line-height: 1.7;
+    font-weight: var(--font-copy-weight);
+    color: #181818;
+    text-align: left;
+}
+
+.custom-audio-player-transcript-text .custom-audio-player-transcript-line p {
+    margin: 0 0 1em;
+}
+
+.custom-audio-player-transcript-text .custom-audio-player-transcript-line p:last-child {
+    margin-bottom: 0;
+}
+
+.custom-audio-player-transcript[data-language="hi"] .custom-audio-player-transcript-hi,
+.custom-audio-player-transcript[data-language="en"] .custom-audio-player-transcript-en {
+    display: block;
+}
+
+/* Word wrapper stays a normal inline-block so line-wrapping only ever
+   happens at the literal space text nodes custom-audio-player.js leaves
+   between words -- never mid-word. Each character inside is its own
+   inline-block so GSAP can tween opacity+y per letter as the notebook
+   scrolls (see the reveal timeline in custom-audio-player.js). */
+.custom-audio-player-transcript-word {
+    display: inline-block;
+}
+
+.custom-audio-player-transcript-char {
+    display: inline-block;
+}
+
+.custom-audio-player-transcript-nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    flex-shrink: 0;
+    position: absolute;
+    top: 50%;
+    right: -50px;
+    transform: translateY(-50%);
+}
+
+.custom-audio-player-transcript-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1.5px solid #570f13;
+    background: transparent;
+    color: #570f13;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease, transform 0.15s ease;
+}
+
+.custom-audio-player-transcript-arrow svg {
+    width: 14px;
+    height: 14px;
+}
+
+.custom-audio-player-transcript-arrow:hover {
+    background: #570f13;
+    color: #FFFDEE;
+}
+
+.custom-audio-player-transcript-arrow:active {
+    transform: scale(0.92);
+}
+
+.custom-audio-player-transcript-arrow.is-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.custom-audio-player-controls {
+    width: 100%;
+    background-color: #570f13;
+}
+
+/* .page-width gives this the site's standard max-width/side-margins;
+   this class only adds the row layout on top of it. */
+.custom-audio-player-controls-inner {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.custom-audio-player-playpause {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid #FFFDEE;
+    background: transparent;
+    color: #FFFDEE;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    transform-origin: center;
+}
+
+.custom-audio-player-playpause:hover,
+.custom-audio-player-playpause.is-playing {
+    background: #FFFDEE;
+    border-color: #FFFDEE;
+    color: #570f13;
+}
+
+.custom-audio-player-playpause:active {
+    /* Instant, untransitioned press feedback — kept even under
+       prefers-reduced-motion since it's direct input feedback, not an
+       autonomous animation. custom-audio-player.js layers a GSAP bounce
+       on top of the release when motion is allowed. */
+    transform: scale(0.94);
+}
+
+.custom-audio-player-icon {
+    display: flex;
+    width: 16px;
+    height: 16px;
+    transform-origin: center;
+}
+
+.custom-audio-player-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.custom-audio-player-icon-pause {
+    display: none;
+}
+
+.custom-audio-player-playpause.is-playing .custom-audio-player-icon-play {
+    display: none;
+}
+
+.custom-audio-player-playpause.is-playing .custom-audio-player-icon-pause {
+    display: flex;
+}
+
+.custom-audio-player-progress-bar {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    touch-action: none;
+}
+
+.custom-audio-player-progress-bar::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    transform: translateY(-50%);
+    border-radius: 2px;
+    background: rgba(255, 253, 238, 0.26)
+}
+
+.custom-audio-player-progress-bar:focus-visible {
+    outline: none;
+}
+
+.custom-audio-player-progress-bar:focus-visible::before {
+    background: rgba(24, 24, 24, 0.32);
+}
+
+.custom-audio-player-progress-fill {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 4px;
+    width: 0%;
+    transform: translateY(-50%);
+    border-radius: 2px;
+    background: #fff;
+    display: flex !important;
+
+    /* No CSS transition here on purpose — JS drives this every animation
+       frame (see custom-audio-player.js), which is already continuous.
+       Layering a transition on top of per-frame updates would make each
+       frame's tiny step ease independently, reading as laggy/mushy instead
+       of smooth. */
+}
+
+.custom-audio-player-progress-handle {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #fff;
+    transform: translate(-50%, -50%) scale(0.9);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    display: flex !important;
+}
+
+.custom-audio-player-progress-bar:hover .custom-audio-player-progress-handle,
+.custom-audio-player-progress-bar:focus-visible .custom-audio-player-progress-handle,
+.custom-audio-player-progress-bar.is-scrubbing .custom-audio-player-progress-handle {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.4);
+    display: flex !important;
+}
+
+.custom-audio-player-language-switcher {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.custom-audio-player-language-pill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 140px;
+    background: #fff;
+    z-index: 0;
+    pointer-events: none;
+    /* No CSS transition on purpose: JS positions this on load and GSAP
+       drives the slide on click. A CSS transition here would also fire
+       for the reduced-motion fallback, where the JS sets it instantly. */
+}
+
+.custom-audio-player-language-button {
+    position: relative;
+    z-index: 1;
+    border: none;
+    background: #ffffff30;
+    padding: 10px 10px;
+    width: 140px;
+    font-family: var(--font-family-label);
+    font-size: var(--font-audio-language-size);
+    font-weight: var(--font-audio-language-weight);
+    letter-spacing: var(--font-audio-language-letter-spacing);
+    text-transform: uppercase;
+    color: #181818;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.custom-audio-player-language-button:active {
+    transform: scale(0.96);
+}
+
+.custom-audio-player-audio {
+    display: none;
+}
+
+.custom-audio-player_puppet_right-image {
+    position: absolute;
+    top: -50px;
+    right: 3%;
+    width: 19rem;
+    animation: puppet-bob-right 6s ease-in-out infinite;
+    will-change: transform;
+}
+
+.custom-audio-player_puppet_left-image {
+    position: absolute;
+    top: -340px;
+    left: 3%;
+    width: 19rem;
+    animation: puppet-bob-left 8s ease-in-out infinite;
+    animation-delay: -1.1s;
+    will-change: transform;
+}
+
+.custom-audio-player_puppet_bottom-image {
+    position: absolute;
+    bottom: -160px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+}
+
+/* Two different periods/offsets so the puppets drift in and out of
+   sync instead of bobbing like a mirrored pair. */
+@keyframes puppet-bob-right {
+
+    0%,
+    100% {
+        transform: translateY(-50px);
+    }
+
+    50% {
+        transform: translateY(30px);
+    }
+}
+
+@keyframes puppet-bob-left {
+
+    0%,
+    100% {
+        transform: translateY(-200px);
+    }
+
+    50% {
+        transform: translateY(-70px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .custom-audio-player_puppet_right-image,
+    .custom-audio-player_puppet_left-image {
+        animation: none;
+    }
+}
+
+@media(max-width:2400px) {
+    .custom-audio-player_puppet_bottom-image {
+        bottom: -132px;
+        width: 30%;
+    }
+}
+
+
+
+@media(max-width:2200px) {
+    .custom-audio-player_puppet_bottom-image {
+        bottom: -98px;
+        width: 23%;
+    }
+
+    .custom-audio-player_puppet_left-image {
+        top: -370px;
+        left: 9%;
+        width: 16rem;
+    }
+
+    .custom-audio-player_puppet_right-image {
+        top: -80px;
+        right: 9%;
+        width: 16rem;
+    }
+
+    .custom-audio-player-hero {
+        aspect-ratio: 1440 / 600;
+    }
+}
+
+@media (max-width: 1800px) {
+    .custom-audio-player-hero {
+        aspect-ratio: 1440 / 730;
+    }
+}
+
+@media(max-width:1500px) {
+    .custom-audio-player_puppet_right-image {
+        top: -70px;
+        right: 4%;
+        width: 13rem;
+    }
+
+    .custom-audio-player_puppet_left-image {
+        top: -240px;
+        left: 4%;
+        width: 13rem;
+    }
+
+    .custom-audio-player-overlay .page-width {
+        top: 20%;
+        width: 70%;
+    }
+
+    .custom-audio-player-hero {
+        aspect-ratio: 1440 / 900;
+    }
+
+    .custom-audio-player_puppet_bottom-image {
+        bottom: -127px;
+        width: 29%;
+    }
+}
+
+@media(max-width:1200px) {
+    .custom-audio-player_puppet_bottom-image {
+        bottom: -101px;
+        width: 31%;
+    }
+
+    .custom-audio-player-hero {
+        aspect-ratio: 1440 / 1200;
+    }
+}
+
+@media(max-width: 980px) {
+    .custom-audio-player-hero-inner {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        left: 0;
+    }
+
+    .custom-audio-player-hero {
+        aspect-ratio: 201 / 314;
+        max-height: unset;
+    }
+
+    .section-template--21320554414274__custom_featured_collection_TzThmV-padding {
+        padding-bottom: 50px;
+    }
+
+    .custom-audio-player_puppet_right-image {
+        right: -2%;
+        animation: puppet-bob-right 10s ease-in-out infinite;
+        width: 12rem;
+        top: -60px;
+    }
+
+    @keyframes puppet-bob-right {
+
+        0%,
+        100% {
+            transform: translateY(50px);
+        }
+
+        50% {
+            transform: translateY(-60px);
+        }
+    }
+
+    @keyframes puppet-bob-left {
+
+        0%,
+        100% {
+            transform: translateY(100px);
+        }
+
+        50% {
+            transform: translateY(250px);
+        }
+    }
+
+    .custom-audio-player_puppet_left-image {
+        left: -2%;
+        width: 12rem;
+    }
+
+    .custom-audio-player_desktop-image {
+        display: none;
+    }
+
+    .custom-audio-player_mobile-image {
+        display: block;
+    }
+
+    .custom-audio-player-overlay {
+        padding: 85px 65px 65px;
+        align-items: start;
+    }
+
+    .custom-audio-player-card {
+        max-width: 100%;
+    }
+
+    .custom-audio-player-heading {
+        font-size: 30px;
+        line-height: 42px;
+        text-align: center;
+        width: 100%;
+        max-width: unset;
+        /* The 4px left indent that used to sit here pushed a 100%-wide block
+           4px past the card's right edge; it also fought the centring. */
+        margin: 0 0 20px;
+    }
+
+    .custom-audio-player-transcript {
+        max-width: 100%;
+        margin-bottom: 20px;
+        gap: 10px;
+    }
+
+    .custom-audio-player-transcript-scroll {
+        height: 220px;
+    }
+
+    .custom-audio-player-transcript-content {
+        padding: 0 26px;
+    }
+
+    .custom-audio-player-transcript-text {
+        font-size: var(--font-body-size-mobile);
+        text-align: left;
+    }
+
+    .custom-audio-player-transcript-arrow {
+        width: 28px;
+        height: 28px;
+    }
+
+    .custom-audio-player-transcript-arrow svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .custom-audio-player-controls-inner {
+        gap: 12px;
+        padding-top: 14px;
+        padding-bottom: 14px;
+    }
+
+    .custom-audio-player-playpause {
+        width: 36px;
+        height: 36px;
+    }
+
+    .custom-audio-player-icon {
+        width: 13px;
+        height: 13px;
+    }
+
+    .custom-audio-player-language-switcher {
+        gap: 14px;
+        margin-bottom: 16px;
+    }
+
+    .custom-audio-player-language-button {
+        font-size: var(--font-audio-language-size-mobile);
+        letter-spacing: var(--font-audio-language-letter-spacing-mobile);
+        width: 100px;
+    }
+}
+
+@media(max-width: 700px) {
+    .custom-audio-player_puppet_right-image {
+        right: -4%;
+        width: 9rem;
+        top: -50px;
+    }
+
+    .custom-audio-player-transcript-nav {
+        right: -40px !important;
+    }
+
+    .custom-audio-player_puppet_left-image {
+        left: -5%;
+        width: 9rem;
+    }
+
+    .custom-audio-player_puppet_bottom-image {
+        bottom: -94px;
+        width: 50%;
+    }
+
+    .custom-audio-player-language-button {
+        width: 50% !important;
+    }
+
+    .custom-audio-player-language-pill {
+        width: calc(50% - 14px);
+    }
+
+    /* Below this width the transcript can run long enough to overflow a
+       fixed-aspect hero, so the section switches from "image dictates
+       height, content clips to fit" to "content dictates height, image
+       covers whatever that ends up being" — the reverse of the desktop
+       relationship. The image becomes the absolute layer and the overlay
+       (and its card) become normal-flow content instead. */
+    .custom-audio-player-hero {
+        aspect-ratio: unset;
+        height: auto;
+    }
+
+    .custom-audio-player_mobile-image {
+        position: absolute;
+        inset: 0;
+        object-fit: cover;
+    }
+
+    .custom-audio-player-overlay {
+        padding: 85px 65px 155px;
+        position: relative;
+        inset: auto;
+    }
+
+    .custom-audio-player-overlay .page-width {
+        position: static;
+        top: auto;
+        left: auto;
+        width: 100%;
+        transform: none;
+    }
+}
+
+@media(max-width: 500px) {
+    .custom-audio-player_puppet_bottom-image {
+        width: 71%;
+    }
+}
+
+@media(max-width: 400px) {
+    /* .custom-audio-player-overlay .page-width is position:static from
+       700px down (content-driven height), so the top/width offsets that
+       used to apply here don't mean anything at this width anymore. */
+
+    .custom-audio-player_puppet_right-image {
+        right: -3%;
+        width: 6rem;
+        top: -49px;
+    }
+
+    .custom-audio-player_puppet_left-image {
+        left: -3%;
+        width: 6rem;
+    }
+}
