@@ -1248,7 +1248,7 @@
     });
 
     // Cart drawer: cascade the line items each time it opens.
-    const cartDrawer = document.querySelector('cart-drawer, mini-cart');
+    const cartDrawer = document.querySelector('cart-drawer');
     if (cartDrawer) {
       let wasActive = cartDrawer.classList.contains('active');
       const animateOpen = () => {

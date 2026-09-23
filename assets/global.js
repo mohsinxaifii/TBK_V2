@@ -709,13 +709,26 @@ class CartDrawer extends MenuDrawer {
     }
   }
 
+  /*
+    Hiding the page's overflow takes the scrollbar away with it, and the layout
+    then widens into the space it occupied -- the whole page, header included,
+    jumps sideways at the moment the drawer opens. Holding that width back as
+    padding keeps everything still. The cart's stylesheet also compensates the
+    header and announcement bar off --scrollbar-width, which nothing in this
+    theme had ever set, so those rules were inert until now.
+  */
   lockPageScroll() {
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
     document.documentElement.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) document.documentElement.style.paddingInlineEnd = `${scrollbarWidth}px`;
     if (window.lenis) window.lenis.stop();
   }
 
   unlockPageScroll() {
     document.documentElement.style.overflow = '';
+    document.documentElement.style.paddingInlineEnd = '';
+    document.documentElement.style.removeProperty('--scrollbar-width');
     if (window.lenis) window.lenis.start();
   }
 
