@@ -251,6 +251,52 @@
                 {%- endfor -%}
               </ul>
             {%- endif -%}
+            {%- comment -%}
+              Footer links the burger should carry too (Contact, Policies),
+              read from the footer's own menus so the two stay in step. Any
+              link already listed above is skipped, so a menu that overlaps
+              the main or secondary one only adds what is missing.
+            {%- endcomment -%}
+            {%- liquid
+              assign shown_urls = ''
+              for link in section.settings.menu.links
+                assign shown_urls = shown_urls | append: '|' | append: link.url
+              endfor
+              for link in secondary_menu.links
+                assign shown_urls = shown_urls | append: '|' | append: link.url
+              endfor
+              assign shown_urls = shown_urls | append: '|'
+              assign extra_handles = section.settings.drawer_extra_menus | split: ','
+            -%}
+            {%- capture extra_links -%}
+              {%- for handle in extra_handles -%}
+                {%- assign extra_menu = linklists[handle.strip] -%}
+                {%- for link in extra_menu.links -%}
+                  {%- assign needle = '|' | append: link.url | append: '|' -%}
+                  {%- if shown_urls contains needle -%}
+                    {%- continue -%}
+                  {%- endif -%}
+                  {%- assign shown_urls = shown_urls | append: link.url | append: '|' -%}
+                  <li>
+                    <a
+                      id="HeaderDrawer-Extra-{{ link.handle }}"
+                      href="{{ link.url }}"
+                      class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.current %} menu-drawer__menu-item--active{% endif %}"
+                      {% if link.current %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      {{ link.title | escape }}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              {%- endfor -%}
+            {%- endcapture -%}
+            {%- if extra_links != blank -%}
+              <ul class="menu-drawer__menu has-submenu list-menu" role="list">
+                {{ extra_links }}
+              </ul>
+            {%- endif -%}
           </nav>
           <div class="menu-drawer__utility-links">
             <div class="menu-drawer__utility-row">
