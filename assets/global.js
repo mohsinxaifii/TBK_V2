@@ -790,6 +790,130 @@ class CartDrawer extends MenuDrawer {
 }
 customElements.define('theme-cart-drawer', CartDrawer);
 
+/* ---- Elements the ported cart markup depends on ----------------------- *
+ * These three live in the source theme's global.js and are referenced right
+ * through the cart's snippets, so the drawer's close button, its prices and
+ * its form states are inert without them.
+ */
+class DrawerCloseButton extends HTMLElement {
+  constructor() {
+    super();
+
+    this.addEventListener('click', () => this.dispatchEvent(new CustomEvent('drawer:force-close', { bubbles: true, cancelable: true, composed: true })));
+  }
+}
+customElements.define('drawer-close-button', DrawerCloseButton);
+
+class FormState extends HTMLElement {
+  constructor() {
+    super();
+
+    this.formInputs = this.querySelectorAll('input,select,textarea');
+    this.form = this.querySelector('form');
+
+    this.formInputs.forEach((input) => {
+      input.addEventListener('input', this.onInputChange.bind(this));
+      input.addEventListener('blur', this.onInputChange.bind(this));
+    });
+
+    if (this.form) this.form.addEventListener('submit', this.onSubmitHandler.bind(this));
+  }
+
+  onInputChange(event) {
+    this.handleInputCheck(event.target);
+  }
+
+  onSubmitHandler(event) {
+    let valid = !0;
+
+    this.formInputs.forEach((input) => {
+      if (!this.handleInputCheck(input)) {
+        valid = !1;
+      }
+    });
+
+    if (!valid) {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  handleInputCheck(input) {
+    if (input.classList.contains('required')) {
+
+      if (input.value.length === 0 || input.value === input.dataset.empty) {
+        input.classList.remove('valid');
+        input.classList.add('invalid');
+        
+        return !1;
+      }
+      else {
+        input.classList.remove('invalid');
+        input.classList.add('valid');
+
+        return !0;
+      }
+    }
+
+    return !0;
+  }
+}
+customElements.define('form-state', FormState);
+
+class PriceMoney extends HTMLElement {
+  constructor() {
+    super();
+
+    if (this.shouldInit()) {
+      this.init();
+    }
+  }
+
+  shouldInit() {
+    if (document.body.dataset.priceSuperscript === undefined) {
+      return false;
+    }  
+
+    const moneyFormat = theme.shopSettings.moneyFormat.toLowerCase();
+    if (moneyFormat.indexOf('class=') !== -1) {
+      return false;
+    }
+    
+    return true;
+  }
+
+  init() {
+    const currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,TRY,UYU,VES,VND'.split(',');
+    const symbol = theme.shopSettings.moneyFormat.replace(/\{{.*}}/, '').trim();
+    const bdi = this.querySelector('bdi');
+    const price = bdi.textContent.replace(theme.shopSettings.isoCode,'');
+    let html = price.replace(' ', '');
+    let money_symbol_decimal = '.';
+    if (currencies_using_comma_decimals.includes(theme.shopSettings.isoCode)) {
+      money_symbol_decimal = ',';
+    }
+    if (price.includes(money_symbol_decimal)) {
+      if (price.lastIndexOf(symbol) + symbol.length === price.length) {
+        const price_without_symbol = price.slice(0, price.lastIndexOf(symbol));
+        const price_without_decimal = price.slice(0, price.lastIndexOf(money_symbol_decimal));
+        const decimal = price_without_symbol.replace(price_without_decimal, '').trim();
+        html = html.replace(decimal, `<sup class="price__suffix">${decimal}</sup>`);
+      }
+      else {
+        const price_without_decimal = price.slice(0, price.lastIndexOf(money_symbol_decimal));
+        const decimal = price.replace(price_without_decimal, '').trim();
+        html = html.replace(decimal, `<sup class="price__suffix">${decimal}</sup>`);
+      }
+    }
+    html = html.replace(symbol, `<span class="price__prefix">${symbol}</span>`);
+    if(theme.shopSettings.currencyCode){
+       html = html + " " + theme.shopSettings.isoCode;
+    }
+    bdi.innerHTML = html;
+  }
+}
+customElements.define('price-money', PriceMoney);
+
 class ModalDialog extends HTMLElement {
   constructor() {
     super();
