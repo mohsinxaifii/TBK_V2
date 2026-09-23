@@ -61,6 +61,13 @@
     background-color: #570f13;
 }
 
+/* The rule above carries two classes and so outranks the single-class
+   `--clone { display: none }`, which un-hid all 72 loop copies on desktop and
+   left the strip scrolling 36000px wide. Restated here, after it. */
+.custom-images-grid_carousal-container--no-image .custom-images-grid_carousal-item--clone {
+    display: none;
+}
+
 @media(max-width: 768px) {
     .custom-images-grid_carousal-container {
         overflow-x: auto;
@@ -74,6 +81,12 @@
 
     .custom-images-grid_carousal-item--clone {
         display: block;
+    }
+
+    /* Same specificity story as above, in the other direction: the strip needs
+       its clones back for the mobile loop. */
+    .custom-images-grid_carousal-container--no-image .custom-images-grid_carousal-item--clone {
+        display: flex;
     }
 }
 
