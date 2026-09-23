@@ -13,9 +13,13 @@ if (!customElements.get('media-gallery')) {
         this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
         if (!this.elements.thumbnails) return;
 
-        this.elements.viewer.addEventListener('slideChanged', debounce(this.onSlideChanged.bind(this), 500));
-        // In the one-image-at-a-time layouts (desktop thumbnails, mobile "show")
-        // the viewer shows only the active item, so there is nothing for
+        // Straight through, not debounced: on mobile the list is a native
+        // scroll-snap strip and slider-component only raises this when the
+        // snapped page changes, so the thumbnail can follow the swipe live.
+        this.elements.viewer.addEventListener('slideChanged', this.onSlideChanged.bind(this));
+        this.prepareMobileStrip();
+        // In the one-image-at-a-time layout (desktop thumbnails) the viewer
+        // shows only the active item, so there is nothing for
         // slider-component to scroll. Catch the arrow clicks on the way down
         // (capture) and step through the media instead.
         this.elements.viewer.addEventListener('click', this.onArrowClick.bind(this), true);
@@ -52,10 +56,45 @@ if (!customElements.get('media-gallery')) {
         // Single-image layouts set the thumbnail in setActiveMedia; slider-component's
         // scroll-based page maths don't describe a list with one visible item.
         if (this.usesStage()) return;
-        const thumbnail = this.elements.thumbnails.querySelector(
-          `[data-target="${event.detail.currentElement.dataset.mediaId}"]`
-        );
+        const current = event.detail && event.detail.currentElement;
+        if (!current) return;
+        if (!current.classList.contains('is-active')) {
+          this.elements.viewer
+            .querySelectorAll('.product__media-item.is-active')
+            .forEach((item) => item.classList.remove('is-active'));
+          current.classList.add('is-active');
+          window.pauseAllMedia();
+        }
+        const thumbnail = this.elements.thumbnails.querySelector(`[data-target="${current.dataset.mediaId}"]`);
         this.setActiveThumbnail(thumbnail);
+      }
+
+      // Mobile swipes on the browser's own scroll-snap strip: 1:1 with the
+      // finger, with momentum, and composited off the main thread -- the
+      // earlier scripted swipe (a 35% drag, then a GSAP slide from off-screen
+      // on release, onto an image that had been display:none and only started
+      // decoding then) is what made it lag and jump. Two things would still
+      // stutter it:
+      // - the theme's reveal-on-scroll fade, which replays on each image as
+      //   it scrolls in from the side;
+      // - lazy images decoding only once they arrive; the neighbours of the
+      //   visible one are asked for eagerly instead.
+      prepareMobileStrip() {
+        this.getViewerItems().forEach((item) =>
+          item.classList.remove('scroll-trigger', 'animate--fade-in', 'scroll-trigger--offscreen')
+        );
+        const warmNeighbours = () => {
+          if (this.mql.matches) return;
+          const items = this.getViewerItems();
+          const current = Math.max(0, items.findIndex((item) => item.classList.contains('is-active')));
+          [current - 1, current + 1, current + 2].forEach((index) => {
+            const image = items[index] && items[index].querySelector('img[loading="lazy"]');
+            if (image) image.loading = 'eager';
+          });
+        };
+        this.elements.viewer.addEventListener('slideChanged', warmNeighbours);
+        if (document.readyState === 'complete') warmNeighbours();
+        else window.addEventListener('load', warmNeighbours, { once: true });
       }
 
       setActiveMedia(mediaId, prepend) {
@@ -96,7 +135,10 @@ if (!customElements.get('media-gallery')) {
         this.preventStickyHeader();
         window.setTimeout(() => {
           if (!this.mql.matches || this.elements.thumbnails) {
-            activeMedia.parentElement.scrollTo({ left: activeMedia.offsetLeft });
+            activeMedia.parentElement.scrollTo({
+              left: activeMedia.offsetLeft,
+              behavior: this.reducedMotion.matches ? 'auto' : 'smooth',
+            });
           }
           const activeMediaRect = activeMedia.getBoundingClientRect();
           // Don't scroll if the image is already in view
@@ -112,10 +154,11 @@ if (!customElements.get('media-gallery')) {
         this.announceLiveRegion(activeMedia, activeThumbnail.dataset.mediaPosition);
       }
 
+      // The one-image "stage" (scripted slide between images) is desktop's
+      // thumbnail layout only. On mobile every layout is the native scroll
+      // strip -- see prepareMobileStrip().
       usesStage() {
-        return this.mql.matches
-          ? this.dataset.desktopLayout.includes('thumbnail')
-          : this.dataset.mobileLayout === 'show';
+        return this.mql.matches && this.dataset.desktopLayout.includes('thumbnail');
       }
 
       canAnimate() {
