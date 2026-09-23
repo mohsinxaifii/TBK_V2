@@ -138,15 +138,6 @@
   font-display: swap;
 }
 
-/* Splash Script -- script accent, footer note */
-@font-face {
-  font-family: 'Splash Script';
-  src: url('{{ "SplashScript-Regular.ttf" | asset_url }}') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* Beaurencourt FY -- former footer-note script, kept registered */
 @font-face {
   font-family: 'Beaurencourt FY';
