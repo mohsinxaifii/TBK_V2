@@ -117,6 +117,36 @@
       {%- endif -%}
 
       {%- if show_video_audio_controls -%}
+        {%- comment -%}
+          Starts the visible video the moment the parser reaches it, instead
+          of waiting for custom-banner-audio.js: that is deferred and wrapped
+          in DOMContentLoaded, so it only ran after every deferred script on
+          the page (GSAP, Lenis, the lot) had loaded -- on iPhones that was
+          seconds of an empty maroon frame. Browsers have no priority hint for
+          <video> (Safari ignores preload as=video), so starting it early is
+          the lever. Only the visible variant is touched, so the hidden one
+          still never downloads; the deferred script takes over from here
+          (pausing off-screen, the Low Power Mode tap retry, breakpoint swaps).
+        {%- endcomment -%}
+        <script>
+          (function (root) {
+            var videos = root.querySelectorAll('.custom-banner_desktop-video, .custom-banner_mobile-video');
+            for (var i = 0; i < videos.length; i++) {
+              videos[i].addEventListener('playing', function () { this.classList.add('is-ready'); }, { once: true });
+            }
+            if (navigator.connection && navigator.connection.saveData) return;
+            var mobile = window.matchMedia('(max-width: 749px)').matches;
+            var video = root.querySelector(mobile ? '.custom-banner_mobile-video' : '.custom-banner_desktop-video');
+            if (!video) return;
+            video.muted = true;
+            video.defaultMuted = true;
+            video.playsInline = true;
+            video.preload = 'auto';
+            var attempt = video.play();
+            if (attempt && attempt.catch) attempt.catch(function () {});
+          })(document.currentScript.parentElement);
+        </script>
+
         <button type="button" class="custom-banner-mute-toggle" aria-pressed="true" aria-label="Unmute video">
           <span class="custom-banner-mute-icon custom-banner-mute-icon-muted" aria-hidden="true">
             <svg viewBox="0 0 16 16" fill="currentColor">

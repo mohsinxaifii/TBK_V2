@@ -23,7 +23,11 @@ const initBannerPlayback = (root) => {
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
     // Reveals it over the section's solid background (see custom-banner.css).
-    video.addEventListener('playing', () => video.classList.add('is-ready'), { once: true });
+    // The section's inline starter usually got it playing before this ran, so
+    // catch the already-playing case too rather than wait for an event that
+    // has been and gone.
+    if (!video.paused && video.readyState >= 3) video.classList.add('is-ready');
+    else video.addEventListener('playing', () => video.classList.add('is-ready'), { once: true });
   });
 
   // Data Saver users get the poster until they touch the page.
