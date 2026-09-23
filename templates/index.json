@@ -232,7 +232,7 @@
         "slide_U3kqPV": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/New_ritual_1_2.png",
+            "image": "shopify://shop_images/tbk-rituals-carousel-come-for-tea.jpg",
             "tag_1": "CULTURE",
             "tag_2": "TECHNIQUES",
             "tag_3": "Traditions",
@@ -240,27 +240,27 @@
             "heading": "I Had Only Come For Tea",
             "description": "<p>An Afternoon in a Sindhi Home</p><p>Every home has a language. Some speak through walls, others through heirlooms. A Sindhi home, I discovered, speaks through what it places in front of you before it asks anything in return.</p>",
             "cta_text": "Read More",
-            "link": "/blogs/rituals/i-had-only-come-for-tea"
+            "link": "shopify://blogs/rituals/i-had-only-come-for-tea"
           }
         },
         "slide_amw3Ht": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Frame_46_1.png",
+            "image": "shopify://shop_images/tbk-rituals-carousel-moongodi.jpg",
             "tag_1": "CULTURE",
             "tag_2": "TECHNIQUES",
             "tag_3": "Traditions",
             "caption": "Rituals",
-            "heading": "The Season of Wadiyan",
+            "heading": "The Season of Moongodi",
             "description": "<p>In the winters of Marwar, the kitchen no longer remained downstairs. It climbed to the terrace. The bedsheets were stretched neatly across the floor, their corners held down by brass lottas so the winter breeze would not disturb them. A heavy steel paraat rested in the warmest patch of sunlight, filled with pale urad batter that had been soaking since the previous evening. Someone tested the batter with a spoon, watched it fall back into the bowl, nodded quietly, and began placing the first wadi onto the cloth.</p>",
             "cta_text": "Read More",
-            "link": "/blogs/rituals/the-season-of-wadiyan"
+            "link": "shopify://blogs/rituals/the-season-of-moongodi"
           }
         },
         "slide_4LjnHX": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/New_ritual_2_1.png",
+            "image": "shopify://shop_images/tbk-rituals-carousel-hour-between.jpg",
             "tag_1": "CULTURE",
             "tag_2": "TECHNIQUES",
             "tag_3": "Traditions",
@@ -268,13 +268,13 @@
             "heading": "The Hour Between",
             "description": "<p>When Business Learnt to Pause</p><p>Across the business communities of western India, there is an hour that has quietly survived every generation. It is neither part of the workday nor entirely home. It begins somewhere between the closing of a ledger and the first handful of namkeen. A pause where conversations have long carried far more than business.</p>",
             "cta_text": "Read More",
-            "link": "/blogs/rituals/the-hour-between"
+            "link": "shopify://blogs/rituals/the-hour-between"
           }
         },
         "slide_7xGQwy": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/Frame_54_ebe6f23d-48ce-4bb7-adbe-a1665dcdcca3.png",
+            "image": "shopify://shop_images/tbk-rituals-carousel-extra-plate.jpg",
             "tag_1": "CULTURE",
             "tag_2": "TECHNIQUES",
             "tag_3": "Traditions",
@@ -282,14 +282,14 @@
             "heading": "The Extra Plate",
             "description": "<p>No One Asked Who Was Coming</p><p>Across many Indian homes, one extra plate was never an accident. It was a quiet habit, passed from one generation to the next. Long before guests announced their arrival, the kitchen had already prepared a place for them.</p>",
             "cta_text": "Read More",
-            "link": "/blogs/rituals/the-extra-plate"
+            "link": "shopify://blogs/rituals/the-extra-plate"
           }
         },
         "slide_KtFEnP": {
           "type": "slide",
           "disabled": true,
           "settings": {
-            "image": "shopify://shop_images/tbk-rituals-5-baithak.png",
+            "image": "shopify://shop_images/tbk-rituals-carousel-baithak.jpg",
             "tag_1": "CULTURE",
             "tag_2": "TECHNIQUES",
             "tag_3": "Traditions",
