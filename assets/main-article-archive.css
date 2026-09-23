@@ -310,6 +310,9 @@
 }
 
 @media screen and (max-width: 749px) {
+  .archive-article__split-col p strong{
+    line-height: 47px;
+  }
   .archive-article__split {
     gap: 24px;
   }
