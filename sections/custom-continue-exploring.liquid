@@ -46,10 +46,9 @@
           {%- liquid
             assign display_count = display_count | plus: 1
 
-            # Same source cascade as blog-listing-grid: custom.card_image is a 2x
-            # export of the Figma card frame, already at these cards' 382:654, so
-            # a post that has one shows the designed cover with no crop waste.
-            # The fallbacks are landscape, hence the server-side crop below.
+            # Same designed card exports blog-listing-grid uses, desktop and
+            # mobile, with the same fallbacks behind the desktop one.
+            assign tile_image_mobile = blog_article.metafields.custom.card_image_mobile.value
             assign tile_image = blog_article.metafields.custom.card_image.value | default: blog_article.metafields.custom.hero_image.value | default: blog_article.image
             assign tile_alt = tile_image.alt | default: blog_article.title | strip_html | default: shop.name | escape
           -%}
@@ -68,33 +67,50 @@
             <span class="continue-exploring__media">
               {%- if tile_image != blank -%}
                 {%- comment -%}
-                  Cropped to the card's own 382:654 server-side rather than left
-                  landscape for object-fit to crop in the browser: covering a
-                  portrait box with a landscape file throws away ~2/3 of every
-                  pixel downloaded, so a nominally 800w image was resolving to
-                  well under one source pixel per CSS pixel. Cropping first means
-                  every delivered pixel lands inside the card. On an image that is
-                  already 382:654 the crop is a no-op.
+                  Every tile here is the 382:654 portrait card, so both sources
+                  are cropped to that ratio server-side instead of being left for
+                  object-fit to crop in the browser: covering a portrait box with
+                  a wide file throws away most of every pixel downloaded. On an
+                  export that is already 382:654 the crop is a no-op.
+
+                  Widths stop at 1146: cropped to portrait, a card export is
+                  bounded by its 1308px height, so 764w is all the designed
+                  assets can actually deliver. The larger steps only pay off on
+                  the hero/featured-image fallbacks.
                 {%- endcomment -%}
-                <img
-                  class="continue-exploring__image"
-                  src="{{ tile_image | image_url: width: 764, height: 1308, crop: 'center' }}"
-                  srcset="
-                    {{ tile_image | image_url: width: 320, height: 548, crop: 'center' }} 320w,
-                    {{ tile_image | image_url: width: 400, height: 685, crop: 'center' }} 400w,
-                    {{ tile_image | image_url: width: 480, height: 822, crop: 'center' }} 480w,
-                    {{ tile_image | image_url: width: 640, height: 1096, crop: 'center' }} 640w,
-                    {{ tile_image | image_url: width: 764, height: 1308, crop: 'center' }} 764w,
-                    {{ tile_image | image_url: width: 960, height: 1644, crop: 'center' }} 960w,
-                    {{ tile_image | image_url: width: 1146, height: 1962, crop: 'center' }} 1146w,
-                    {{ tile_image | image_url: width: 1528, height: 2616, crop: 'center' }} 1528w
-                  "
-                  sizes="(min-width: 1400px) 330px, (min-width: 1280px) 24vw, (min-width: 990px) 31vw, (min-width: 750px) 47vw, 82vw"
-                  alt="{{ tile_alt }}"
-                  loading="lazy"
-                  width="382"
-                  height="654"
-                >
+                <picture class="continue-exploring__picture">
+                  {%- if tile_image_mobile != blank -%}
+                    <source
+                      media="(max-width: 749px)"
+                      srcset="
+                        {{ tile_image_mobile | image_url: width: 320, height: 548, crop: 'center' }} 320w,
+                        {{ tile_image_mobile | image_url: width: 400, height: 685, crop: 'center' }} 400w,
+                        {{ tile_image_mobile | image_url: width: 480, height: 822, crop: 'center' }} 480w,
+                        {{ tile_image_mobile | image_url: width: 640, height: 1096, crop: 'center' }} 640w,
+                        {{ tile_image_mobile | image_url: width: 708, height: 1212, crop: 'center' }} 708w
+                      "
+                      sizes="82vw"
+                    >
+                  {%- endif -%}
+                  <img
+                    class="continue-exploring__image"
+                    src="{{ tile_image | image_url: width: 764, height: 1308, crop: 'center' }}"
+                    srcset="
+                      {{ tile_image | image_url: width: 320, height: 548, crop: 'center' }} 320w,
+                      {{ tile_image | image_url: width: 400, height: 685, crop: 'center' }} 400w,
+                      {{ tile_image | image_url: width: 480, height: 822, crop: 'center' }} 480w,
+                      {{ tile_image | image_url: width: 640, height: 1096, crop: 'center' }} 640w,
+                      {{ tile_image | image_url: width: 764, height: 1308, crop: 'center' }} 764w,
+                      {{ tile_image | image_url: width: 960, height: 1644, crop: 'center' }} 960w,
+                      {{ tile_image | image_url: width: 1146, height: 1962, crop: 'center' }} 1146w
+                    "
+                    sizes="(min-width: 1400px) 330px, (min-width: 1280px) 24vw, (min-width: 990px) 31vw, (min-width: 750px) 47vw, 82vw"
+                    alt="{{ tile_alt }}"
+                    loading="lazy"
+                    width="382"
+                    height="654"
+                  >
+                </picture>
               {%- else -%}
                 {{ 'lifestyle-1' | placeholder_svg_tag: 'continue-exploring__image placeholder-svg' }}
               {%- endif -%}

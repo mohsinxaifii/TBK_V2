@@ -46,6 +46,13 @@
   pointer-events: none;
 }
 
+/* <picture> is an inline box and would otherwise add a stray line box inside
+   the media frame. It carries no styling — the absolutely positioned <img>
+   inside keeps every rule below. Same treatment as the archive hero. */
+.continue-exploring__picture {
+  display: contents;
+}
+
 .continue-exploring__image {
   position: absolute;
   inset: 0;
