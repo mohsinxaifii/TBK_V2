@@ -94,16 +94,22 @@
             </div>
           {%- endif -%}
 
+          {%- comment -%} Language switcher hidden for now {%- endcomment -%}
+          {%- comment -%}
           <div class="custom-audio-player-language-switcher">
             <span class="custom-audio-player-language-pill" aria-hidden="true"></span>
             <button type="button" class="custom-audio-player-language-button" data-language="hi">हिन्दी</button>
             <button type="button" class="custom-audio-player-language-button" data-language="en">ENGLISH</button>
           </div>
+          {%- endcomment -%}
+          {%- assign default_audio = 'bikaneri-bhujia.mp3' | asset_url -%}
+          {%- assign audio_hi = section.settings.audio_url | default: section.settings.audio_url_english | default: default_audio -%}
+          {%- assign audio_en = section.settings.audio_url_english | default: section.settings.audio_url | default: default_audio -%}
           <audio
             class="custom-audio-player-audio"
             preload="metadata"
-            data-src-hi="{{ section.settings.audio_url | default: section.settings.audio_url_english }}"
-            data-src-en="{{ section.settings.audio_url_english | default: section.settings.audio_url }}"
+            data-src-hi="{{ audio_hi }}"
+            data-src-en="{{ audio_en }}"
           ></audio>
         </div>
       </div>
@@ -165,7 +171,7 @@
       "type": "url",
       "id": "audio_url",
       "label": "Hindi Audio URL",
-      "info": "Paste the direct URL to an audio file. Used for English too if no English audio URL is set below."
+      "info": "Paste the direct URL to an audio file. Used for English too if no English audio URL is set below. Leave blank to use the bundled Bikaneri Bhujia audio."
     },
     {
       "type": "url",
