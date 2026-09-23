@@ -753,6 +753,23 @@ a.product__text {
 
   /* Specific enough to beat Dawn's peek-row sizing (.grid--peek.slider--mobile
      .grid__item, and .grid__item's 50% max-width on mobile). */
+  /* Seamless strip: each image fills its slide edge to edge. The theme's
+     media frame (a transparent --media-border-width border, width trimmed by
+     twice that, a -1px nudge for cover) left ~2px of the container's white
+     background showing between neighbouring images as they swipe. */
+  media-gallery[data-mobile-layout='show'] .product__media-list .product-media-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+  }
+
+  media-gallery[data-mobile-layout='show'] .product__media-list .product-media-container::after {
+    content: none;
+  }
+
   media-gallery[data-mobile-layout='show'] .product__media-list .product__media-item.grid__item {
     flex: 0 0 100%;
     width: 100%;
