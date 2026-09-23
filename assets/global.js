@@ -790,6 +790,28 @@ class CartDrawer extends MenuDrawer {
 }
 customElements.define('theme-cart-drawer', CartDrawer);
 
+/*
+  Storage guard used by the ported cart.js (it remembers an applied discount
+  code) and gift-tiers.js (it remembers the terms checkbox). It lives in the
+  source theme's global.js; without it both threw ReferenceError on every cart
+  render, which is what left the discount field and the terms checkbox dead.
+*/
+function isStorageSupported(type) {
+  // Return false if we are in an iframe without access to sessionStorage
+  if (window.self !== window.top) return false;
+
+  const testKey = 'tbk:test';
+  const storage = type === 'session' ? window.sessionStorage : window.localStorage;
+
+  try {
+    storage.setItem(testKey, '1');
+    storage.removeItem(testKey);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 /* ---- Elements the ported cart markup depends on ----------------------- *
  * These three live in the source theme's global.js and are referenced right
  * through the cart's snippets, so the drawer's close button, its prices and
