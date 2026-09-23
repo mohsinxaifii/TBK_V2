@@ -69,12 +69,16 @@
   display: block;
 }
 
+/* The photo is 3:2 against the card's wider 864:504, so `cover` scales it to
+   the card's width and trims the top and bottom. The design frames that window
+   above centre, keeping the arches in shot behind the musicians — 35% is where
+   its own placement (3231:5365) puts the visible band. */
 .custom-intro-popup__image {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center 35%;
 }
 
 /* Desktop has no flat wash over the photo — only the blurred scrim. */
@@ -330,6 +334,12 @@
     width: 197.18%;
     height: 81.93%;
     background: rgba(74, 0, 4, 0.94);
+  }
+
+  /* The mobile photo is taller than the card, so `cover` trims the sides here
+     instead; the design holds the group left of centre (3231:5458). */
+  .custom-intro-popup__image {
+    object-position: 24% center;
   }
 
   .custom-intro-popup__wordmark {
