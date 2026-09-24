@@ -36,7 +36,7 @@
         "size": "330 gm",
         "tax_note": "(Inclusive of all taxes.)",
         "icon": "shopify://shop_images/Vector_1.png",
-        "cta": "BUY NOW",
+        "cta": "Add to Cart",
         "top_right_caption": "PARAAT BHUJIA"
       }
     },
@@ -112,7 +112,7 @@
         "size": "120 gm X 3",
         "tax_note": "(Inclusive of all taxes.)",
         "icon": "shopify://shop_images/Vector_1.png",
-        "cta": "BUY NOW",
+        "cta": "Add to Cart",
         "top_right_caption": "HANDMADE BHUJIA"
       }
     },
