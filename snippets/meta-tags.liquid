@@ -4,7 +4,9 @@
   assign og_type = 'website'
   assign og_description = page_description | default: shop.description | default: shop.name
 
-  if request.page_type == 'product'
+  if request.page_type == 'index'
+    assign og_description = 'The Bikaneri Kitchen is deeply personal. Rooted in the food, recipes and stories of Bikaner, we’re bringing those traditions forward while staying true to what made them special.'
+  elsif request.page_type == 'product'
     assign og_type = 'product'
   elsif request.page_type == 'article'
     assign og_type = 'article'
