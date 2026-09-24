@@ -249,6 +249,25 @@ details[open].menu-opening > .menu-drawer__submenu {
   width: 1.5rem;
 }
 
+/* Facebook/LinkedIn icons are circle-outlined PNGs; give Instagram and
+   YouTube the same ring so all four read as one set. */
+.menu-drawer .list-social__link[href*="instagram.com"] .svg-wrapper,
+.menu-drawer .list-social__link[href*="youtube.com"] .svg-wrapper {
+  box-sizing: border-box;
+  border: 1.25px solid #FF6344;
+  border-radius: 50%;
+}
+
+.menu-drawer .list-social__link[href*="instagram.com"] .svg-wrapper > img {
+  width: 50%;
+  height: 50%;
+}
+
+.menu-drawer .list-social__link[href*="youtube.com"] .svg-wrapper > .icon {
+  width: 60%;
+  height: 60%;
+}
+
 @media screen and (max-width: 749px) {
   .menu-drawer.country-selector-open {
     transform: none !important;
