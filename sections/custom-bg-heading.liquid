@@ -38,7 +38,32 @@
     color: inherit;
   }
 
+  /* Facebook/LinkedIn icons are circle-outlined PNGs; give Instagram and
+     YouTube the same ring so all four read as one set. */
+  .custom-bg-heading__social .list-social__link[href*="instagram.com"] .svg-wrapper,
+  .custom-bg-heading__social .list-social__link[href*="youtube.com"] .svg-wrapper {
+    box-sizing: border-box;
+    border: 2px solid #ff6344;
+    border-radius: 50%;
+    color: #ff6344;
+  }
+
+  .custom-bg-heading__social .list-social__link[href*="instagram.com"] .svg-wrapper > img {
+    width: 50%;
+    height: 50%;
+  }
+
+  .custom-bg-heading__social .list-social__link[href*="youtube.com"] .svg-wrapper > .icon {
+    width: 60%;
+    height: 60%;
+  }
+
   @media screen and (max-width: 768px) {
+    .custom-bg-heading__social .list-social__link[href*="instagram.com"] .svg-wrapper,
+    .custom-bg-heading__social .list-social__link[href*="youtube.com"] .svg-wrapper {
+      border-width: 1.6px;
+    }
+
     .custom-bg-heading {
       padding-top: 32px;
       padding-bottom: 28px;
