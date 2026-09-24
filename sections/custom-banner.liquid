@@ -36,7 +36,7 @@
     {%- endif -%}
   {%- endif -%}
 
-  <div class="custom-banner-sticky">
+  <div class="custom-banner-sticky{% unless framed %} custom-banner-sticky--hero{% endunless %}">
     <div class="custom-banner-container{% if framed %} page-top-banner-container{% endif %}{% if show_video_audio_controls %} custom-banner-container--video{% endif %}">
       {%- comment -%}
         Both breakpoints' media sit in the markup and CSS toggles which one

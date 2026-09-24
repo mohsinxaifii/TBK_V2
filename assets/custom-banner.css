@@ -57,6 +57,23 @@
         transform: scale(1.03);
         transform-origin: center;
     }
+
+    /* Unframed (index) hero: a tall 14:25 black frame with the media centred
+       in it at its own aspect ratio. The framed off-index banner keeps its
+       page-top-banner height. */
+    .custom-banner-sticky--hero {
+        aspect-ratio: 14 / 25;
+        background-color: #000;
+    }
+
+    .custom-banner-sticky--hero .custom-banner-container {
+        height: 100%;
+    }
+
+    .custom-banner-sticky--hero .custom-banner-container--video,
+    .custom-banner-sticky--hero .custom-banner_mobile-video {
+        background-color: #000;
+    }
 }
 
 /* Framed (off-index) banner: .page-top-banner-container brings the archives
