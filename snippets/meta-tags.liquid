@@ -4,9 +4,7 @@
   assign og_type = 'website'
   assign og_description = page_description | default: shop.description | default: shop.name
 
-  if request.page_type == 'index'
-    assign og_description = 'Hi, For me, The Bikaneri Kitchen is deeply personal. It comes from the food I grew up with, the recipes our families have carried, and a city whose taste has travelled far beyond its walls. We’ve spent a long time going back to those roots, understanding the ingredients, the hands and the stories behind them, and finding a way to bring them forward without losing what made them special in the first place. Today, I’m very happy to finally share The Bikaneri Kitchen with you. I hope you enjoy discovering it as much as we have enjoyed bringing it to life. — Jai Agarwal'
-  elsif request.page_type == 'product'
+  if request.page_type == 'product'
     assign og_type = 'product'
   elsif request.page_type == 'article'
     assign og_type = 'article'
