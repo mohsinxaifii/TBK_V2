@@ -391,6 +391,7 @@
     display: inline-block;
     /* An inline-block doesn't inherit the button's underline, so set it here. */
     text-decoration: underline;
+    text-underline-offset: 2px;
     text-transform: uppercase;
 }
 
