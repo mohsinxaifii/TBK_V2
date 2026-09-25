@@ -37,7 +37,9 @@
   {%- endif -%}
 
   <div class="custom-banner-sticky{% unless framed %} custom-banner-sticky--hero{% endunless %}">
-    <div class="custom-banner-container{% if framed %} page-top-banner-container{% endif %}{% if show_video_audio_controls %} custom-banner-container--video{% endif %}">
+    <div class="custom-banner-container{% if framed %} page-top-banner-container{% endif %}{% if show_video_audio_controls %} custom-banner-container--video{% endif %}"
+      {%- if section.settings.media_type == 'video' and section.settings.mobile_banner_video != blank %} style="--mobile-video-ratio: {{ section.settings.mobile_banner_video.aspect_ratio }}"{% endif -%}
+    >
       {%- comment -%}
         Both breakpoints' media sit in the markup and CSS toggles which one
         shows, so nothing here may fetch eagerly on its own: videos carry
