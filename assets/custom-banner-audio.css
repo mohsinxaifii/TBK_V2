@@ -167,3 +167,20 @@
         height: 14px;
     }
 }
+
+/* Mobile hero: the film sits centred in a taller 14:25 frame, so the
+   container's bottom edge is below the film's. Lift the toggle by the
+   letterbox gap (half the frame height less half the film's height, the
+   latter from the container width and the ratio set inline in the section)
+   so it sits 16px in from the film's own bottom edge. Browsers without
+   container units keep the plain 16px above, as does a missing ratio (the
+   tiny fallback makes the calc negative, so max() picks 16px). */
+@media (max-width: 749px) {
+    .custom-banner-sticky--hero .custom-banner-container--video {
+        container-type: inline-size;
+    }
+
+    .custom-banner-sticky--hero .custom-banner-mute-toggle {
+        bottom: max(16px, calc(50% - 50cqw / var(--mobile-video-ratio, 0.01) + 16px));
+    }
+}
