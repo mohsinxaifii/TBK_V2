@@ -1,0 +1,95 @@
+{%- comment -%}
+  Meta Pixel standard events for the storefront. Rendered in theme.liquid
+  right after the base code (init + PageView), so fbq is already queued.
+
+  Checkout events (InitiateCheckout, AddPaymentInfo, Purchase) are not fired
+  here: checkout runs in GoKwik, which sends them itself to the pixel set in
+  Theme settings > GoKwik (settings.fbpixel). Firing them here as well would
+  double count.
+
+  content_ids are variant IDs throughout, so every event matches up.
+{%- endcomment -%}
+<script>
+  (function () {
+    if (typeof window.fbq !== 'function') return;
+    var currency = {{ cart.currency.iso_code | json }};
+
+    {%- if template.name == 'product' and product %}
+      {%- assign pixel_variant = product.selected_or_first_available_variant %}
+      fbq('track', 'ViewContent', {
+        content_ids: [{{ pixel_variant.id | json }}],
+        content_name: {{ product.title | json }},
+        content_type: 'product',
+        value: {{ pixel_variant.price | divided_by: 100.0 | json }},
+        currency: currency
+      });
+    {%- endif %}
+
+    {%- if template.name == 'search' and search.performed %}
+      fbq('track', 'Search', { search_string: {{ search.terms | json }} });
+    {%- endif %}
+
+    // Forms post back to the same page with a flag on success: contact forms
+    // add contact_posted, the newsletter (customer) forms customer_posted.
+    var query = window.location.search;
+    if (/[?&]contact_posted=true/.test(query)) fbq('track', 'Contact');
+    if (/[?&]customer_posted=true/.test(query)) fbq('track', 'Lead');
+
+    // AddToCart: every add in this theme is an AJAX POST to /cart/add
+    // (product-form, cart-add-interceptor.js, quick add, wishlist cards), so
+    // watching fetch catches them all from one place. Only successful adds
+    // count -- Shopify answers sold out / unavailable with a `status` field.
+    var ADD_PATH = /\/cart\/add(\.js)?(\?|$)/;
+    var nativeFetch = window.fetch;
+    if (nativeFetch) {
+      window.fetch = function (input, init) {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        var request = nativeFetch.apply(this, arguments);
+        if (!ADD_PATH.test(url)) return request;
+        request
+          .then(function (response) {
+            if (!response.ok) return;
+            return response
+              .clone()
+              .json()
+              .then(function (data) {
+                if (!data || data.status) return;
+                var items = data.items || [data];
+                var value = 0;
+                var ids = [];
+                for (var i = 0; i < items.length; i++) {
+                  if (!items[i].variant_id && !items[i].id) continue;
+                  ids.push(items[i].variant_id || items[i].id);
+                  value += ((items[i].final_price || items[i].price || 0) * (items[i].quantity || 1)) / 100;
+                }
+                if (!ids.length) return;
+                fbq('track', 'AddToCart', {
+                  content_ids: ids,
+                  content_type: 'product',
+                  value: Math.round(value * 100) / 100,
+                  currency: currency
+                });
+              });
+          })
+          .catch(function () {});
+        return request;
+      };
+    }
+
+    // AddToWishlist: wishlist.js toggles the button's own click handler first,
+    // so by the time this document listener runs the class shows the new state.
+    document.addEventListener('click', function (event) {
+      var button = event.target.closest && event.target.closest('.shop-card__wishlist');
+      if (!button || !button.classList.contains('is-wishlisted')) return;
+      try {
+        var card = JSON.parse(button.dataset.card);
+        fbq('track', 'AddToWishlist', {
+          content_ids: [card.currentVariantId],
+          content_name: card.title,
+          content_type: 'product',
+          currency: currency
+        });
+      } catch (e) {}
+    });
+  })();
+</script>
