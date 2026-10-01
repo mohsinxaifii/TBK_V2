@@ -26,7 +26,7 @@
   border-radius: 12px;
   color: var(--manufacturing-units-accent);
   font-family: var(--font-family-body);
-  font-weight: var(--font-weight-bold);
+  font-weight: 500;
 }
 
 /* Columns sit at fixed widths pushed apart, as in the design: code at the
