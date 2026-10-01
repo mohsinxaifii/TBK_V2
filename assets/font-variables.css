@@ -421,6 +421,20 @@
    --font-policy-nav-mobile-link-size: 16px;
    --font-policy-subheading-size: 24px;
 
+   /* ---- Manufacturing units page (custom-manufacturing-units) ---- */
+   /* Desktop heading from Figma 3512:6866: Baskerville Regular 72/80 at 4%
+     tracking. Phones fall back to the section heading role. Table text is
+     Helvetica Neue Bold: 16/24 header row, 12/16 cells, 12/20 licence. */
+   --font-manufacturing-heading-size: 72px;
+   --font-manufacturing-heading-line-height: 80px;
+   --font-manufacturing-heading-letter-spacing: 2.88px;
+   --font-manufacturing-heading-weight: var(--font-weight-regular);
+   --font-manufacturing-head-size: 16px;
+   --font-manufacturing-head-line-height: 24px;
+   --font-manufacturing-cell-size: 12px;
+   --font-manufacturing-cell-line-height: 16px;
+   --font-manufacturing-license-line-height: 20px;
+
    /* ---- Press page ---- */
    --font-press-publication-size: 22px;
 
