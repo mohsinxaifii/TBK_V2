@@ -11,13 +11,60 @@
   "sections": {
     "main": {
       "type": "main-page",
+      "disabled": true,
       "settings": {
         "padding_top": 28,
         "padding_bottom": 28
       }
+    },
+    "custom_manufacturing_units": {
+      "type": "custom-manufacturing-units",
+      "blocks": {
+        "unit_f": {
+          "type": "unit",
+          "settings": {
+            "code": "CODE: (F)",
+            "address": "MFD BY: BIKAJI FOODS INTERNATIONAL (F) E/558-561, C/569-572, E/573-577, E/578-579, F/580-584, F/585-592 RIICO INDUSTRIAL AREA, KARNI (EXTENSION), BIKANER - 334004, RAJASTHAN",
+            "license": "Lic No- 10016013001074"
+          }
+        },
+        "unit_g": {
+          "type": "unit",
+          "settings": {
+            "code": "CODE: (G)",
+            "address": "MFD BY: PAPADMALJI AGRO FOODS LTD. OPPOSITE MANAV BHARTI SCHOOL, RANI BAZAR INDUSTRIAL AREA ROAD, GHARSISAR, BIKANER 334001, RAJASTHAN",
+            "license": "Lic No :- 12218017000042"
+          }
+        }
+      },
+      "block_order": [
+        "unit_f",
+        "unit_g"
+      ],
+      "settings": {
+        "heading": "See first letter of batch no. for manufacturing unit address",
+        "code_label": "CODE",
+        "address_label": "ADDRESS",
+        "license_label": "FSSAI LIC. NO.",
+        "background_color": "#fffdee",
+        "table_color": "#570f13",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "custom_bg_heading_follow_us": {
+      "type": "custom-bg-heading",
+      "name": "Custom BG Heading",
+      "settings": {
+        "heading": "Follow Us",
+        "heading_color": "#ff6344",
+        "background_color": "#570f13"
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "custom_manufacturing_units",
+    "custom_bg_heading_follow_us"
   ]
 }

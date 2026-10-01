@@ -1,0 +1,118 @@
+/* Manufacturing units page (Figma 3512:6862). A display heading over a
+   rounded, bordered three-column table: code / address / FSSAI licence. */
+
+.manufacturing-units__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.manufacturing-units__heading {
+  margin: 0;
+  color: #181818;
+  font-family: var(--font-family-display);
+  font-size: var(--font-manufacturing-heading-size);
+  line-height: var(--font-manufacturing-heading-line-height);
+  letter-spacing: var(--font-manufacturing-heading-letter-spacing);
+  font-weight: var(--font-manufacturing-heading-weight);
+  text-transform: capitalize;
+}
+
+.manufacturing-units__table {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  border: 2px solid var(--manufacturing-units-accent);
+  border-radius: 12px;
+  color: var(--manufacturing-units-accent);
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Columns sit at fixed widths pushed apart, as in the design: code at the
+   left inset, licence 200px in from the right inset, address between. */
+.manufacturing-units__row {
+  display: grid;
+  grid-template-columns: 62px 200px 200px;
+  justify-content: space-between;
+  align-items: start;
+  padding: 20px 120px;
+  border-top: 1px solid var(--manufacturing-units-accent);
+  font-size: var(--font-manufacturing-cell-size);
+  line-height: var(--font-manufacturing-cell-line-height);
+  word-break: break-word;
+}
+
+.manufacturing-units__row--head {
+  padding-top: 0;
+  border-top: 0;
+  font-size: var(--font-manufacturing-head-size);
+  line-height: var(--font-manufacturing-head-line-height);
+}
+
+.manufacturing-units__row:last-child {
+  padding-bottom: 0;
+}
+
+.manufacturing-units__code {
+  white-space: nowrap;
+}
+
+.manufacturing-units__address {
+  text-transform: uppercase;
+  white-space: pre-line;
+}
+
+.manufacturing-units__license {
+  line-height: var(--font-manufacturing-license-line-height);
+}
+
+@media screen and (max-width: 989px) {
+  .manufacturing-units__row {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+/* Mobile (Figma 3512:6728). The header row and the body rows are laid out
+   differently in the design: the header pushes "FSSAI LIC. NO." to the right
+   edge on one line, while body rows keep a 200px address column and let the
+   licence number wrap in whatever is left. */
+@media screen and (max-width: 749px) {
+  .manufacturing-units__heading {
+    font-size: var(--font-manufacturing-heading-size-mobile);
+    line-height: var(--font-manufacturing-heading-line-height-mobile);
+    letter-spacing: var(--font-manufacturing-heading-letter-spacing-mobile);
+  }
+
+  .manufacturing-units__table {
+    border-radius: 11px;
+  }
+
+  .manufacturing-units__row {
+    grid-template-columns: auto minmax(0, 200px) minmax(48px, 1fr);
+    justify-content: start;
+    gap: 12px;
+    padding: 20px 8px;
+  }
+
+  .manufacturing-units__row--head {
+    grid-template-columns: 62px minmax(0, 1fr) auto;
+    padding: 0 12px 20px;
+    font-size: var(--font-manufacturing-cell-size);
+    line-height: var(--font-manufacturing-cell-line-height);
+  }
+
+  .manufacturing-units__row--head > :last-child {
+    white-space: nowrap;
+  }
+
+  .manufacturing-units__row:last-child {
+    padding-bottom: 0;
+  }
+
+  .manufacturing-units__code {
+    font-size: var(--font-manufacturing-code-size-mobile);
+    line-height: normal;
+  }
+}
