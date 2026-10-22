@@ -2,7 +2,7 @@
 <script src="{{ 'custom-intro-popup.js' | asset_url }}" defer="defer"></script>
 
 {%- liquid
-  assign cta_url = section.settings.cta_1_link | default: '/collections/the-bhandaar'
+  assign cta_url = section.settings.cta_1_link | default: '/products/paraat-bhujia'
   assign video_desktop = section.settings.video_url | strip
   assign video_mobile = section.settings.video_url_mobile | strip | default: video_desktop
   assign poster_desktop = section.settings.image
@@ -60,6 +60,52 @@
             preload="none"
             aria-hidden="true"
           ></video>
+
+          {%- comment -%}
+            Same control as the home banner's (custom-banner.liquid): a round
+            toggle in the film's corner, plus a cursor tag over the film on
+            desktop. Cream rather than the banner's maroon — the popup's film
+            sits under a dark wash, where a maroon ring would all but vanish.
+          {%- endcomment -%}
+          <button
+            type="button"
+            class="custom-intro-popup__mute"
+            data-custom-intro-popup-mute
+            aria-pressed="true"
+            aria-label="Unmute video"
+          >
+            <span class="custom-intro-popup__mute-icon custom-intro-popup__mute-icon--muted" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="currentColor">
+                <path d="M2 6h2.3L8 3.2v9.6L4.3 10H2V6z" />
+                <path
+                  d="M11 6.2l3.2 3.6M14.2 6.2L11 9.8"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.3"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+            <span class="custom-intro-popup__mute-icon custom-intro-popup__mute-icon--unmuted" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="currentColor">
+                <path d="M2 6h2.3L8 3.2v9.6L4.3 10H2V6z" />
+                <path
+                  d="M10.4 5.6a3.4 3.4 0 0 1 0 4.8"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.3"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M12.2 3.8a6.2 6.2 0 0 1 0 8.4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.3"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+          </button>
         {%- endif -%}
       </div>
 
@@ -151,6 +197,21 @@
         {%- endif -%}
       </div>
     </div>
+
+    {%- comment -%}
+      A child of the overlay, not the dialog: GSAP leaves a transform on the
+      dialog after its entrance, which would make it the containing block for
+      this position:fixed tag and throw it off the cursor.
+    {%- endcomment -%}
+    {%- if video_desktop != blank -%}
+      <div class="custom-intro-popup__cursor-tag" aria-hidden="true">
+        <span class="custom-intro-popup__cursor-tag-flip">
+          <span class="custom-intro-popup__cursor-tag-mask">
+            <span class="custom-intro-popup__cursor-tag-text">Unmute Video</span>
+          </span>
+        </span>
+      </div>
+    {%- endif -%}
   </div>
 {%- endif -%}
 
@@ -269,7 +330,7 @@
       "type": "url",
       "id": "cta_1_link",
       "label": "Button link",
-      "info": "Defaults to /collections/the-bhandaar when left empty."
+      "info": "Defaults to the Paraat Bhujia product page when left empty."
     }
   ],
   "presets": [
