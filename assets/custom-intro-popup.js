@@ -136,6 +136,46 @@
     let lastFocused = null;
     let openTimer = null;
 
+    // One <video> per breakpoint, each holding its URL in data-src until it is
+    // needed. Only the one whose data-media matches is ever given a src, so a
+    // phone never downloads the desktop clip and vice versa.
+    const videos = Array.from(root.querySelectorAll('.custom-intro-popup__video'));
+    const mobileQuery = window.matchMedia('(max-width: 749px)');
+
+    function activeVideo() {
+      return videos.find((video) => window.matchMedia(video.dataset.media).matches);
+    }
+
+    function loadVideo() {
+      const video = activeVideo();
+      if (video && !video.getAttribute('src')) {
+        video.preload = 'auto';
+        video.src = video.dataset.src;
+      }
+      return video;
+    }
+
+    // Reduced motion still gets the clip loaded, so its first frame shows, but
+    // it is never set playing.
+    function playVideo() {
+      const video = loadVideo();
+      if (!video || reduceMotion) return;
+      const playing = video.play();
+      if (playing) playing.catch(() => {});
+    }
+
+    function pauseVideos() {
+      videos.forEach((video) => video.pause());
+    }
+
+    // Rotating a tablet or resizing across 750 swaps which clip is on screen.
+    function onBreakpointChange() {
+      if (!isOpen) return;
+      pauseVideos();
+      playVideo();
+    }
+    mobileQuery.addEventListener('change', onBreakpointChange);
+
     function focusables() {
       return Array.from(dialog.querySelectorAll('a[href], button:not([disabled])')).filter(
         (el) => el.getClientRects().length > 0
@@ -179,6 +219,7 @@
       lockScroll();
       document.addEventListener('keydown', onKeydown);
       closeButton.focus({ preventScroll: true });
+      playVideo();
 
       if (typeof window.gsap === 'undefined' || reduceMotion) return;
 
@@ -204,6 +245,7 @@
 
       const finish = () => {
         root.hidden = true;
+        pauseVideos();
         if (lastFocused && typeof lastFocused.focus === 'function') {
           lastFocused.focus({ preventScroll: true });
         }
@@ -251,13 +293,19 @@
       destroy() {
         clearTimeout(openTimer);
         if (isOpen) release();
+        mobileQuery.removeEventListener('change', onBreakpointChange);
+        pauseVideos();
         root.remove();
       },
     };
 
     if (!designMode && hasSeen(frequency)) return;
 
+    // The clip starts buffering when the loader lifts, so the delay before the
+    // popup opens is spent downloading it rather than the visitor watching a
+    // blank panel.
     whenLoaderDone(() => {
+      loadVideo();
       openTimer = setTimeout(open, delay);
     });
   }

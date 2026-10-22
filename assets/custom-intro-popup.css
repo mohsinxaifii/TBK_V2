@@ -1,4 +1,4 @@
-/* First-visit introduction popup (Figma 3231:5335 desktop, 3231:5308 mobile).
+/* First-visit introduction popup (Figma 3702:4182 desktop, 3699:4115 mobile).
  *
  * The overlay is moved to <body> by the JS on init, so it is a child of the
  * document rather than of the section's <div> inside <main>. Sections on this
@@ -10,11 +10,6 @@
  * the popup never flashes before the JS runs). [hidden] gets display:none from
  * the UA sheet, which `display:flex` here would override, hence the explicit
  * !important rule at the bottom.
- *
- * Decorative layers (scrim, wordmark, stars) are positioned in percentages of
- * the card rather than pixels: the card holds a fixed aspect ratio but shrinks
- * once the viewport is narrower than it, and px offsets would drift off their
- * marks as soon as that happened.
  */
 .custom-intro-popup {
   position: fixed;
@@ -31,55 +26,50 @@
   backdrop-filter: blur(8px);
 }
 
-/* 864x504 card. Held as a ratio rather than a fixed height so the whole card
-   scales together when the viewport is narrower than 864 — the photo is the
-   background, so letting the box grow taller would just reveal more crop.
-   Content is right-aligned here: the copy column sits over the photo's right
-   third, against the blurred scrim. */
+/* 864x525 card: video panel on the left, a 336px copy column on the right.
+   The column is fixed and the video panel takes whatever is left of the
+   width (see __media), so when the viewport is narrower than 864 it is the
+   video that gives way, never the copy. Padding puts the column 70px down and
+   48px in from the right, and the small print 22px off the bottom. */
 .custom-intro-popup__dialog {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: flex-end;
   width: 864px;
   max-width: 100%;
-  aspect-ratio: 864 / 504;
+  aspect-ratio: 864 / 525;
   margin: auto;
-  padding: 48px;
+  padding: 70px 48px 22px;
   overflow: hidden;
-  border-radius: 4px;
   background: #570f13;
 }
 
-/* ---- Media: the photo is the card's background, not a column ---- */
+/* ---- Media: the video panel ---- */
 
+/* 443px of the 864: everything left of the copy column, its 37px gutter and
+   the 48px right padding (336 + 37 + 48 = 421). */
 .custom-intro-popup__media {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
   z-index: 0;
+  width: calc(100% - 421px);
   overflow: hidden;
   background: #570f13;
   pointer-events: none;
 }
 
-/* The photo no longer fills the card: the design places a 609x812 portrait
-   frame over the left side (3330:3733), bleeding off the top, bottom and left
-   edges, and leaves the right side as the card's own maroon. The frame is in
-   percentages so it tracks the card when that scales down. */
-.custom-intro-popup__picture {
+/* The design lays a 32% black wash over the footage. */
+.custom-intro-popup__media::after {
+  content: '';
   position: absolute;
-  left: -8.912%;
-  top: -50.992%;
-  width: 70.486%;
-  height: 161.111%;
-  display: block;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.32);
 }
 
-/* The frame is 3:4 and so is the photograph, so `cover` fills it without
-   cropping. A replacement at another ratio is cropped to fit rather than
-   letterboxed. */
-.custom-intro-popup__image {
+.custom-intro-popup__video {
   display: block;
   width: 100%;
   height: 100%;
@@ -87,62 +77,59 @@
   object-position: center;
 }
 
-/* The maroon falloff behind the copy: a real rectangle with a 49.45px blur, as
-   drawn in the design, rather than a gradient approximating it. Sized and
-   placed off the card's own edges, so it bleeds past them and the blur has
-   somewhere to fall off to. */
-.custom-intro-popup__scrim {
-  position: absolute;
-  left: 43.4%;
-  top: -21.23%;
-  width: 56.597%;
-  height: 138.492%;
-  background: rgba(87, 15, 19, 0.96);
-  filter: blur(49.45px);
+.custom-intro-popup__video--mobile {
+  display: none;
 }
 
-/* ---- Wordmark, over the photo ---- */
+/* ---- Wordmark, over the video ---- */
 
+/* Placed by the artwork, not the file: the SVG carries 4px/3px of drop-shadow
+   margin around the 124x60 lockup, which the design puts at 23,28. */
 .custom-intro-popup__wordmark {
   position: absolute;
   z-index: 1;
-  left: 17.94%;
-  top: 45.63%;
-  width: 132px;
   height: auto;
   pointer-events: none;
 }
 
-/* ---- Four-point stars ---- */
+.custom-intro-popup__wordmark--desktop {
+  left: 19px;
+  top: 25px;
+  width: 132px;
+}
 
-/* Desktop stacks them down the left edge of the photo; the mobile rules below
-   move them into the card's bottom corners. */
+.custom-intro-popup__wordmark--mobile {
+  display: none;
+}
+
+/* ---- Four-point stars, in the bottom corners ---- */
+
 .custom-intro-popup__ornament {
   position: absolute;
   z-index: 1;
-  left: 28px;
+  bottom: 22px;
   width: 19px;
   height: 19px;
   pointer-events: none;
 }
 
 .custom-intro-popup__ornament--start {
-  top: 37px;
+  left: 23px;
 }
 
 .custom-intro-popup__ornament--end {
-  bottom: 28px;
+  right: 23px;
 }
 
 /* ---- Close ---- */
 
-/* Design puts the glyph 37px down with its right edge 48px in. The offsets
+/* Design puts the glyph 22px down with its right edge 23px in. The offsets
    subtract the button's own padding and the stroke's 0.75px cap bleed so the
    drawn X lands there, while the padding keeps a ~42px hit area. */
 .custom-intro-popup__close {
   position: absolute;
-  top: 23px;
-  right: 33px;
+  top: 7px;
+  right: 8px;
   z-index: 2;
   display: flex;
   align-items: center;
@@ -159,7 +146,6 @@
   opacity: 0.7;
 }
 
-
 /* 14.5, not 13: the viewBox pads the 13x12 glyph by the round cap's 0.75px
    radius on each side, so sizing the SVG to 13 would draw the X at 11.7px.
    Same size at both breakpoints — the design uses one icon for both. */
@@ -169,17 +155,17 @@
   height: auto;
 }
 
-/* ---- Content: the 336px column over the scrim ---- */
+/* ---- Content: the 336px column ---- */
 
+/* Grows to the card's full inner height so the small print can be pushed to
+   the bottom with margin-top:auto, level with the stars. */
 .custom-intro-popup__content {
   position: relative;
   z-index: 1;
   display: flex;
+  flex: 1 0 auto;
   flex-direction: column;
-  justify-content: center;
   gap: 24px;
-  /* max-width rather than width so it collapses rather than overflowing once
-     the card is scaled down. */
   width: 336px;
   max-width: 100%;
 }
@@ -187,13 +173,25 @@
 .custom-intro-popup__text {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+}
+
+/* Spacing between the three lines is set per line rather than with gap: the
+   design has 12px under the eyebrow but 16px under the heading. */
+.custom-intro-popup__eyebrow {
+  margin: 0 0 12px;
+  color: #fffdee;
+  font-family: var(--font-family-label);
+  font-size: var(--font-intro-popup-eyebrow-size);
+  font-weight: var(--font-intro-popup-eyebrow-weight);
+  line-height: var(--font-intro-popup-eyebrow-line-height);
+  letter-spacing: var(--font-intro-popup-eyebrow-letter-spacing);
+  text-transform: uppercase;
 }
 
 /* capitalize is the design's own text style, not the copy — the setting is
    written in sentence case and titled by CSS, so editors need not match it. */
 .custom-intro-popup__heading {
-  margin: 0;
+  margin: 0 0 16px;
   color: #fffdee;
   font-family: var(--font-family-display);
   font-size: var(--font-intro-popup-heading-size);
@@ -213,13 +211,13 @@
   letter-spacing: var(--font-intro-popup-body-letter-spacing);
 }
 
-.custom-intro-popup__welcome {
-  margin: 0;
+.custom-intro-popup__note {
+  margin: auto 0 0;
   color: #fffdee;
   font-family: var(--font-family-body);
-  font-size: var(--font-intro-popup-body-size);
-  font-weight: 500;
-  line-height: var(--font-intro-popup-body-line-height);
+  font-size: var(--font-intro-popup-note-size);
+  font-weight: var(--font-weight-light);
+  line-height: var(--font-intro-popup-note-line-height);
 }
 
 /* ---- Button ---- */
@@ -274,93 +272,82 @@
   filter: brightness(0) saturate(100%) invert(97%) sepia(9%) saturate(556%) hue-rotate(310deg) brightness(105%) contrast(100%);
 }
 
-
-/* ---- Between the mobile board and the desktop card's natural width ---- */
-
-/* The 336px column plus 96px of padding needs 432px; below roughly 900 the
-   heading starts to crowd it, so the type steps down with the box rather than
-   wrapping awkwardly. */
-@media screen and (min-width: 750px) and (max-width: 900px) {
-  .custom-intro-popup__dialog {
-    padding: 32px;
-  }
-
-  .custom-intro-popup__heading {
-    font-size: 28px;
-    line-height: 36px;
-  }
-}
-
-/* ---- Mobile (3231:5308) ---- */
+/* ---- Mobile (3699:4115) ---- */
 
 @media screen and (max-width: 749px) {
   .custom-intro-popup {
     padding: 16px;
   }
 
-  /* 354x714 card. Content is bottom-aligned over the photo, which fills the
-     card. The bottom padding clears the stars in the corners: 24 to the card
-     edge, 19 of star, then the design's 40px gap above them. */
+  /* 354 wide, stacked: the video as a block across the top, the centred copy
+     under it. Height comes from the content rather than a ratio, which lands
+     on the design's 704. */
   .custom-intro-popup__dialog {
     width: 354px;
-    aspect-ratio: 354 / 714;
-    justify-content: flex-end;
+    aspect-ratio: auto;
     align-items: stretch;
-    /* Square here — the 4px radius is desktop-only in the design. */
-    border-radius: 0;
-    padding: 48px 24px 83px;
+    padding: 0;
   }
 
-  /* Same photograph, framed taller and pulled further left (3330:3789). */
-  .custom-intro-popup__picture {
-    left: -33.051%;
-    top: -51.12%;
-    width: 169.774%;
-    height: 112.185%;
+  /* In the flow here rather than behind the card: 354x357 above the copy. */
+  .custom-intro-popup__media {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    width: 100%;
+    aspect-ratio: 354 / 357;
   }
 
-  /* Rotated to lie across the card: a wide, short band low down, darkening the
-     bottom half where the copy sits. */
-  .custom-intro-popup__scrim {
-    left: -44.07%;
-    top: 47.2%;
-    width: 197.18%;
-    height: 81.93%;
-    background: rgba(74, 0, 4, 0.94);
+  .custom-intro-popup__video--desktop {
+    display: none;
   }
 
-  .custom-intro-popup__wordmark {
-    left: 31.356%;
-    top: 25.35%;
-    width: 124px;
+  .custom-intro-popup__video--mobile {
+    display: block;
   }
 
-  /* Into the bottom corners, flanking the button. */
+  .custom-intro-popup__wordmark--desktop {
+    display: none;
+  }
+
+  .custom-intro-popup__wordmark--mobile {
+    display: block;
+    left: 16px;
+    top: 22px;
+    width: 91px;
+  }
+
   .custom-intro-popup__ornament {
     bottom: 24px;
   }
 
   .custom-intro-popup__ornament--start {
-    top: auto;
     left: 24px;
   }
 
   .custom-intro-popup__ornament--end {
-    left: auto;
     right: 24px;
   }
 
+  /* 28px under the video. The bottom padding clears the stars in the corners:
+     24 to the card edge, 19 of star, then the design's 48px gap above them. */
   .custom-intro-popup__content {
+    flex: none;
     width: 100%;
     gap: 16px;
+    padding: 28px 24px 91px;
     text-align: center;
   }
 
-  .custom-intro-popup__text {
-    gap: 8px;
+  .custom-intro-popup__eyebrow {
+    margin-bottom: 8px;
+    font-size: var(--font-intro-popup-eyebrow-size-mobile);
+    line-height: var(--font-intro-popup-eyebrow-line-height-mobile);
+    letter-spacing: var(--font-intro-popup-eyebrow-letter-spacing-mobile);
   }
 
   .custom-intro-popup__heading {
+    margin-bottom: 8px;
     font-size: var(--font-intro-popup-heading-size-mobile);
     line-height: var(--font-intro-popup-heading-line-height-mobile);
     letter-spacing: var(--font-intro-popup-heading-letter-spacing-mobile);
@@ -372,27 +359,23 @@
     letter-spacing: var(--font-intro-popup-body-letter-spacing-mobile);
   }
 
-  /* Bold italic here against plain bold on desktop. */
-  .custom-intro-popup__welcome {
-    font-size: var(--font-intro-popup-body-size-mobile);
-    line-height: var(--font-intro-popup-body-line-height-mobile);
-    letter-spacing: var(--font-intro-popup-body-letter-spacing-mobile);
-    font-style: italic;
+  /* Straight under the button here, and Regular rather than desktop's Light. */
+  .custom-intro-popup__note {
+    margin-top: 0;
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--font-intro-popup-note-letter-spacing-mobile);
   }
 
-  /* 42 rather than desktop's 41: the mobile button carries 6px of vertical
-     padding on top of the 28px line and the 1px border, and its border is the
-     maroon rather than the cream. */
+  /* 40px: 6px of padding either side of the 28px line. The border stays (the
+     hover state needs it), so it comes out of the padding. */
   .custom-intro-popup__cta {
-    min-height: 42px;
-    padding: 6px 16px;
-    border-color: #570f13;
+    min-height: 40px;
+    padding: 5px 16px;
   }
 
-  /* Design puts the X 37px down and 16px in from the card edge here. */
+  /* Design puts the X 22px down and 19px in from the card edge here. */
   .custom-intro-popup__close {
-    top: 23px;
-    right: 1px;
+    right: 4px;
   }
 }
 

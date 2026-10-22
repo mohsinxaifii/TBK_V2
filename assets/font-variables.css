@@ -485,16 +485,23 @@
    --font-continue-exploring-title-size: 20px;
 
    /* ---- Intro popup (custom-intro-popup, first-visit overlay) ---- */
-   /* The design's own scale (3231:5335 desktop, 3231:5308 mobile), not the
-     shared section roles: the copy sits in a 336px column beside the photo, so
+   /* The design's own scale (3702:4182 desktop, 3699:4115 mobile), not the
+     shared section roles: the copy sits in a 336px column beside the video, so
      the 50px section heading would be far too big for it. Tracking is 2% of
      the size on the desktop heading and body and 4% on mobile, matching the
      Figma text styles. The button keeps one size across both breakpoints. */
+   --font-intro-popup-eyebrow-size: 12px;
+   --font-intro-popup-eyebrow-line-height: 24px;
+   --font-intro-popup-eyebrow-letter-spacing: 1.92px;
+   --font-intro-popup-eyebrow-weight: var(--font-weight-semibold);
+   --font-intro-popup-eyebrow-size-mobile: 10px;
+   --font-intro-popup-eyebrow-line-height-mobile: 16px;
+   --font-intro-popup-eyebrow-letter-spacing-mobile: 4px;
    --font-intro-popup-heading-size: 32px;
    --font-intro-popup-heading-line-height: 42px;
    --font-intro-popup-heading-letter-spacing: 0.64px;
    --font-intro-popup-heading-weight: var(--font-weight-regular);
-   --font-intro-popup-heading-size-mobile: 22px;
+   --font-intro-popup-heading-size-mobile: 24px;
    --font-intro-popup-heading-line-height-mobile: 32px;
    --font-intro-popup-heading-letter-spacing-mobile: 0px;
    --font-intro-popup-body-size: 16px;
@@ -504,9 +511,10 @@
    --font-intro-popup-body-size-mobile: 14px;
    --font-intro-popup-body-line-height-mobile: 20px;
    --font-intro-popup-body-letter-spacing-mobile: 0.56px;
-   /* The "Welcome to The Bikaneri Kitchen" line: same size as the body but
-     bold, and italic as well on mobile. */
-   --font-intro-popup-welcome-weight: var(--font-weight-bold);
+   /* The "*Available until …" small print. */
+   --font-intro-popup-note-size: 8px;
+   --font-intro-popup-note-line-height: 12px;
+   --font-intro-popup-note-letter-spacing-mobile: 0.32px;
    --font-intro-popup-cta-size: 16px;
    --font-intro-popup-cta-line-height: 28px;
    --font-intro-popup-cta-letter-spacing: 0.64px;

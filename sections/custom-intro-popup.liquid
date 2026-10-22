@@ -3,6 +3,10 @@
 
 {%- liquid
   assign cta_url = section.settings.cta_1_link | default: '/collections/the-bhandaar'
+  assign video_desktop = section.settings.video_url | strip
+  assign video_mobile = section.settings.video_url_mobile | strip | default: video_desktop
+  assign poster_desktop = section.settings.image
+  assign poster_mobile = section.settings.image_mobile | default: poster_desktop
 -%}
 
 {%- if section.settings.enabled -%}
@@ -27,57 +31,56 @@
       aria-labelledby="CustomIntroPopupHeading-{{ section.id }}"
     >
       <div class="custom-intro-popup__media">
-        {%- if section.settings.image != blank -%}
-          {%- comment -%}
-            The photograph is a 3:4 portrait placed over the left of the card
-            rather than a full-bleed background — the right side is the card's
-            own maroon. Supply it plain: the falloff where the two meet is the
-            __scrim layer below, a real blurred rectangle as in the design
-            (3322:3709 / 3330:3765), not baked into the export.
-
-            Eager, despite being off-screen: the overlay starts at display:none,
-            and browsers don't fetch lazy images inside a hidden box — the photo
-            would only start downloading as the popup opened, and pop in late.
-            fetchpriority=low keeps it out of the way of the banner's LCP.
-          {%- endcomment -%}
-          <picture class="custom-intro-popup__picture">
-            {%- if section.settings.image_mobile != blank -%}
-              <source
-                media="(max-width: 749px)"
-                srcset="
-                  {{ section.settings.image_mobile | image_url: width: 601 }} 601w,
-                  {{ section.settings.image_mobile | image_url: width: 1202 }} 1202w
-                "
-                sizes="601px"
-                width="{{ section.settings.image_mobile.width }}"
-                height="{{ section.settings.image_mobile.height }}"
-              >
-            {%- endif -%}
-            <img
-              class="custom-intro-popup__image"
-              src="{{ section.settings.image | image_url: width: 609 }}"
-              srcset="
-                {{ section.settings.image | image_url: width: 609 }} 609w,
-                {{ section.settings.image | image_url: width: 1218 }} 1218w
-              "
-              sizes="609px"
-              width="{{ section.settings.image.width }}"
-              height="{{ section.settings.image.height }}"
-              alt="{{ section.settings.image.alt | escape }}"
-              loading="eager"
-              fetchpriority="low"
-            >
-          </picture>
+        {%- comment -%}
+          One video per breakpoint (3702:4182 desktop, 3699:4115 mobile). Both
+          carry their URL in data-src rather than src: the JS only loads the one
+          that matches the viewport, and only for visitors who are going to see
+          the popup, so returning visitors never download either.
+        {%- endcomment -%}
+        {%- if video_desktop != blank -%}
+          <video
+            class="custom-intro-popup__video custom-intro-popup__video--desktop"
+            data-src="{{ video_desktop | escape }}"
+            data-media="(min-width: 750px)"
+            {% if poster_desktop != blank %}poster="{{ poster_desktop | image_url: width: 900 }}"{% endif %}
+            muted
+            loop
+            playsinline
+            preload="none"
+            aria-hidden="true"
+          ></video>
+          <video
+            class="custom-intro-popup__video custom-intro-popup__video--mobile"
+            data-src="{{ video_mobile | escape }}"
+            data-media="(max-width: 749px)"
+            {% if poster_mobile != blank %}poster="{{ poster_mobile | image_url: width: 720 }}"{% endif %}
+            muted
+            loop
+            playsinline
+            preload="none"
+            aria-hidden="true"
+          ></video>
         {%- endif -%}
-        <span class="custom-intro-popup__scrim"></span>
       </div>
 
+      {%- comment -%}
+        The two breakpoints use different lockups: desktop has the shadowed
+        132×68 wordmark, mobile a smaller 91×44 one with no shadow.
+      {%- endcomment -%}
       <img
-        class="custom-intro-popup__wordmark"
+        class="custom-intro-popup__wordmark custom-intro-popup__wordmark--desktop"
         src="{{ 'intro-popup-wordmark.svg' | asset_url }}"
         alt=""
         width="132"
         height="68"
+        aria-hidden="true"
+      >
+      <img
+        class="custom-intro-popup__wordmark custom-intro-popup__wordmark--mobile"
+        src="{{ 'intro-popup-wordmark-mobile.svg' | asset_url }}"
+        alt=""
+        width="91"
+        height="44"
         aria-hidden="true"
       >
 
@@ -93,11 +96,7 @@
       </button>
 
       {%- comment -%}
-        The two four-point stars. Desktop stacks them down the left edge of the
-        photo (3231:5352); mobile puts them in the bottom corners under the
-        button (3231:5330). Absolute at both sizes so one pair of elements
-        serves both, with the card's bottom padding on mobile keeping the copy
-        clear of them.
+        The two four-point stars sit in the card's bottom corners at both sizes.
       {%- endcomment -%}
       <img
         class="custom-intro-popup__ornament custom-intro-popup__ornament--start"
@@ -118,6 +117,9 @@
 
       <div class="custom-intro-popup__content">
         <div class="custom-intro-popup__text">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="custom-intro-popup__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
           {%- if section.settings.heading != blank -%}
             <h2 class="custom-intro-popup__heading" id="CustomIntroPopupHeading-{{ section.id }}">
               {{- section.settings.heading | escape -}}
@@ -127,10 +129,6 @@
             <p class="custom-intro-popup__body">{{ section.settings.body | escape | newline_to_br }}</p>
           {%- endif -%}
         </div>
-
-        {%- if section.settings.welcome != blank -%}
-          <p class="custom-intro-popup__welcome">{{ section.settings.welcome | escape }}</p>
-        {%- endif -%}
 
         {%- if section.settings.cta_1_label != blank -%}
           <div class="custom-intro-popup__actions">
@@ -146,6 +144,10 @@
               >
             </a>
           </div>
+        {%- endif -%}
+
+        {%- if section.settings.note != blank -%}
+          <p class="custom-intro-popup__note">{{ section.settings.note | escape }}</p>
         {%- endif -%}
       </div>
     </div>
@@ -196,37 +198,62 @@
       "content": "Content"
     },
     {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "A limited gifting edition",
+      "info": "The small uppercase line above the heading."
+    },
+    {
       "type": "textarea",
       "id": "heading",
       "label": "Heading",
-      "default": "Some doors open into a place. Some open into a world.",
+      "default": "A little more to give.",
       "info": "Wraps on its own at both sizes — no manual line breaks needed."
     },
     {
       "type": "textarea",
       "id": "body",
       "label": "Body text",
-      "default": "Ours opens into Bikaner.\nIts kitchens, its people, its stories, and the tastes they have carried for generations.",
+      "default": "This Diwali, Our Paraat Bhujia comes wrapped in a bundle of love : The Gathri packaging.\nA thoughtful way to share a taste of Bikaner with those who matter.",
       "info": "Press Enter/Return for a line break."
     },
     {
       "type": "text",
-      "id": "welcome",
-      "label": "Welcome line",
-      "default": "Welcome to The Bikaneri Kitchen",
-      "info": "The bold line between the body copy and the button."
+      "id": "note",
+      "label": "Small print",
+      "default": "*Available until 8 November",
+      "info": "Desktop: the bottom of the card. Mobile: under the button."
+    },
+    {
+      "type": "header",
+      "content": "Video"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (desktop)",
+      "default": "https://cdn.shopify.com/videos/c/o/v/4c33101a7aee4165aebfb4666b2d9296.mp4",
+      "info": "MP4 link, e.g. from Content › Files. Fills the left panel — a portrait clip (around 6:7) fits it best."
+    },
+    {
+      "type": "text",
+      "id": "video_url_mobile",
+      "label": "Video URL (mobile)",
+      "default": "https://cdn.shopify.com/videos/c/o/v/1a346f8f4b394a78968725e01b34257e.mp4",
+      "info": "Fills the square block at the top of the card. Falls back to the desktop video."
     },
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Image (desktop)",
-      "info": "Fills the 864×504 card. Supply the plain photograph — the maroon falloff behind the text is drawn by the theme, so an export with it already baked in will read twice as dark."
+      "label": "Poster image (desktop)",
+      "info": "Optional. Shown while the video loads — use a still from the video."
     },
     {
       "type": "image_picker",
       "id": "image_mobile",
-      "label": "Image (mobile)",
-      "info": "Fills the 354×714 card. Falls back to the desktop image, which would crop heavily — supply this one."
+      "label": "Poster image (mobile)",
+      "info": "Optional. Falls back to the desktop poster."
     },
     {
       "type": "header",
@@ -236,7 +263,7 @@
       "type": "text",
       "id": "cta_1_label",
       "label": "Button label",
-      "default": "Step Inside"
+      "default": "Step Into the Tradition"
     },
     {
       "type": "url",
