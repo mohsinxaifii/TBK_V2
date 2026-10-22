@@ -43,6 +43,12 @@
   padding: 70px 48px 22px;
   overflow: hidden;
   background: #570f13;
+  /* All the copy is cream on maroon, and macOS browsers' default subpixel
+     antialiasing thickens light-on-dark strokes — the Light body and small
+     print read as Regular, and the button as Bold. Grayscale smoothing is
+     what Figma renders with, so this is what matches the design. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ---- Media: the video panel ---- */

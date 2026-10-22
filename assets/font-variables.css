@@ -493,7 +493,10 @@
    --font-intro-popup-eyebrow-size: 12px;
    --font-intro-popup-eyebrow-line-height: 24px;
    --font-intro-popup-eyebrow-letter-spacing: 1.92px;
-   --font-intro-popup-eyebrow-weight: var(--font-weight-semibold);
+   /* Regular, not semibold, to get the design's Semibold: the Proxima Nova A
+     files in theme.liquid sit one step heavy (the 400 face is the Semibold
+     cut, 600 is Extrabold). */
+   --font-intro-popup-eyebrow-weight: var(--font-weight-regular);
    --font-intro-popup-eyebrow-size-mobile: 10px;
    --font-intro-popup-eyebrow-line-height-mobile: 16px;
    --font-intro-popup-eyebrow-letter-spacing-mobile: 4px;
