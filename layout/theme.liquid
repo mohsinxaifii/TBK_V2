@@ -7,6 +7,20 @@
     <meta name="theme-color" content="">
     <link rel="canonical" href="{{ canonical_url }}">
 
+    {%- comment -%}
+      Google Analytics 4 (G-KVCL27P7M6). Storefront pages only -- checkout
+      and purchase events don't run this layout; they come from the Google &
+      YouTube app / customer events. Remove this if that app is connected to
+      the same property, or page views get counted twice.
+    {%- endcomment -%}
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KVCL27P7M6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-KVCL27P7M6');
+    </script>
+
     {%- if settings.favicon != blank -%}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
     {%- endif -%}
