@@ -11,7 +11,7 @@
   "current": {
     "logo": "shopify://shop_images/Vector.png",
     "logo_width": 150,
-    "favicon": "shopify://shop_images/The_Bikaneri_Kitchen_logo_2.png",
+    "favicon": "shopify://shop_images/Favicon_dark_bg.png",
     "type_header_font": "baskervville_n4",
     "heading_scale": 100,
     "type_body_font": "assistant_n4",
@@ -128,6 +128,23 @@
     "show_cart_note": false,
     "cart_drawer_collection": "",
     "cart_color_scheme": "scheme-e41ba56d-f51d-47f6-8e6e-e04c8cbcade2",
+    "mid": "19xb37yvc14c",
+    "envType": "production",
+    "fbpixel": "1092269630333588",
+    "goEnable": true,
+    "goBuynowEnable": true,
+    "buyNowText": "Buy It Now",
+    "enableIntlFlow": false,
+    "cart_promo_banner_enabled": false,
+    "cart_promo_banner_text": "Get <strong>10% OFF</strong> sitewide",
+    "cart_recommendations_collection": "the-bhandaar",
+    "cart_recommendations_heading": "Complete your Order with",
+    "empty_cart_button_secondary": true,
+    "gift_tiers_enabled": false,
+    "show_free_shipping_message": false,
+    "show_shipping_calculator": false,
+    "cart_recommendations_show_vendor": false,
+    "cart_recommendations_show_price": true,
     "sections": {
       "main-password-header": {
         "type": "main-password-header",
@@ -210,24 +227,7 @@
           "shadow": "#121212"
         }
       }
-    },
-    "mid": "19xb37yvc14c",
-    "envType": "production",
-    "goEnable": true,
-    "goBuynowEnable": true,
-    "buyNowText": "Buy It Now",
-    "fbpixel": "1092269630333588",
-    "enableIntlFlow": false,
-    "show_shipping_calculator": false,
-    "show_free_shipping_message": false,
-    "gift_tiers_enabled": false,
-    "empty_cart_button_secondary": true,
-    "cart_promo_banner_enabled": false,
-    "cart_promo_banner_text": "Get <strong>10% OFF</strong> sitewide",
-    "cart_recommendations_heading": "Complete your Order with",
-    "cart_recommendations_collection": "the-bhandaar",
-    "cart_recommendations_show_price": true,
-    "cart_recommendations_show_vendor": false
+    }
   },
   "presets": {
     "Dawn": {
