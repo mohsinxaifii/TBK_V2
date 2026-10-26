@@ -132,6 +132,20 @@
     const delay = (parseFloat(root.dataset.delay) || 0) * 1000;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // Visitors from when this ran in "once" mode still carry a permanent flag
+    // in localStorage. Session mode never reads it, but clear it so it can't
+    // resurface if the setting is ever switched back.
+    if (frequency === 'session' && !designMode) {
+      const legacy = storageFor('once');
+      if (legacy) {
+        try {
+          legacy.removeItem(STORAGE_KEY);
+        } catch (e) {
+          // Blocked storage — nothing to clean up.
+        }
+      }
+    }
+
     let isOpen = false;
     let lastFocused = null;
     let openTimer = null;

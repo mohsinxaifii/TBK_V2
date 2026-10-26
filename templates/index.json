@@ -491,7 +491,7 @@
       "settings": {
         "enabled": true,
         "delay_seconds": 5,
-        "frequency": "once",
+        "frequency": "session",
         "eyebrow": "A limited gifting edition",
         "heading": "A little more to give.",
         "body": "This Diwali, Our Paraat Bhujia comes wrapped in a bundle of love : The Gathri packaging.\nA thoughtful way to share a taste of Bikaner with those who matter.",
