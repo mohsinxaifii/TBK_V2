@@ -25,19 +25,19 @@
       "name": "Custom Featured Product",
       "settings": {
         "reverse_layout": false,
-        "featured_product": "paraat-bhujia",
+        "featured_product": "paraat-bhujia-gathri-edit",
         "bg_left_color": "#570f13",
-        "bg_right_image": "shopify://shop_images/Frame_4.png",
-        "bg_right_image_mobile": "shopify://shop_images/Frame_4.png",
+        "bg_right_image": "shopify://shop_images/Frame_4_1.png",
+        "bg_right_image_mobile": "shopify://shop_images/Frame_4_1.png",
         "featured-product-left-bg": "shopify://shop_images/Frame_1321319393_3.jpg",
-        "top_left_caption": "our first",
-        "heading": "Paraat Bhujia",
-        "description": "<p>Its story begins in the royal kitchens of Maharaja Dungar Singh Ji, with moth, gram flour, spices and the instinct of experienced hands. Cooked over the bhatti and gathered warm into the paraat, those fine golden strands became a taste inseparable from Bikaner, carried from one generation of hands to another.</p>",
+        "top_left_caption": "made for the festive table",
+        "heading": "Paraat Bhujia: Gathri Edit",
+        "description": "<p>Paraat Bhujia traces its story to the royal kitchens of Maharaja Dungar Singh Ji, where moth, gram flour and spices came together in a recipe remembered for its lightness of bite and savoury depth.</p>",
         "size": "330 gm",
         "tax_note": "(Inclusive of all taxes.)",
         "icon": "shopify://shop_images/Vector_1.png",
         "cta": "Add to Cart",
-        "top_right_caption": "PARAAT BHUJIA"
+        "top_right_caption": "PARAAT BHUJIA : GATHRI EDIT"
       }
     },
     "custom_home_values_Fk3bUf": {
