@@ -66,9 +66,9 @@
         "product_reviews": {
           "type": "product_reviews",
           "settings": {
-            "trust_text_1": "Free shipping above 1299",
-            "trust_text_2": "Secure payments",
-            "trust_text_3": "COD available"
+            "trust_text_1": "",
+            "trust_text_2": "",
+            "trust_text_3": ""
           }
         }
       },
