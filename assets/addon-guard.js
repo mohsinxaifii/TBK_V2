@@ -1,12 +1,14 @@
 /*
- * Add-on guard: Gathri and Jhola only exist in a cart alongside Paraat Bhujia.
+ * Add-on guard: each add-on only exists in a cart alongside one of its anchor
+ * products (snippets/addon-anchors.liquid) -- Gathri with Paraat Bhujia, Jhola
+ * with Paraat Bhujia or Handmade Bhujia.
  *
- * - Adding an add-on while Paraat Bhujia is not in the cart is refused before the
+ * - Adding an add-on while none of its anchors is in the cart is refused before the
  *   request reaches Shopify, and the shopper is told why.
- * - After any cart change, add-ons left without Paraat Bhujia (it was removed or
- *   set to zero) are removed too, and the drawer / cart page re-render. The cart
+ * - After any cart change, add-ons left without an anchor (the anchor was removed
+ *   or set to zero) are removed too, and the drawer / cart page re-render. The cart
  *   drawer's suggestions then drop them as well, since they are only suggested
- *   while Paraat Bhujia is in the cart (snippets/cart-recommendations.liquid).
+ *   while an anchor is in the cart (snippets/cart-recommendations.liquid).
  * - A page that loads with such a cart (e.g. after the cart page's full-page
  *   remove link) cleans it up straight away.
  *
@@ -17,14 +19,28 @@
  */
 (() => {
   const config = window.TBKAddons;
-  if (!config || !config.addonVariantIds || !config.addonVariantIds.length) return;
+  const rules = ((config && config.rules) || [])
+    .map((rule) => ({
+      title: rule.title,
+      variantIds: new Set((rule.variantIds || []).map(String).filter(Boolean)),
+      anchorIds: new Set((rule.anchorVariantIds || []).map(String).filter(Boolean)),
+      anchorTitles: (rule.anchorTitles || []).filter(Boolean),
+    }))
+    .filter((rule) => rule.variantIds.size);
+  if (!rules.length) return;
 
-  const addonIds = new Set(config.addonVariantIds.map(String).filter(Boolean));
-  const anchorIds = new Set((config.anchorVariantIds || []).map(String));
   const root = (window.theme && theme.routes && theme.routes.root_url) || '/';
   const base = root.endsWith('/') ? root : `${root}/`;
-  const message =
-    config.message || `Add ${config.anchorTitle || 'Paraat Bhujia'} to your cart first.`;
+
+  const ruleFor = (variantId) => rules.find((rule) => rule.variantIds.has(String(variantId)));
+
+  const listTitles = (titles) =>
+    titles.length > 1 ? `${titles.slice(0, -1).join(', ')} or ${titles[titles.length - 1]}` : titles[0] || 'its pairing';
+
+  const messageFor = (rule) =>
+    `${rule.title} comes with ${listTitles(rule.anchorTitles)}. Add ${
+      rule.anchorTitles.length > 1 ? 'one' : rule.anchorTitles[0]
+    } to your cart first.`;
 
   const nativeFetch = window.fetch.bind(window);
   const ADD_PATH = /\/cart\/add(\.js)?$/;
@@ -68,10 +84,16 @@
   const getCart = () =>
     nativeFetch(`${base}cart.js`, { headers: { Accept: 'application/json' } }).then((response) => response.json());
 
-  const hasAnchor = (cart) => cart.items.some((item) => anchorIds.has(String(item.variant_id)));
+  /* Variant ids in the cart, plus any about to be added alongside in the same request. */
+  const anchored = (rule, variantIds) => [...variantIds].some((id) => rule.anchorIds.has(String(id)));
 
-  const orphanAddons = (cart) =>
-    hasAnchor(cart) ? [] : cart.items.filter((item) => addonIds.has(String(item.variant_id)));
+  const orphanAddons = (cart) => {
+    const inCart = cart.items.map((item) => item.variant_id);
+    return cart.items.filter((item) => {
+      const rule = ruleFor(item.variant_id);
+      return rule && !anchored(rule, inCart);
+    });
+  };
 
   /* ---- Notice ---------------------------------------------------------------- */
 
@@ -131,25 +153,39 @@
     }
   };
 
+  /* One cleanup at a time. A cart change that lands while one is running marks it
+     dirty, so it runs again against the newer cart instead of trusting a stale read. */
   let cleaning = null;
+  let dirty = false;
+
+  const cleanOnce = async () => {
+    const cart = await getCart();
+    const orphans = orphanAddons(cart);
+    if (!orphans.length) return false;
+
+    const updates = {};
+    orphans.forEach((line) => {
+      updates[line.key] = 0;
+    });
+    await nativeFetch(`${base}cart/update.js`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ updates }),
+    });
+    return true;
+  };
+
   const cleanup = () => {
+    dirty = true;
     if (cleaning) return cleaning;
     cleaning = (async () => {
+      let changed = false;
       try {
-        const cart = await getCart();
-        const orphans = orphanAddons(cart);
-        if (!orphans.length) return;
-
-        const updates = {};
-        orphans.forEach((line) => {
-          updates[line.key] = 0;
-        });
-        await nativeFetch(`${base}cart/update.js`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ updates }),
-        });
-        refreshCartUI();
+        while (dirty) {
+          dirty = false;
+          if (await cleanOnce()) changed = true;
+        }
+        if (changed) refreshCartUI();
       } catch (error) {
         console.error('[addon-guard] cleanup failed:', error);
       } finally {
@@ -167,17 +203,19 @@
 
     if (ADD_PATH.test(path)) {
       const ids = variantIdsIn(init && init.body);
-      const addsAddon = ids.some((id) => addonIds.has(id));
-      const addsAnchor = ids.some((id) => anchorIds.has(id));
+      const addonRules = ids.map(ruleFor).filter(Boolean);
 
-      if (addsAddon && !addsAnchor) {
-        let allowed = false;
+      if (addonRules.length) {
+        let inCart = [];
         try {
-          allowed = hasAnchor(await getCart());
+          inCart = (await getCart()).items.map((item) => item.variant_id);
         } catch (e) {
-          allowed = false;
+          inCart = [];
         }
-        if (!allowed) {
+        const available = inCart.concat(ids);
+        const blocked = addonRules.find((rule) => !anchored(rule, available));
+        if (blocked) {
+          const message = messageFor(blocked);
           notify(message);
           // Same shape Shopify uses for a refused add, so existing callers treat it
           // as an ordinary error rather than crashing on an unexpected body.

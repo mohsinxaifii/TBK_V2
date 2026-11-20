@@ -43,16 +43,16 @@
   endfor
 
   comment
-    Add-ons (Gathri, Jhola) are only offered alongside Paraat Bhujia. Without it in the
-    cart they are dropped from both the mapped rail and the collection fallback.
+    Add-ons are only offered while one of their anchor products is in the cart (Gathri
+    with Paraat Bhujia; Jhola with Paraat or Handmade Bhujia -- see 'addon-anchors').
+    The rest are dropped from both the mapped rail and the collection fallback.
   endcomment
   capture addon_handles
     render 'addon-products'
   endcapture
-  assign addons_allowed = false
-  if handles_in_cart contains ',paraat-bhujia,'
-    assign addons_allowed = true
-  endif
+  capture addons_allowed
+    render 'addon-allowed'
+  endcapture
 
   comment
     The rotation seed is derived from which products are in the cart, never from the clock.
@@ -162,8 +162,10 @@
     if seen_handles contains candidate_marker
       continue
     endif
-    if addons_allowed == false and addon_handles contains candidate_marker
-      continue
+    if addon_handles contains candidate_marker
+      unless addons_allowed contains candidate_marker
+        continue
+      endunless
     endif
     assign seen_handles = seen_handles | append: candidate_handle | append: ','
 
@@ -191,8 +193,10 @@
     if handles_in_cart contains fallback_marker
       continue
     endif
-    if addons_allowed == false and addon_handles contains fallback_marker
-      continue
+    if addon_handles contains fallback_marker
+      unless addons_allowed contains fallback_marker
+        continue
+      endunless
     endif
     assign fallback_available = fallback_available | plus: 1
   endfor
@@ -242,8 +246,10 @@
           {%- if handles_in_cart contains fallback_marker -%}
             {%- continue -%}
           {%- endif -%}
-          {%- if addons_allowed == false and addon_handles contains fallback_marker -%}
-            {%- continue -%}
+          {%- if addon_handles contains fallback_marker -%}
+            {%- unless addons_allowed contains fallback_marker -%}
+              {%- continue -%}
+            {%- endunless -%}
           {%- endif -%}
           {%- assign fallback_shown = fallback_shown | plus: 1 -%}
           {% render 'cart-recommendation-card', recommendation: recommendation %}

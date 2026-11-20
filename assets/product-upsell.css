@@ -1,73 +1,125 @@
 /* "Complete Your Table" -- product page cross-sell rail (snippets/product-upsell.liquid). */
 
 .product-upsell {
-  margin: 2.4rem 0 0.8rem;
+  --upsell-card-bg: #f6eeda;
+  --upsell-card-border: #e3d3aa;
+  --upsell-media-bg: #eadbb5;
+  --upsell-ink: #181818;
+  --upsell-gap: 1.2rem;
+
+  display: block;
+  margin: 2.8rem 0 1.2rem;
+}
+
+.product-upsell *,
+.product-upsell *::before,
+.product-upsell *::after {
+  box-sizing: border-box;
+}
+
+/* ---- Header: heading + arrows ---------------------------------------------- */
+
+.product-upsell__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+  margin-bottom: 1.4rem;
 }
 
 .product-upsell__heading {
-  margin: 0 0 1.6rem;
+  margin: 0;
   font-family: var(--font-family-display);
   font-size: 2.6rem;
   font-weight: 400;
   line-height: 1.2;
   letter-spacing: 0.01em;
-  color: #181818;
+  color: var(--upsell-ink);
 }
+
+.product-upsell__nav {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.8rem;
+}
+
+.product-upsell__nav[hidden] {
+  display: none;
+}
+
+.product-upsell__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--upsell-ink);
+  color: #fffdee;
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.product-upsell__arrow:disabled {
+  background: #d9d3c2;
+  color: #fffdee;
+  cursor: default;
+}
+
+.product-upsell__arrow:not(:disabled):hover {
+  opacity: 0.85;
+}
+
+/* ---- Rail ------------------------------------------------------------------- */
 
 .product-upsell__list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.2rem;
+  display: flex;
+  gap: var(--upsell-gap);
   margin: 0;
   padding: 0;
-}
-
-/* Three or more cards: a horizontal rail, two cards in view and the next one peeking. */
-.product-upsell__list--scroll {
-  display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  scroll-padding-inline: 0;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
 
-.product-upsell__list--scroll::-webkit-scrollbar {
+.product-upsell__list::-webkit-scrollbar {
   display: none;
 }
 
-.product-upsell__list--scroll.is-scrolling {
+.product-upsell__list.is-scrolling {
   scroll-snap-type: none;
 }
 
-.product-upsell__list--scroll.is-dragging {
+.product-upsell__list.is-dragging {
   cursor: grabbing;
   user-select: none;
 }
 
-.product-upsell__list--scroll .product-upsell__item {
-  flex: 0 0 calc((100% - 1.2rem) / 2.15);
-  scroll-snap-align: start;
-}
-
+/* Two cards in view where the column allows it; never narrower than 26rem, so a
+   tight column shows one and a half cards instead of squeezing two. */
 .product-upsell__item {
+  flex: 0 0 max(26rem, calc((100% - var(--upsell-gap)) / 2));
+  scroll-snap-align: start;
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1.4rem;
   min-width: 0;
-  padding: 1.2rem;
-  border: 1px solid rgba(24, 24, 24, 0.2);
-  background: #fff;
+  padding: 1.2rem 1.4rem 1.2rem 1.2rem;
+  border: 1px solid var(--upsell-card-border);
+  background: var(--upsell-card-bg);
 }
 
 .product-upsell__media {
   flex: 0 0 auto;
   display: block;
-  width: 7.2rem;
+  width: 7.6rem;
   aspect-ratio: 1;
   overflow: hidden;
-  background: #e9edf0;
+  background: var(--upsell-media-bg);
 }
 
 .product-upsell__image {
@@ -83,21 +135,18 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
 .product-upsell__title {
   margin: 0;
   font-family: var(--font-family-display);
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.25;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #181818;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  color: var(--upsell-ink);
 }
 
 .product-upsell__title a {
@@ -106,17 +155,19 @@
 }
 
 .product-upsell__variant {
-  margin-left: 0.4rem;
+  display: block;
+  margin-top: 0.2rem;
   font-family: var(--font-family-body);
+  font-size: 1.2rem;
   font-weight: 400;
-  font-size: 1.1rem;
   letter-spacing: 0;
   text-transform: none;
-  opacity: 0.7;
+  color: rgba(24, 24, 24, 0.65);
 }
 
 .product-upsell__row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.8rem;
@@ -124,9 +175,9 @@
 
 .product-upsell__price {
   font-family: var(--font-family-product-meta);
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 500;
-  color: #181818;
+  color: var(--upsell-ink);
   white-space: nowrap;
 }
 
@@ -141,21 +192,21 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid rgba(24, 24, 24, 0.35);
-  background: #fff;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid var(--upsell-ink);
+  background: transparent;
   font-family: var(--font-family-body);
   font-size: 1.3rem;
-  line-height: 1.4;
-  color: #181818;
+  line-height: 1.3;
+  color: var(--upsell-ink);
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .product-upsell__add:hover,
 .product-upsell__add:focus-visible {
-  background: #181818;
-  color: #fff;
+  background: var(--upsell-ink);
+  color: #fffdee;
 }
 
 .product-upsell__add[disabled],
@@ -169,29 +220,16 @@
     font-size: 2.2rem;
   }
 
-  /* Phones are too narrow for two cards side by side; one card plus a peek. */
-  .product-upsell__list {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
+  /* One card plus a peek of the next. */
+  .product-upsell__item {
+    flex-basis: min(85%, 32rem);
   }
 
-  .product-upsell__list::-webkit-scrollbar {
-    display: none;
-  }
-
-  .product-upsell__item,
-  .product-upsell__list--scroll .product-upsell__item {
-    flex: 0 0 82%;
-    scroll-snap-align: start;
-  }
-
-  .product-upsell__list:has(> .product-upsell__item:only-child) .product-upsell__item {
+  .product-upsell__item:only-child {
     flex-basis: 100%;
   }
 
   .product-upsell__media {
-    width: 6.4rem;
+    width: 7rem;
   }
 }

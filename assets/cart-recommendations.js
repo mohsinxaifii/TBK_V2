@@ -149,5 +149,45 @@ if (!customElements.get('cart-recommendations')) {
 /* The product page's "Complete Your Table" rail (snippets/product-upsell.liquid) is the
    same kind of horizontal scroller, pointed at its own list via data-list. */
 if (!customElements.get('upsell-rail')) {
-  customElements.define('upsell-rail', class UpsellRail extends CartRecommendations {});
+  customElements.define(
+    'upsell-rail',
+    class UpsellRail extends CartRecommendations {
+      connectedCallback() {
+        super.connectedCallback();
+        if (!this.list) return;
+
+        this.nav = this.querySelector('.product-upsell__nav');
+        this.prev = this.querySelector('[data-rail-prev]');
+        this.next = this.querySelector('[data-rail-next]');
+        if (!this.nav || !this.prev || !this.next) return;
+
+        this.prev.addEventListener('click', () => this.step(-1));
+        this.next.addEventListener('click', () => this.step(1));
+        this.list.addEventListener('scroll', () => this.updateNav(), { passive: true });
+        this.resizeObserver = new ResizeObserver(() => this.updateNav());
+        this.resizeObserver.observe(this.list);
+        this.updateNav();
+      }
+
+      disconnectedCallback() {
+        if (this.resizeObserver) this.resizeObserver.disconnect();
+      }
+
+      /* One card per click: the width of a card plus the gap after it. */
+      step(direction) {
+        const card = this.list.querySelector('.product-upsell__item');
+        if (!card) return;
+        const gap = parseFloat(getComputedStyle(this.list).columnGap) || 0;
+        this.list.scrollBy({ left: direction * (card.offsetWidth + gap), behavior: 'smooth' });
+      }
+
+      /* Arrows only when there is something to scroll to; each end disables its own. */
+      updateNav() {
+        const max = this.list.scrollWidth - this.list.clientWidth;
+        this.nav.hidden = max <= 1;
+        this.prev.disabled = this.list.scrollLeft <= 1;
+        this.next.disabled = this.list.scrollLeft >= max - 1;
+      }
+    }
+  );
 }

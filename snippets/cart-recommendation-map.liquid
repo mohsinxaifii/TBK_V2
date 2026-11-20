@@ -16,9 +16,9 @@
   Order within a row is the priority order: the rail walks these left to right before it
   rotates and interleaves them, so put the strongest pairing first.
 
-  Add-ons listed in 'addon-products' (Gathri, Jhola) are only ever offered while
-  paraat-bhujia is in the cart -- cart-recommendations enforces that even if one is added
-  to another row or to the fallback collection.
+  Add-ons listed in 'addon-products' (Gathri, Jhola) are only ever offered while one of
+  their anchor products is in the cart (see 'addon-anchors') -- cart-recommendations
+  enforces that even if one is added to another row or to the fallback collection.
 
   Every handle here was checked against the live catalogue on 2026-08-05. A handle that no
   longer exists is skipped silently rather than erroring, so re-check this file after
@@ -28,4 +28,4 @@
   {%- capture recommendation_map -%}{% render 'cart-recommendation-map' %}{%- endcapture -%}
 {% endcomment %}
 paraat-bhujia >> gathri, jhola, handmade-bhujia;
-handmade-bhujia >> paraat-bhujia;
+handmade-bhujia >> paraat-bhujia, jhola;

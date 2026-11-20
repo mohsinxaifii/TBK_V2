@@ -53,45 +53,52 @@
     </script>
 
     {%- comment -%}
-      Add-ons only live in a cart next to Paraat Bhujia: assets/addon-guard.js refuses
-      adding one without it and removes them when it goes. cleanupOnLoad catches a cart
-      that changed through a full page load (the cart page's remove link).
+      Add-ons only live in a cart next to one of their anchor products (rules in
+      'addon-anchors'): assets/addon-guard.js refuses adding one without an anchor and
+      removes it when its last anchor goes. cleanupOnLoad catches a cart that changed
+      through a full page load (the cart page's remove link).
     {%- endcomment -%}
+    {%- capture addon_rules_raw -%}{% render 'addon-anchors' %}{%- endcapture -%}
+    {%- capture addons_allowed -%}{% render 'addon-allowed' %}{%- endcapture -%}
     {%- liquid
-      assign addon_anchor = all_products['paraat-bhujia']
-      assign addon_list = addon_handles | strip | split: ','
-      assign addon_variant_ids = ''
-      for addon_handle in addon_list
-        if addon_handle == blank
-          continue
-        endif
-        for addon_variant in all_products[addon_handle].variants
-          assign addon_variant_ids = addon_variant_ids | append: addon_variant.id | append: ','
-        endfor
-      endfor
-
-      assign cart_has_anchor = false
-      assign cart_has_addon = false
+      assign addon_rules = addon_rules_raw | strip | split: ';'
+      assign addon_cleanup_on_load = false
       for item in cart.items
-        if item.product.handle == 'paraat-bhujia'
-          assign cart_has_anchor = true
-        endif
         assign addon_marker = ',' | append: item.product.handle | append: ','
         if addon_handles contains addon_marker
-          assign cart_has_addon = true
+          unless addons_allowed contains addon_marker
+            assign addon_cleanup_on_load = true
+          endunless
         endif
       endfor
-      assign addon_cleanup_on_load = false
-      if cart_has_addon and cart_has_anchor == false
-        assign addon_cleanup_on_load = true
-      endif
     -%}
     <script>
       window.TBKAddons = {
-        addonVariantIds: {{ addon_variant_ids | split: ',' | json }},
-        anchorVariantIds: {{ addon_anchor.variants | map: 'id' | json }},
-        anchorTitle: {{ addon_anchor.title | default: 'Paraat Bhujia' | json }},
-        message: {{ 'Gathri and Jhola come with Paraat Bhujia. Add Paraat Bhujia to your cart first.' | json }},
+        rules: [
+          {%- for rule in addon_rules -%}
+            {%- assign rule_parts = rule | split: '>' -%}
+            {%- if rule_parts.size < 2 -%}{%- continue -%}{%- endif -%}
+            {%- assign rule_addon = all_products[rule_parts[0]] -%}
+            {%- assign rule_anchor_handles = rule_parts[1] | split: ',' -%}
+            {%- assign rule_anchor_ids = '' -%}
+            {%- assign rule_anchor_titles = '' -%}
+            {%- for anchor_handle in rule_anchor_handles -%}
+              {%- assign rule_anchor = all_products[anchor_handle] -%}
+              {%- if rule_anchor == blank -%}{%- continue -%}{%- endif -%}
+              {%- for anchor_variant in rule_anchor.variants -%}
+                {%- assign rule_anchor_ids = rule_anchor_ids | append: anchor_variant.id | append: ',' -%}
+              {%- endfor -%}
+              {%- assign rule_anchor_titles = rule_anchor_titles | append: rule_anchor.title | append: '|' -%}
+            {%- endfor -%}
+            {%- assign rule_anchor_titles = rule_anchor_titles | split: '|' -%}
+            {
+              title: {{ rule_addon.title | default: rule_parts[0] | json }},
+              variantIds: {{ rule_addon.variants | map: 'id' | json }},
+              anchorVariantIds: {{ rule_anchor_ids | split: ',' | json }},
+              anchorTitles: {{ rule_anchor_titles | json }}
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        ],
         cleanupOnLoad: {{ addon_cleanup_on_load | json }}
       };
     </script>

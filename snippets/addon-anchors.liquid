@@ -1,0 +1,20 @@
+{% comment %}
+  Which product each add-on belongs with. An add-on can only sit in the cart, and is
+  only suggested in the cart drawer, while at least one of its anchor products is in
+  the cart. Removing the last anchor removes the add-on.
+
+  Format: one rule per add-on, separated by ';'. Each rule is
+  `addon-handle>anchor-handle,anchor-handle`.
+
+  Every add-on here must also be listed in 'addon-products' (which hides its product
+  page) and carry the product tag 'addon' (which keeps it out of The Bhandaar).
+
+  Read by:
+  - 'addon-allowed' (which add-ons the current cart permits)
+  - layout/theme.liquid (window.TBKAddons, for assets/addon-guard.js)
+
+  Usage:
+  {%- capture addon_rules -%}{% render 'addon-anchors' %}{%- endcapture -%}
+  {%- assign addon_rules = addon_rules | strip | split: ';' -%}
+{% endcomment %}
+gathri>paraat-bhujia;jhola>paraat-bhujia,handmade-bhujia

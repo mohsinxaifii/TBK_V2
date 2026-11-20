@@ -1,0 +1,39 @@
+{% comment %}
+  Outputs the add-on handles the current cart allows, comma-wrapped on both sides
+  (e.g. ",gathri,jhola,"), using the rules in 'addon-anchors'. An add-on is allowed
+  when at least one of its anchor products is in the cart.
+
+  Usage:
+  {%- capture addons_allowed -%}{% render 'addon-allowed' %}{%- endcapture -%}
+  {%- if addons_allowed contains ',jhola,' -%}...{%- endif -%}
+{% endcomment %}
+{%- liquid
+  capture rules_raw
+    render 'addon-anchors'
+  endcapture
+  assign rules = rules_raw | strip | split: ';'
+
+  assign cart_handles = ','
+  for item in cart.items
+    assign cart_handles = cart_handles | append: item.product.handle | append: ','
+  endfor
+
+  assign allowed = ','
+  for rule in rules
+    assign rule_parts = rule | split: '>'
+    if rule_parts.size < 2
+      continue
+    endif
+    assign addon_handle = rule_parts[0] | strip
+    assign anchors = rule_parts[1] | split: ','
+    for anchor in anchors
+      assign anchor_marker = anchor | strip | prepend: ',' | append: ','
+      if cart_handles contains anchor_marker
+        assign allowed = allowed | append: addon_handle | append: ','
+        break
+      endif
+    endfor
+  endfor
+
+  echo allowed
+-%}
