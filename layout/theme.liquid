@@ -53,6 +53,51 @@
     </script>
 
     {%- comment -%}
+      Add-ons only live in a cart next to Paraat Bhujia: assets/addon-guard.js refuses
+      adding one without it and removes them when it goes. cleanupOnLoad catches a cart
+      that changed through a full page load (the cart page's remove link).
+    {%- endcomment -%}
+    {%- liquid
+      assign addon_anchor = all_products['paraat-bhujia']
+      assign addon_list = addon_handles | strip | split: ','
+      assign addon_variant_ids = ''
+      for addon_handle in addon_list
+        if addon_handle == blank
+          continue
+        endif
+        for addon_variant in all_products[addon_handle].variants
+          assign addon_variant_ids = addon_variant_ids | append: addon_variant.id | append: ','
+        endfor
+      endfor
+
+      assign cart_has_anchor = false
+      assign cart_has_addon = false
+      for item in cart.items
+        if item.product.handle == 'paraat-bhujia'
+          assign cart_has_anchor = true
+        endif
+        assign addon_marker = ',' | append: item.product.handle | append: ','
+        if addon_handles contains addon_marker
+          assign cart_has_addon = true
+        endif
+      endfor
+      assign addon_cleanup_on_load = false
+      if cart_has_addon and cart_has_anchor == false
+        assign addon_cleanup_on_load = true
+      endif
+    -%}
+    <script>
+      window.TBKAddons = {
+        addonVariantIds: {{ addon_variant_ids | split: ',' | json }},
+        anchorVariantIds: {{ addon_anchor.variants | map: 'id' | json }},
+        anchorTitle: {{ addon_anchor.title | default: 'Paraat Bhujia' | json }},
+        message: {{ 'Gathri and Jhola come with Paraat Bhujia. Add Paraat Bhujia to your cart first.' | json }},
+        cleanupOnLoad: {{ addon_cleanup_on_load | json }}
+      };
+    </script>
+    <script src="{{ 'addon-guard.js' | asset_url }}" defer="defer"></script>
+
+    {%- comment -%}
       Google Analytics 4 (G-KVCL27P7M6). Storefront pages only -- checkout
       and purchase events don't run this layout; they come from the Google &
       YouTube app / customer events. Remove this if that app is connected to
