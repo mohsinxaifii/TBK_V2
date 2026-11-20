@@ -36,7 +36,10 @@
         role="list"
       >
         {% assign skip_card_product_styles = false %}
+        {%- capture addon_handles -%}{% render 'addon-products' %}{%- endcapture -%}
         {% for recommendation in recommendations.products %}
+          {%- assign addon_marker = ',' | append: recommendation.handle | append: ',' -%}
+          {%- if addon_handles contains addon_marker -%}{%- continue -%}{%- endif -%}
           <li class="grid__item">
             {% render 'card-product',
               card_product: recommendation,
