@@ -112,7 +112,10 @@
         <cart-recommendations class="cart-card cart-recommendations">
           <p class="cart-card__title">{{ settings.cart_recommendations_heading | escape }}</p>
           <ul class="cart-recommendations__list list-unstyled">
+            {%- capture addon_handles -%}{% render 'addon-products' %}{%- endcapture -%}
             {%- for recommendation in empty_cart_recommendations limit: 8 -%}
+              {%- assign addon_marker = ',' | append: recommendation.handle | append: ',' -%}
+              {%- if addon_handles contains addon_marker -%}{%- continue -%}{%- endif -%}
               {% render 'cart-recommendation-card', recommendation: recommendation %}
             {%- endfor -%}
           </ul>

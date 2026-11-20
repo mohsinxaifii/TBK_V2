@@ -43,10 +43,26 @@
   endif
 
   assign card_media = card_variant.featured_media | default: recommendation.featured_media
+
+  comment
+    Add-ons (see 'addon-products') have no product page to visit, so the card is not a link.
+  endcomment
+  capture addon_handles
+    render 'addon-products'
+  endcapture
+  assign addon_marker = ',' | append: recommendation.handle | append: ','
+  assign card_linkable = true
+  if addon_handles contains addon_marker
+    assign card_linkable = false
+  endif
 -%}
 
 <li class="cart-recommendations__item">
-  <a href="{{ card_url }}" class="cart-recommendations__link">
+  {%- if card_linkable -%}
+    <a href="{{ card_url }}" class="cart-recommendations__link">
+  {%- else -%}
+    <span class="cart-recommendations__link">
+  {%- endif -%}
     {%- if card_media -%}
       <span class="cart-recommendations__media">
         <img
@@ -80,7 +96,11 @@
         </span>
       {%- endif -%}
     </span>
-  </a>
+  {%- if card_linkable -%}
+    </a>
+  {%- else -%}
+    </span>
+  {%- endif -%}
 
   {%- if quick_add -%}
     <add-to-cart

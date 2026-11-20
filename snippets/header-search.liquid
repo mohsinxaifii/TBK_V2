@@ -110,7 +110,10 @@
           <div class="search-modal__popular">
             <p class="search-modal__popular-label">Popular searches:</p>
             <ul class="search-modal__popular-list" role="list">
+              {%- capture addon_handles -%}{% render 'addon-products' %}{%- endcapture -%}
               {%- for product in search_shortcut_products limit: 50 -%}
+                {%- assign addon_marker = ',' | append: product.handle | append: ',' -%}
+                {%- if addon_handles contains addon_marker -%}{%- continue -%}{%- endif -%}
                 <li class="search-modal__popular-item">
                   <a href="{{ product.url }}" class="search-modal__popular-link">
                     {{- product.title | escape -}}

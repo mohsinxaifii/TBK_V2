@@ -1,0 +1,20 @@
+{% comment %}
+  Add-on products: sold only as a companion to Paraat Bhujia, never browsed on their own.
+
+  Outputs the handles comma-wrapped on both sides, so `contains` cannot match a handle
+  that merely starts with another one. Everything that gates them reads this one list:
+  - layout/theme.liquid redirects their product pages to the anchor product and blocks
+    clicks on any link pointing at them
+  - product-upsell / cart-recommendation-card render them without a link
+  - cart-recommendations only offers them while the anchor product is in the cart
+  - search, predictive search and the cart page leave them out or unlinked
+
+  The anchor product (where add-on pages redirect to, and what must be in the cart for
+  the drawer to suggest them) is 'paraat-bhujia'.
+
+  Usage:
+  {%- capture addon_handles -%}{% render 'addon-products' %}{%- endcapture -%}
+  {%- assign marker = ',' | append: product.handle | append: ',' -%}
+  {%- if addon_handles contains marker -%}...{%- endif -%}
+{% endcomment %}
+,gathri,jhola,

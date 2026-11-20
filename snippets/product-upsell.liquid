@@ -1,0 +1,135 @@
+{% comment %}
+  "Complete Your Table" -- the product page cross-sell rail, under the buy buttons.
+
+  Which products appear is decided per product handle below, not by Shopify's
+  recommendation engine, so the merchandising stays exactly as specified:
+  - Paraat Bhujia   -> Handmade Bhujia, Gathri, Jhola
+  - Handmade Bhujia -> Paraat Bhujia
+  Any other product renders nothing.
+
+  Add-on products (see 'addon-products') are shown without a link, since their own
+  product pages are never meant to be opened. The + Add button uses the theme's
+  <add-to-cart> element, so it adds the product's first available variant and opens
+  the cart drawer just like the cart's own recommendation rail.
+
+  Accepts:
+  - product: {Object} the product whose page this is
+  - block: {Object} the 'upsell' block
+
+  Usage:
+  {% render 'product-upsell', product: product, block: block %}
+{% endcomment %}
+
+{%- liquid
+  case product.handle
+    when 'paraat-bhujia'
+      assign upsell_handles = 'handmade-bhujia,gathri,jhola' | split: ','
+    when 'handmade-bhujia'
+      assign upsell_handles = 'paraat-bhujia' | split: ','
+    else
+      assign upsell_handles = blank
+  endcase
+
+  capture addon_handles
+    render 'addon-products'
+  endcapture
+
+  assign upsell_count = 0
+  for upsell_handle in upsell_handles
+    if all_products[upsell_handle].available
+      assign upsell_count = upsell_count | plus: 1
+    endif
+  endfor
+-%}
+
+{%- if upsell_count > 0 -%}
+  {{ 'product-upsell.css' | asset_url | stylesheet_tag }}
+  {%- unless settings.cart_type == 'drawer' -%}
+    {%- comment -%} The drawer layout already loads this; it defines <upsell-rail>. {%- endcomment -%}
+    <script src="{{ 'cart-recommendations.js' | asset_url }}" defer="defer"></script>
+  {%- endunless -%}
+
+  <div class="product-upsell" {{ block.shopify_attributes }}>
+    {%- if block.settings.heading != blank -%}
+      <h2 class="product-upsell__heading">{{ block.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    <upsell-rail class="product-upsell__rail" data-list=".product-upsell__list">
+      <ul
+        class="product-upsell__list list-unstyled{% if upsell_count > 2 %} product-upsell__list--scroll{% endif %}"
+        role="list"
+      >
+        {%- for upsell_handle in upsell_handles -%}
+          {%- liquid
+            assign upsell = all_products[upsell_handle]
+            unless upsell.available
+              continue
+            endunless
+
+            assign upsell_variant = upsell.selected_or_first_available_variant
+            assign upsell_media = upsell_variant.featured_media | default: upsell.featured_media
+            assign upsell_marker = ',' | append: upsell.handle | append: ','
+            assign upsell_linkable = true
+            if addon_handles contains upsell_marker
+              assign upsell_linkable = false
+            endif
+          -%}
+          <li class="product-upsell__item">
+            {%- if upsell_linkable -%}
+              <a href="{{ upsell.url }}" class="product-upsell__media" tabindex="-1" aria-hidden="true">
+            {%- else -%}
+              <span class="product-upsell__media">
+            {%- endif -%}
+            {%- if upsell_media -%}
+              {{
+                upsell_media
+                | image_url: width: 240
+                | image_tag:
+                  widths: '120, 180, 240',
+                  sizes: '90px',
+                  loading: 'lazy',
+                  alt: upsell.title,
+                  class: 'product-upsell__image'
+              }}
+            {%- endif -%}
+            {%- if upsell_linkable -%}
+              </a>
+            {%- else -%}
+              </span>
+            {%- endif -%}
+
+            <div class="product-upsell__info">
+              <p class="product-upsell__title">
+                {%- if upsell_linkable -%}
+                  <a href="{{ upsell.url }}">{{ upsell.title | escape }}</a>
+                {%- else -%}
+                  {{ upsell.title | escape }}
+                {%- endif -%}
+                {%- unless upsell.has_only_default_variant -%}
+                  <span class="product-upsell__variant">{{ upsell_variant.title | escape }}</span>
+                {%- endunless -%}
+              </p>
+              <div class="product-upsell__row">
+                <span class="product-upsell__price">
+                  {%- if upsell_variant.compare_at_price > upsell_variant.price -%}
+                    <s>{{ upsell_variant.compare_at_price | money_without_trailing_zeros }}</s>
+                  {%- endif -%}
+                  {{ upsell_variant.price | money_without_trailing_zeros }}
+                </span>
+                <add-to-cart
+                  class="product-upsell__add"
+                  data-variant-id="{{ upsell_variant.id }}"
+                  role="button"
+                  tabindex="0"
+                  aria-label="{{ 'products.product.add_to_cart' | t }}: {{ upsell.title | escape }}"
+                >
+                  <span aria-hidden="true">+</span> Add
+                </add-to-cart>
+              </div>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </upsell-rail>
+  </div>
+{%- endif -%}

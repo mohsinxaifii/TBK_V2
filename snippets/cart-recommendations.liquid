@@ -43,6 +43,18 @@
   endfor
 
   comment
+    Add-ons (Gathri, Jhola) are only offered alongside Paraat Bhujia. Without it in the
+    cart they are dropped from both the mapped rail and the collection fallback.
+  endcomment
+  capture addon_handles
+    render 'addon-products'
+  endcapture
+  assign addons_allowed = false
+  if handles_in_cart contains ',paraat-bhujia,'
+    assign addons_allowed = true
+  endif
+
+  comment
     The rotation seed is derived from which products are in the cart, never from the clock.
     The drawer re-fetches this section on every cart:refresh and swaps in the new innerHTML,
     so a seed that moved between renders would visibly reshuffle the rail a network
@@ -150,6 +162,9 @@
     if seen_handles contains candidate_marker
       continue
     endif
+    if addons_allowed == false and addon_handles contains candidate_marker
+      continue
+    endif
     assign seen_handles = seen_handles | append: candidate_handle | append: ','
 
     assign lookups_used = lookups_used | plus: 1
@@ -173,9 +188,13 @@
   assign fallback_available = 0
   for recommendation in fallback_products
     assign fallback_marker = ',' | append: recommendation.handle | append: ','
-    unless handles_in_cart contains fallback_marker
-      assign fallback_available = fallback_available | plus: 1
-    endunless
+    if handles_in_cart contains fallback_marker
+      continue
+    endif
+    if addons_allowed == false and addon_handles contains fallback_marker
+      continue
+    endif
+    assign fallback_available = fallback_available | plus: 1
   endfor
 
   assign show_recommendations = true
@@ -220,10 +239,14 @@
             {%- break -%}
           {%- endif -%}
           {%- assign fallback_marker = ',' | append: recommendation.handle | append: ',' -%}
-          {%- unless handles_in_cart contains fallback_marker -%}
-            {%- assign fallback_shown = fallback_shown | plus: 1 -%}
-            {% render 'cart-recommendation-card', recommendation: recommendation %}
-          {%- endunless -%}
+          {%- if handles_in_cart contains fallback_marker -%}
+            {%- continue -%}
+          {%- endif -%}
+          {%- if addons_allowed == false and addon_handles contains fallback_marker -%}
+            {%- continue -%}
+          {%- endif -%}
+          {%- assign fallback_shown = fallback_shown | plus: 1 -%}
+          {% render 'cart-recommendation-card', recommendation: recommendation %}
         {%- endfor -%}
       {%- endif -%}
     </ul>

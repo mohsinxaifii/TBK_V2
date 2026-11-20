@@ -54,6 +54,12 @@
             "show_gift_card_recipient": false
           }
         },
+        "upsell": {
+          "type": "upsell",
+          "settings": {
+            "heading": "Complete Your Table"
+          }
+        },
         "discount_callout": {
           "type": "discount_callout",
           "disabled": true,
@@ -79,6 +85,7 @@
         "price",
         "quantity_selector",
         "buy_buttons",
+        "upsell",
         "discount_callout",
         "product_reviews"
       ],

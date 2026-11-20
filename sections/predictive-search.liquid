@@ -129,7 +129,10 @@
               role="group"
               aria-labelledby="predictive-search-products"
             >
+              {%- capture addon_handles -%}{% render 'addon-products' %}{%- endcapture -%}
               {%- for product in predictive_search.resources.products -%}
+                {%- assign addon_marker = ',' | append: product.handle | append: ',' -%}
+                {%- if addon_handles contains addon_marker -%}{%- continue -%}{%- endif -%}
                 <li
                   id="predictive-search-option-product-{{ forloop.index }}"
                   class="predictive-search__list-item"

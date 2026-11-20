@@ -91,7 +91,12 @@
                     <td class="cart-item__media">
                       {% if item.image %}
                         {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}
-                        <a href="{{ item.url }}" class="cart-item__link" aria-hidden="true" tabindex="-1"> </a>
+                        {%- comment -%} Add-ons (see 'addon-products') have no product page to link to. {%- endcomment -%}
+                        {%- capture addon_handles -%}{% render 'addon-products' %}{%- endcapture -%}
+                        {%- assign addon_marker = ',' | append: item.product.handle | append: ',' -%}
+                        {%- unless addon_handles contains addon_marker -%}
+                          <a href="{{ item.url }}" class="cart-item__link" aria-hidden="true" tabindex="-1"> </a>
+                        {%- endunless -%}
                         <div class="cart-item__image-container gradient {% if item.parent_relationship.parent == null %}global-media-settings{% endif %}">
                           <img
                             src="{{ item.image | image_url: width: 300 }}"
@@ -111,7 +116,13 @@
                       {%- endif -%}
 
                       <div class="cart-item__title">
-                        <a href="{{ item.url }}" class="cart-item__name h4 break">{{ item.product.title | escape }}</a>
+                        {%- capture addon_handles -%}{% render 'addon-products' %}{%- endcapture -%}
+                        {%- assign addon_marker = ',' | append: item.product.handle | append: ',' -%}
+                        {%- if addon_handles contains addon_marker -%}
+                          <span class="cart-item__name h4 break">{{ item.product.title | escape }}</span>
+                        {%- else -%}
+                          <a href="{{ item.url }}" class="cart-item__name h4 break">{{ item.product.title | escape }}</a>
+                        {%- endif -%}
                         {%- assign cart_disclosure_modal_id = 'CartDisclosureModal-cart-' | append: item.key | replace: ':', '-' -%}
                         {%- render 'cart-disclosure-indicator',
                           product: item.product,

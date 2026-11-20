@@ -8,6 +8,51 @@
     <link rel="canonical" href="{{ canonical_url }}">
 
     {%- comment -%}
+      Add-on products (Gathri, Jhola -- see 'addon-products') are sold only alongside
+      Paraat Bhujia and their product pages must never be seen. Shopify will not let a
+      URL redirect override a live product URL, so the theme does it: the product page
+      itself bounces to Paraat Bhujia before anything paints, and any link to an add-on
+      anywhere on the site is neutralised on click. The theme editor is left alone so
+      the template can still be customised.
+    {%- endcomment -%}
+    {%- capture addon_handles -%}{% render 'addon-products' %}{%- endcapture -%}
+    {%- assign addon_redirect_url = all_products['paraat-bhujia'].url | default: '/products/paraat-bhujia' -%}
+    {%- if template.name == 'product' and request.design_mode == false -%}
+      {%- assign addon_marker = ',' | append: product.handle | append: ',' -%}
+      {%- if addon_handles contains addon_marker -%}
+        <meta name="robots" content="noindex, nofollow">
+        <meta http-equiv="refresh" content="0;url={{ addon_redirect_url }}">
+        <script>window.location.replace({{ addon_redirect_url | json }});</script>
+        <style>html { visibility: hidden; }</style>
+      {%- endif -%}
+    {%- endif -%}
+    <script>
+      (function () {
+        var addons = {{ addon_handles | strip | split: ',' | json }}.filter(Boolean);
+        if (!addons.length) return;
+        var pattern = new RegExp('/products/(' + addons.join('|') + ')/?$');
+        document.addEventListener(
+          'click',
+          function (event) {
+            var link = event.target.closest && event.target.closest('a[href]');
+            if (!link) return;
+            var url;
+            try {
+              url = new URL(link.href, window.location.href);
+            } catch (e) {
+              return;
+            }
+            if (url.origin === window.location.origin && pattern.test(url.pathname)) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+          },
+          true
+        );
+      })();
+    </script>
+
+    {%- comment -%}
       Google Analytics 4 (G-KVCL27P7M6). Storefront pages only -- checkout
       and purchase events don't run this layout; they come from the Google &
       YouTube app / customer events. Remove this if that app is connected to

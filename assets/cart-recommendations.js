@@ -23,7 +23,7 @@ class CartRecommendations extends HTMLElement {
   static LINE_HEIGHT = 16;
 
   connectedCallback() {
-    this.list = this.querySelector('.cart-recommendations__list');
+    this.list = this.querySelector(this.dataset.list || '.cart-recommendations__list');
     if (!this.list) return;
 
     this.pointerId = null;
@@ -142,4 +142,12 @@ class CartRecommendations extends HTMLElement {
     }, CartRecommendations.SNAP_RESTORE_DELAY);
   }
 }
-customElements.define('cart-recommendations', CartRecommendations);
+if (!customElements.get('cart-recommendations')) {
+  customElements.define('cart-recommendations', CartRecommendations);
+}
+
+/* The product page's "Complete Your Table" rail (snippets/product-upsell.liquid) is the
+   same kind of horizontal scroller, pointed at its own list via data-list. */
+if (!customElements.get('upsell-rail')) {
+  customElements.define('upsell-rail', class UpsellRail extends CartRecommendations {});
+}

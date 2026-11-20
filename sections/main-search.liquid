@@ -257,7 +257,12 @@
                 role="list"
               >
                 {%- assign skip_card_product_styles = false -%}
+                {%- capture addon_handles -%}{% render 'addon-products' %}{%- endcapture -%}
                 {%- for item in search.results -%}
+                  {%- if item.object_type == 'product' -%}
+                    {%- assign addon_marker = ',' | append: item.handle | append: ',' -%}
+                    {%- if addon_handles contains addon_marker -%}{%- continue -%}{%- endif -%}
+                  {%- endif -%}
                   {% assign lazy_load = false %}
                   {%- if forloop.index > 2 -%}
                     {%- assign lazy_load = true -%}

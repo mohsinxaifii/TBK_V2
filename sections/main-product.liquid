@@ -543,6 +543,8 @@
                     section_id: section.id,
                     show_pickup_availability: true
                   -%}
+                {%- when 'upsell' -%}
+                  {%- render 'product-upsell', product: product, block: block -%}
                 {%- when 'discount_callout' -%}
                   {%- render 'discount-callout', block: block -%}
                 {%- when 'product_reviews' -%}
@@ -1391,6 +1393,23 @@
           "id": "page",
           "type": "page",
           "label": "t:sections.main-product.blocks.popup.settings.page.label"
+        }
+      ]
+    },
+    {
+      "type": "upsell",
+      "name": "Complete your table",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Paraat Bhujia shows Handmade Bhujia, Gathri and Jhola. Handmade Bhujia shows Paraat Bhujia. Other products show nothing. The pairings are set in snippets/product-upsell.liquid."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Complete Your Table"
         }
       ]
     },
